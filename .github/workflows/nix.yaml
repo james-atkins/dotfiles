@@ -33,7 +33,7 @@ jobs:
       if: ${{ github.event_name == 'schedule' || github.event_name == 'pull_request' }}
     
     - name: Build all packages
-      run: nix build --verbose --print-build-logs .#allPackages
+      run: nix build --verbose --print-build-logs .#githubActionsPkgs
     
     - name: Commit and push
       run: |-
