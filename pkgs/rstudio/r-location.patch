@@ -1,0 +1,70 @@
+diff --git a/src/cpp/core/r_util/REnvironmentPosix.cpp b/src/cpp/core/r_util/REnvironmentPosix.cpp
+index dbc9a9a..aa5ec50 100644
+--- a/src/cpp/core/r_util/REnvironmentPosix.cpp
++++ b/src/cpp/core/r_util/REnvironmentPosix.cpp
+@@ -601,6 +601,32 @@ bool detectRLocationsUsingR(const std::string& rScriptPath,
+       return false;
+    }
+ 
++   // Get the R_LIBS_SITE environment variable
++   command =  rCommand +
++     " --slave --vanilla -e \"cat(Sys.getenv('R_LIBS_SITE'))\"";
++
++   fullCommand = createSourcedCommand(prelaunchScript,
++                                                  module,
++                                                  moduleBinaryPath,
++                                                  command);
++
++   error = runCommand(fullCommand, system::ProcessOptions(), &result);
++   if (error)
++   {
++      LOG_ERROR(error);
++      *pErrMsg = "Error calling R script (" + rScriptPath +
++                 "), " + error.getSummary();
++      LOG_ERROR_MESSAGE(*pErrMsg);
++      return false;
++   }
++   output = result.stdOut;
++   boost::algorithm::trim(output);
++
++   if (!output.empty())
++   {
++      core::system::setenv("R_LIBS_SITE", output);
++   }
++
+    return true;
+ }
+ #endif
+@@ -649,8 +676,8 @@ bool detectREnvironment(const FilePath& whichRScript,
+          if (!validateRScriptPath(rstudioWhichR, pErrMsg))
+             return false;
+ 
+-         detected = detectRLocationsUsingScript(
+-                  FilePath(rstudioWhichR),
++         detected = detectRLocationsUsingR(
++                  rstudioWhichR,
+                   &rHomePath,
+                   &rLibPath,
+                   &scriptVars,
+@@ -671,8 +698,8 @@ bool detectREnvironment(const FilePath& whichRScript,
+          if (!validateRScriptPath(whichRScript.getAbsolutePath(), pErrMsg))
+             return false;
+ 
+-         detected = detectRLocationsUsingScript(
+-                  whichRScript,
++         detected = detectRLocationsUsingR(
++                  whichRScript.getAbsolutePath(),
+                   &rHomePath,
+                   &rLibPath,
+                   &scriptVars,
+@@ -690,8 +717,8 @@ bool detectREnvironment(const FilePath& whichRScript,
+    if (!detected)
+    {
+       // check with default R script path
+-      detected = detectRLocationsUsingScript(
+-               FilePath(*pRScriptPath),
++      detected = detectRLocationsUsingR(
++               *pRScriptPath,
+                &rHomePath,
+                &rLibPath,
+                &scriptVars,
