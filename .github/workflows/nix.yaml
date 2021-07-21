@@ -1,4 +1,4 @@
-name: "Nix builder and autoupdater"
+name: "nix"
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
     - cron: '9 9 * * *'
 
 jobs:
-  update-packages:
+  nix:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -33,7 +33,7 @@ jobs:
       if: ${{ github.event_name == 'schedule' || github.event_name == 'pull_request' }}
     
     - name: Build all packages
-      run: nix build --verbose .#allPackages
+      run: nix build --verbose --print-build-logs .#allPackages
     
     - name: Commit and push
       run: |-
