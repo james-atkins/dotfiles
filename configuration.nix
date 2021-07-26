@@ -105,6 +105,9 @@ with lib.mkOption;
       extraOptions = ''
         experimental-features = nix-command flakes
       '';
+
+      binaryCaches = [ "https://james-atkins.cachix.org" ];
+      binaryCachePublicKeys = [ "james-atkins.cachix.org-1:Ljm14bKUUSXidZleVQejHDjDp1lrI7Rh/2WsY5ax280="];
     };
 
     nixpkgs.config.allowUnfree = true;
