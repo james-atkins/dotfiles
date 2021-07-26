@@ -27,6 +27,7 @@ jobs:
       with:
         name: james-atkins
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+        pushFilter: "(-source$|nixpkgs\.tar\.gz$)"
     
     - name: Flake update
       run: nix flake update
