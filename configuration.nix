@@ -89,6 +89,7 @@ with lib.mkOption;
       tree
       vim
       wget
+      zip unzip
     ];
 
     fonts.fonts = with pkgs; [
