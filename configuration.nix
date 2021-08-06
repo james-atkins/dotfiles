@@ -11,6 +11,7 @@ with lib.mkOption;
       (lib.mkAliasOptionModule [ "primary-user" "home-manager" ] [ "home-manager" "users" "james" ])
       (lib.mkAliasOptionModule [ "primary-user" "groups" ] [ "users" "users" "james" "extraGroups" ])
 
+      ./config/desktop/theme.nix
       ./config/desktop/sway/default.nix
       ./config/desktop/applications.nix
 
