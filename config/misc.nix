@@ -15,5 +15,9 @@
       userName = "James Atkins";
       userEmail = "code@jamesatkins.net";
     };
+
+    home.packages = with pkgs; [
+      ranger atool
+    ];
   };
 }
