@@ -4,12 +4,11 @@ let
   localPkgs = import ../pkgs/default.nix { pkgs = pkgs; };
 
   RWithPackages = pkgs.rWrapper.override {
-    packages = with pkgs.unstable.rPackages; [
+    packages = with pkgs.rPackages; [
       tidyverse
       shiny
       RSQLite
       data_table
-      targets
     ];
   };
 
