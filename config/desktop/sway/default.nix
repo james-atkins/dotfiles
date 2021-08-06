@@ -13,16 +13,29 @@
     pulse.enable = true;
   };
 
-  # TODO: everything managed by home-manager where possible?
-  programs.sway.enable = true;
-  programs.sway.extraPackages = [];
+  # Things copied from nixpkgs/sway.nix
+  security.pam.services.swaylock = {};
+  hardware.opengl.enable = true;
+  fonts.enableDefaultFonts = true;
+  programs.dconf.enable = true;
+
+  # programs.xwayland.enable = true;
+
+  # Screen sharing
+  xdg.portal.enable = true;
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-wlr ];
 
   primary-user.home-manager = {
     wayland.windowManager.sway = {
       enable = true;
-      package = null;
+      # package = null;
       wrapperFeatures.gtk = true;
       config = null;
+      extraSessionCommands =
+        ''
+        export QT_QPA_PLATFORM=wayland
+        export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+        '';
       extraConfig = builtins.readFile ./sway.config;
     };
 
@@ -39,6 +52,7 @@
       '';
 
     home.packages = with pkgs; [
+      qt5.qtwayland  # for QT_QPA_PLATFORM=wayland
       swaylock
       swayidle
       waybar
