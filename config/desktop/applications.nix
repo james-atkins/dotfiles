@@ -8,6 +8,7 @@
     };
 
     home.packages = with pkgs; [ 
+      evince
       skype
       teams
       zoom-us
