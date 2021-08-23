@@ -21,6 +21,7 @@ with lib.mkOption;
       ./config/misc.nix
 
       ./config/r.nix
+      ./config/sqlite.nix
     ];
 
   config = {
