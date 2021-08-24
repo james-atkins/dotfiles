@@ -26,8 +26,8 @@
       fsType = "ext4";
     };
 
-  fileSystems."/mnt/backup" =
-    { device = "/dev/disk/by-uuid/aa653ef7-df7e-4873-9a63-cf57d668a7a8";
+  fileSystems."/nix/store" =
+    { device = "/dev/disk/by-uuid/84adbd6f-68a8-4fe4-873d-1f066bc81704";
       fsType = "ext4";
     };
 
