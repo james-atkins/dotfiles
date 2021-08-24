@@ -27,6 +27,8 @@ in
     nixpkgs.overlays = [ neovimOverlay ];
 
     primary-user.home-manager = {
+      home.sessionVariables.EDITOR = "nvim";
+
       programs.neovim = {
         enable = true;
         vimAlias = true;
