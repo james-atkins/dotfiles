@@ -2,17 +2,14 @@
 
 let
   # NeoVim 0.5
-  neovimOverlay =
-    final: prev: { 
-      neovim-unwrapped = prev.neovim-unwrapped.overrideAttrs (oldAttrs: {
-        version = "0.5.0";
-        src = builtins.fetchTarball {
-          url = https://github.com/neovim/neovim/archive/refs/tags/v0.5.0.tar.gz;
-          sha256 = "0lgbf90sbachdag1zm9pmnlbn35964l3khs27qy4462qzpqyi9fi";
-        };
-        buildInputs = oldAttrs.buildInputs ++ [ prev.tree-sitter ];
-      });
+  neovim05 = pkgs.neovim-unwrapped.overrideAttrs (oldAttrs: {
+    version = "0.5.0";
+    src = builtins.fetchTarball {
+      url = https://github.com/neovim/neovim/archive/refs/tags/v0.5.0.tar.gz;
+      sha256 = "0lgbf90sbachdag1zm9pmnlbn35964l3khs27qy4462qzpqyi9fi";
     };
+    buildInputs = oldAttrs.buildInputs ++ [ pkgs.tree-sitter ];
+  });
 
   neovimConfigDirs = dirs: 
     builtins.listToAttrs (map (dir: { name = "nvim/${dir}"; value = { source = ./. + "/${dir}"; }; }) dirs);
@@ -24,13 +21,12 @@ let
     builtins.listToDirs (map (dir: { name = "nvim/${dir}"; value = { source = mkOutOfStoreSymlink dir; }; }) dirs);
 in
   {
-    nixpkgs.overlays = [ neovimOverlay ];
-
     primary-user.home-manager = {
       home.sessionVariables.EDITOR = "nvim";
 
       programs.neovim = {
         enable = true;
+        package = neovim05;
         vimAlias = true;
         vimdiffAlias = true;
 
