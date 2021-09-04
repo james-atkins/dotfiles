@@ -7,12 +7,21 @@
       url = "github:nix-community/home-manager/release-21.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, home-manager }: rec {
+  outputs = { self, nixpkgs, nixos-hardware, home-manager, rust-overlay }: rec {
 
     nixosConfigurations.milan = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
+
+      specialArgs = {
+        rust-overlay = rust-overlay.overlay;
+      };
 
       modules = [
         nixos-hardware.nixosModules.lenovo-thinkpad-t480

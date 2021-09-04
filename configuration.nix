@@ -19,6 +19,7 @@ with lib.mkOption;
       ./config/nvim/default.nix
       ./config/vscode.nix
       ./config/misc.nix
+      ./config/rust.nix
 
       ./config/r.nix
       ./config/sqlite.nix
