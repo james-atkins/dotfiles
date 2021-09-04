@@ -8,7 +8,11 @@ in
   {
     nixpkgs.overlays = [ rust-overlay ];
 
-    primary-user.home-manager.home.packages = [
-      rustStable
-    ];
+    primary-user.home-manager = {
+      home.packages = [ rustStable ];
+
+      home.sessionVariables = {
+        RUST_SRC_PATH = "${rustStable}/lib/rustlib/src/rust";
+      };
+    };
   }
