@@ -1,7 +1,18 @@
 { config, pkgs, options, lib, ... }:
 
+let
+  overlaysCompat = pkgs.writeTextDir "overlays-compat.nix" ''
+    final: prev:
+    with prev.lib;
+    let
+      flake = builtins.getFlake (toString ${./.});
+      overlays = flake.nixosConfigurations.${config.networking.hostName}.config.nixpkgs.overlays;
+    in
+      # Apply all overlays to the input of the current "main" overlay
+      foldl' (flip extends) (_: prev) overlays final
+    '';
+in
 with lib.mkOption;
-
 {
   imports =
     [
@@ -105,7 +116,7 @@ with lib.mkOption;
 
     nix = { 
       package = pkgs.nixFlakes;
-      # nixPath = [ "nixpkgs-overlays=${overlaysCompat}" ];
+      nixPath = [ "nixpkgs-overlays=${overlaysCompat}" ];
       extraOptions = ''
         experimental-features = nix-command flakes
       '';
