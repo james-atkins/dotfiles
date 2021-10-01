@@ -3,10 +3,10 @@
 let
   # NeoVim 0.5
   neovim05 = pkgs.neovim-unwrapped.overrideAttrs (oldAttrs: {
-    version = "0.5.0";
+    version = "0.5.1";
     src = builtins.fetchTarball {
-      url = https://github.com/neovim/neovim/archive/refs/tags/v0.5.0.tar.gz;
-      sha256 = "0lgbf90sbachdag1zm9pmnlbn35964l3khs27qy4462qzpqyi9fi";
+      url = https://github.com/neovim/neovim/archive/refs/tags/v0.5.1.tar.gz;
+      sha256 = "0b2gda9h14lvwahrr7kq3ix8wsw99g4ngy1grmhv5544n93ypcyk";
     };
     buildInputs = oldAttrs.buildInputs ++ [ pkgs.tree-sitter ];
   });
