@@ -18,6 +18,8 @@
 
     home.packages = with pkgs; [
       ranger atool
+
+      texlive.combined.scheme-medium
     ];
   };
 }
