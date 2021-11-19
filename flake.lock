@@ -38,11 +38,11 @@
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1637217942,
-        "narHash": "sha256-tqcvsA1th9p80Fll+8bkMz2GCnLh1++KCyuvNSd7sx4=",
+        "lastModified": 1637242070,
+        "narHash": "sha256-/XCFGOriSpAgo0lPxVK12vFBpta567kwfHZr5tNNHyE=",
         "owner": "nixos",
         "repo": "nixos-hardware",
-        "rev": "abf18e3afe2f94d1c896292b1c433c88bec80662",
+        "rev": "5a7e613703ea349fd46b3fa2f3dfe3bd5444d591",
         "type": "github"
       },
       "original": {
@@ -83,11 +83,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1637201710,
-        "narHash": "sha256-CxlxEp9NWvivBm+Z0TTVd5xF5aZed3isdNp4CmVQ6BM=",
+        "lastModified": 1637288133,
+        "narHash": "sha256-x5XWEK333KEhy2WL3TafE1vSa8/A1sGdbirTIV2bmSc=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "85733f85cd860760e3ed536b6e8a6ed0cd1ebde4",
+        "rev": "ccc467eff80b2fbb8000cf425e999ef14fbe200c",
         "type": "github"
       },
       "original": {
