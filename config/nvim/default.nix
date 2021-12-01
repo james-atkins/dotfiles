@@ -1,16 +1,6 @@
 { config, pkgs , lib, ... }:
 
 let
-  # NeoVim 0.5
-  neovim05 = pkgs.neovim-unwrapped.overrideAttrs (oldAttrs: {
-    version = "0.5.1";
-    src = builtins.fetchTarball {
-      url = https://github.com/neovim/neovim/archive/refs/tags/v0.5.1.tar.gz;
-      sha256 = "0b2gda9h14lvwahrr7kq3ix8wsw99g4ngy1grmhv5544n93ypcyk";
-    };
-    buildInputs = oldAttrs.buildInputs ++ [ pkgs.tree-sitter ];
-  });
-
   neovimConfigDirs = dirs: 
     builtins.listToAttrs (map (dir: { name = "nvim/${dir}"; value = { source = ./. + "/${dir}"; }; }) dirs);
 
@@ -26,7 +16,6 @@ in
 
       programs.neovim = {
         enable = true;
-        package = neovim05;
         vimAlias = true;
         vimdiffAlias = true;
 
