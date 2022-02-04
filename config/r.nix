@@ -5,8 +5,10 @@ let
 
   RWithPackages = pkgs.rWrapper.override {
     packages = with pkgs.rPackages; [
+      arrow
       tidyverse
       shiny
+      testthat
       RSQLite
       data_table
     ];
