@@ -9,7 +9,7 @@ in
     nixpkgs.overlays = [ rust-overlay ];
 
     primary-user.home-manager = {
-      home.packages = with pkgs; [ rustStable gcc ];
+      home.packages = with pkgs; [ rustStable gcc rust-analyzer ];
 
       home.sessionVariables = {
         RUST_SRC_PATH = "${rustStable}/lib/rustlib/src/rust";
