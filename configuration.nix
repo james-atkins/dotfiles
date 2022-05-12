@@ -59,6 +59,16 @@ with lib.mkOption;
     networking.hostName = "milan";
     networking.networkmanager.enable = true;
 
+    # Enable tailscale and configure firewall accordingly: always allow
+    # traffic from my tailnet and allow tailscale's UDP port through the
+    # firewall.
+    services.tailscale.enable = true;
+    networking.firewall = {
+      enable = true;
+      trustedInterfaces = [ "tailscale0" ];
+      allowedUDPPorts = [ config.services.tailscale.port ];
+    };
+
     time.timeZone = "Europe/London";
 
     users.users = { 
