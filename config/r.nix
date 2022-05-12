@@ -16,6 +16,5 @@ let
 
 in
   {
-    # primary-user.home-manager.home.packages = [ localPkgs.rstudio RWithPackages ];
-    primary-user.home-manager.home.packages = [ RWithPackages ];
+    primary-user.home-manager.home.packages = [ localPkgs.rstudio RWithPackages ];
   }
