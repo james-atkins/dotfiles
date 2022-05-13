@@ -3,6 +3,8 @@
 , fetchFromGitHub
 , cmake
 , duckdbVersion
+, openssl
+, ninja
 }:
 
 stdenv.mkDerivation rec {
@@ -16,12 +18,24 @@ stdenv.mkDerivation rec {
     sha256 = "sha256-2PBc5qe2md87u2nvMTx/XZVzLsr8QrvUkw46/6VTlGs=";
   };
 
+  patches = [ ./version.patch ];
   postPatch = ''
-    substituteInPlace CMakeLists.txt \
-      --replace 'set(DUCKDB_VERSION "v''${DUCKDB_MAJOR_VERSION}.''${DUCKDB_MINOR_VERSION}.''${DUCKDB_PATCH_VERSION}-dev''${DUCKDB_DEV_ITERATION}")' 'set(DUCKDB_VERSION "v${version}")'
+    substituteInPlace CMakeLists.txt --subst-var-by DUCKDB_VERSION "v${version}"
   '';
 
-  nativeBuildInputs = [ cmake ];
+  cmakeFlags = [
+    "-DBUILD_FTS_EXTENSION=ON"
+    "-DBUILD_HTTPFS_EXTENSION=ON"
+    "-DBUILD_ICU_EXTENSION=ON"
+    "-DBUILD_PARQUET_EXTENSION=ON"
+    "-DBUILD_REST_EXTENSION=ON"
+    "-DBUILD_TPCDS_EXTENSION=ON"
+    "-DBUILD_TPCH_EXTENSION=ON"
+    "-DBUILD_VISUALIZER_EXTENSION=ON"
+  ];
+
+  buildInputs = [ openssl ]; # For HTTPFS
+  nativeBuildInputs = [ cmake ninja ];
 
   meta = with lib; {
     homepage = "https://github.com/duckdb/duckdb";
