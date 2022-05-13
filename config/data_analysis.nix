@@ -1,7 +1,4 @@
-{ lib
-, pkgs
-, ...
-}:
+{ pkgs, ... }:
 
 let
   localPkgs = import ../pkgs/default.nix { pkgs = pkgs; };
