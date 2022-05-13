@@ -8,11 +8,14 @@ let
   RWithPackages = pkgs.rWrapper.override {
     packages = with pkgs.rPackages; [
       arrow
+      conflicted
+      countrycode
       data_table
       devtools
       localPkgs.duckdb.R
       RSQLite
       shiny
+      tarchetypes
       targets
       testthat
       tidyverse
