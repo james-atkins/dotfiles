@@ -107,6 +107,7 @@ in
       home.packages = with pkgs; [
         localPkgs.duckdb
         localPkgs.rstudio
+        jq
         RWithPackages
         pythonWithPackages
         (sqlite.override { interactive = true; })
