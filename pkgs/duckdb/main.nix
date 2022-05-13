@@ -1,15 +1,14 @@
 { lib
-, stdenv
-, fetchFromGitHub
 , cmake
-, duckdbVersion
-, openssl
+, fetchFromGitHub
 , ninja
+, openssl
+, stdenv
 }:
 
 stdenv.mkDerivation rec {
   pname = "duckdb";
-  version = duckdbVersion;
+  version = "0.3.4";
 
   src = fetchFromGitHub {
     owner = pname;

@@ -10,7 +10,7 @@ let
       arrow
       data_table
       devtools
-      localPkgs.duckdb.Rpkg
+      localPkgs.duckdb.R
       RSQLite
       shiny
       testthat
@@ -19,10 +19,11 @@ let
     ];
   };
 
-  pythonWithPackages = pkgs.python3.withPackages (p: with p; [
+  pythonWithPackages = pkgs.python3.withPackages (pp: with pp; [
     beautifulsoup4
     cython
     cytoolz
+    (localPkgs.duckdb.python pp)
     flake8
     ipython
     jupyter
@@ -52,7 +53,7 @@ in
   {
     primary-user.home-manager = {
       home.packages = with pkgs; [
-        localPkgs.duckdb.cli
+        localPkgs.duckdb
         localPkgs.rstudio
         RWithPackages
         pythonWithPackages

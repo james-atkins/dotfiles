@@ -1,10 +1,9 @@
-{ pkgs }:
+{ callPackage }:
 
 let
-  duckdbVersion = "0.3.4";
+  duckdb = callPackage ./main.nix {};
+  R = callPackage ./R.nix { inherit duckdb; };
+  python = pythonPackages: pythonPackages.callPackage ./python.nix { inherit duckdb; };
 in
-  {
-    cli = pkgs.callPackage ./cli.nix { inherit duckdbVersion; };
-    Rpkg = pkgs.callPackage ./R.nix { inherit duckdbVersion; };
-  }
+  duckdb // { inherit R; } // { inherit python; }
 
