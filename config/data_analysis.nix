@@ -13,6 +13,7 @@ let
       localPkgs.duckdb.R
       RSQLite
       shiny
+      targets
       testthat
       tidyverse
       usethis
