@@ -32,8 +32,7 @@ with lib.mkOption;
       ./config/misc.nix
       ./config/rust.nix
 
-      ./config/r.nix
-      ./config/sqlite.nix
+      ./config/data_analysis.nix
     ];
 
   config = {
