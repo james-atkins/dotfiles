@@ -1,5 +1,3 @@
-# FROM https://github.com/NixOS/nixpkgs/blob/da882cddccc10149c4bdbff5fbb0e1f5fc926f79/pkgs/development/libraries/arrow-cpp/default.nix
-
 { stdenv
 , lib
 , fetchurl
@@ -21,6 +19,7 @@
 , grpc
 , gtest
 , jemalloc
+, libbacktrace
 , lz4
 , minio
 , ninja
@@ -71,21 +70,20 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "arrow-cpp";
-  version = "7.0.0";
+  version = "8.0.0";
 
   src = fetchurl {
-    url =
-      "mirror://apache/arrow/arrow-${version}/apache-arrow-${version}.tar.gz";
-    hash = "sha256-6PSbFJoV7O9OQPz6sbh8ETxrHuGGAFwWnlzfldMamd4=";
+    url = "mirror://apache/arrow/arrow-${version}/apache-arrow-${version}.tar.gz";
+    hash = "sha256-rZoFcFEXyYnBFrrprHBJL+AVBQ4bgPsOOP3ktdhjqqM=";
   };
   sourceRoot = "apache-arrow-${version}/cpp";
 
   ${if enableJemalloc then "ARROW_JEMALLOC_URL" else null} = jemalloc.src;
 
+  # versions are all taken from
+  # https://github.com/apache/arrow/blob/apache-arrow-8.0.0/cpp/thirdparty/versions.txt
+
   ARROW_MIMALLOC_URL = fetchFromGitHub {
-    # From
-    # ./cpp/cmake_modules/ThirdpartyToolchain.cmake
-    # ./cpp/thirdparty/versions.txt
     owner = "microsoft";
     repo = "mimalloc";
     rev = "v1.7.3";
@@ -95,8 +93,15 @@ stdenv.mkDerivation rec {
   ARROW_XSIMD_URL = fetchFromGitHub {
     owner = "xtensor-stack";
     repo = "xsimd";
-    rev = "aeec9c872c8b475dedd7781336710f2dd2666cb2";
-    hash = "sha256-vWKdJkieKhaxyAJhijXUmD7NmNvMWd79PskQojulA1w=";
+    rev = "7d1778c3b38d63db7cec7145d939f40bc5d859d1";
+    hash = "sha256-89AysBUVnTdWyMPazeJegnQ6WEH90Ns7qQInZLMSXY4=";
+  };
+
+  ARROW_SUBSTRAIT_URL = fetchFromGitHub {
+    owner = "substrait-io";
+    repo = "substrait";
+    rev = "e1b4c04a1b518912f4c4065b16a1b2c0ac8e14cf";
+    hash = "sha256-56FSjDngsROSHLjMv+OYAIYqphEu3GzgIMHbgh/ZQw0=";
   };
 
   patches = [] ++ lib.optional stdenv.isDarwin [ ./darwin.patch ];
@@ -114,7 +119,10 @@ stdenv.mkDerivation rec {
     gflags
     glog
     gtest
+    libbacktrace
     lz4
+    nlohmann_json # alternative JSON parser to rapidjson
+    protobuf # substrait requires protobuf
     rapidjson
     re2
     snappy
@@ -149,6 +157,9 @@ stdenv.mkDerivation rec {
     "-DARROW_BUILD_SHARED=${if enableShared then "ON" else "OFF"}"
     "-DARROW_BUILD_STATIC=${if enableShared then "OFF" else "ON"}"
     "-DARROW_BUILD_TESTS=ON"
+    "-DARROW_BUILD_INTEGRATION=ON"
+    "-DARROW_BUILD_UTILITIES=ON"
+    "-DARROW_EXTRA_ERROR_CONTEXT=ON"
     "-DARROW_VERBOSE_THIRDPARTY_BUILD=ON"
     "-DARROW_DEPENDENCY_SOURCE=SYSTEM"
     "-DThrift_SOURCE=AUTO" # search for Thrift using pkg-config (ThriftConfig.cmake requires OpenSSL and libevent)
@@ -167,8 +178,10 @@ stdenv.mkDerivation rec {
     # Disable Python for static mode because openblas is currently broken there.
     "-DARROW_PYTHON=${if enableShared then "ON" else "OFF"}"
     "-DARROW_USE_GLOG=ON"
+    "-DARROW_WITH_BACKTRACE=ON"
     "-DARROW_WITH_BROTLI=ON"
     "-DARROW_WITH_LZ4=ON"
+    "-DARROW_WITH_NLOHMANN_JSON=ON"
     "-DARROW_WITH_SNAPPY=ON"
     "-DARROW_WITH_UTF8PROC=ON"
     "-DARROW_WITH_ZLIB=ON"
@@ -176,8 +189,10 @@ stdenv.mkDerivation rec {
     "-DARROW_MIMALLOC=ON"
     # Parquet options:
     "-DARROW_PARQUET=ON"
+    "-DARROW_SUBSTRAIT=ON"
     "-DPARQUET_BUILD_EXECUTABLES=ON"
     "-DARROW_FLIGHT=${if enableFlight then "ON" else "OFF"}"
+    "-DARROW_FLIGHT_TESTING=${if enableFlight then "ON" else "OFF"}"
     "-DARROW_S3=${if enableS3 then "ON" else "OFF"}"
     "-DARROW_GCS=${if enableGcs then "ON" else "OFF"}"
   ] ++ lib.optionals (!enableShared) [
