@@ -24,10 +24,14 @@ let
           nativeBuildInputs = attrs.nativeBuildInputs ++ inputs;
         });
     in old // {
-      arrow = old.arrow.overrideAttrs (attrs: {
-        nativeBuildInputs = attrs.nativeBuildInputs ++ [ pkgs.arrow-cpp ];
-        patchPhase = "patchShebangs configure";
-      });
+      arrow =
+        let
+          arrow-cpp = pkgs.callPackage ./arrow.nix {};
+        in
+          old.arrow.overrideAttrs (attrs: {
+            nativeBuildInputs = attrs.nativeBuildInputs ++ [ arrow-cpp ];
+            patchPhase = "patchShebangs configure";
+          });
 
       curl = withNativeBuildInputs old.curl [ pkgs.curl.dev ];
 

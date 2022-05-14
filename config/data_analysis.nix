@@ -7,7 +7,7 @@ let
     packages = with localPkgs.cran; [
       localPkgs.duckdb.R
 
-      # arrow
+      arrow
       conflicted
       countrycode
       data_table
