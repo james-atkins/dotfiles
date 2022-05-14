@@ -1,16 +1,16 @@
 { lib
 , duckdb
 , python3
-, rPackages
+, cran
 }:
 
-with rPackages; buildRPackage rec {
+cran.buildRPackage rec {
   name = "duckdb";
   inherit (duckdb) version src;
 
   sourceRoot = "source/tools/rpkg";
 
   nativeBuildInputs = [ python3 ];
-  propagatedBuildInputs = [ DBI ];
+  propagatedBuildInputs = with cran; [ DBI ];
 }
 
