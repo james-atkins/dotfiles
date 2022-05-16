@@ -29,7 +29,7 @@ let
           arrow-cpp = pkgs.callPackage ./arrow.nix {};
         in
           old.arrow.overrideAttrs (attrs: {
-            nativeBuildInputs = attrs.nativeBuildInputs ++ [ arrow-cpp ];
+            nativeBuildInputs = attrs.nativeBuildInputs ++ [ pkgs.pkg-config arrow-cpp ];
             patchPhase = "patchShebangs configure";
           });
 
