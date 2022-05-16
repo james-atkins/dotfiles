@@ -109,6 +109,7 @@ with lib.mkOption;
 
     environment.systemPackages = with pkgs; [
       git
+      htop
       tree
       vim
       wget
