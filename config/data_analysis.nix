@@ -57,7 +57,7 @@ in
     primary-user.home-manager = {
       home.packages = with pkgs; [
         localPkgs.duckdb
-        localPkgs.rstudio
+        # localPkgs.rstudio
         jq
         RWithPackages
         pythonWithPackages

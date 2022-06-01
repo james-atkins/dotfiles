@@ -13,7 +13,7 @@
     home.packages = with pkgs; [ 
       anki
       evince
-      skype
+      skypeforlinux
       teams
       zoom-us
       keepassxc

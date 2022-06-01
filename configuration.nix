@@ -66,6 +66,7 @@ with lib.mkOption;
       enable = true;
       trustedInterfaces = [ "tailscale0" ];
       allowedUDPPorts = [ config.services.tailscale.port ];
+      checkReversePath = "loose";
     };
 
     time.timeZone = "Europe/London";

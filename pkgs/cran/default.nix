@@ -25,13 +25,10 @@ let
         });
     in old // {
       arrow =
-        let
-          arrow-cpp = pkgs.callPackage ./arrow.nix {};
-        in
-          old.arrow.overrideAttrs (attrs: {
-            nativeBuildInputs = attrs.nativeBuildInputs ++ [ pkgs.pkg-config arrow-cpp ];
-            patchPhase = "patchShebangs configure";
-          });
+        old.arrow.overrideAttrs (attrs: {
+          nativeBuildInputs = with pkgs; attrs.nativeBuildInputs ++ [ pkg-config arrow-cpp ];
+          patchPhase = "patchShebangs configure";
+        });
 
       curl = withNativeBuildInputs old.curl [ pkgs.curl.dev ];
 
