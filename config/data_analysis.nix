@@ -67,7 +67,7 @@ in
 
       home.file.".sqliterc".text = ''
         .headers ON
-        .mode columns
+        .mode box
         .changes ON
       '';
     };
