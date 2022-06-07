@@ -61,6 +61,7 @@ in
         jq
         RWithPackages
         pythonWithPackages
+        julia_17-bin
         (sqlite.override { interactive = true; })
       ];
 
