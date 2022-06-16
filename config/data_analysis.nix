@@ -12,6 +12,7 @@ let
       countrycode
       data_table
       devtools
+      markdown
       RSQLite
       shiny
       targets
@@ -57,9 +58,10 @@ in
     primary-user.home-manager = {
       home.packages = with pkgs; [
         localPkgs.duckdb
-        # localPkgs.rstudio
+        localPkgs.rstudio
         jq
         RWithPackages
+        pandoc
         pythonWithPackages
         julia_17-bin
         (sqlite.override { interactive = true; })
