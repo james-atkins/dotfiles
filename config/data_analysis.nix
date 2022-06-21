@@ -13,6 +13,7 @@ let
       data_table
       devtools
       markdown
+      reticulate
       RSQLite
       shiny
       targets

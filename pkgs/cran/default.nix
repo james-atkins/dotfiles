@@ -48,6 +48,8 @@ let
         PKGCONFIG_LIBS = "-Wl,-rpath,${lib.getLib pkgs.openssl}/lib -L${lib.getLib pkgs.openssl}/lib -lssl -lcrypto";
       });
 
+      png = withNativeBuildInputs old.png [ pkgs.libpng.dev ];
+
       ps = old.ps.overrideAttrs (attrs: {
         patchPhase = "patchShebangs configure";
       });
