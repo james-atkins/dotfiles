@@ -108,6 +108,10 @@ with lib.mkOption;
     services.udev.packages = [ pkgs.utsushi ];
     primary-user.home-manager.home.packages = [ pkgs.simple-scan ];
 
+    # Wireless headphones
+    hardware.bluetooth.enable = true;
+    services.blueman.enable = true;
+
     environment.systemPackages = with pkgs; [
       git
       htop
