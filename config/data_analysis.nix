@@ -41,6 +41,7 @@ let
     pandas
     patsy
     pyarrow
+    (localPkgs.pyblp pp)
     pytest
     requests
     scipy
