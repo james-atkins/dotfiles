@@ -1,5 +1,4 @@
 { config, pkgs, options, lib, ... }:
-
 let
   overlaysCompat = pkgs.writeTextDir "overlays-compat.nix" ''
     final: prev:
@@ -11,6 +10,8 @@ let
       # Apply all overlays to the input of the current "main" overlay
       foldl' (flip extends) (_: prev) overlays final
     '';
+
+  localPkgs = import ./pkgs/default.nix { pkgs = pkgs; };
 in
 with lib.mkOption;
 {
@@ -61,7 +62,10 @@ with lib.mkOption;
     # Enable tailscale and configure firewall accordingly: always allow
     # traffic from my tailnet and allow tailscale's UDP port through the
     # firewall.
-    services.tailscale.enable = true;
+    services.tailscale = {
+      enable = true;
+      package = localPkgs.tailscale;
+    };
     networking.firewall = {
       enable = true;
       trustedInterfaces = [ "tailscale0" ];
