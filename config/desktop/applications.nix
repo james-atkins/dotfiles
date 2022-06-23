@@ -17,6 +17,7 @@
       teams
       zoom-us
       keepassxc
+      libreoffice-fresh
     ];
   };
 }
