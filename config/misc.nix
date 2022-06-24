@@ -19,6 +19,8 @@
       ranger atool
 
       texlive.combined.scheme-medium
+
+      borgmatic borgbackup
     ];
   };
 }

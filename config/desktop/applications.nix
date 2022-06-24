@@ -12,12 +12,22 @@
 
     home.packages = with pkgs; [ 
       anki
+      dolphin
       evince
+      gnome.nautilus
       skypeforlinux
       teams
       zoom-us
       keepassxc
       libreoffice-fresh
+      xfce.thunar
+
+      breeze-icons
+      breeze-gtk
+      breeze-qt5
+      okular
+
+      vlc
     ];
   };
 }
