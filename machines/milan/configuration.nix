@@ -1,40 +1,29 @@
-{ config, pkgs, options, lib, ... }:
+{ config, lib, pkgs, nixpkgs, home-manager, nixos-hardware, ... }:
 let
-  overlaysCompat = pkgs.writeTextDir "overlays-compat.nix" ''
-    final: prev:
-    with prev.lib;
-    let
-      flake = builtins.getFlake (toString ${./.});
-      overlays = flake.nixosConfigurations.${config.networking.hostName}.config.nixpkgs.overlays;
-    in
-      # Apply all overlays to the input of the current "main" overlay
-      foldl' (flip extends) (_: prev) overlays final
-    '';
-
-  localPkgs = import ./pkgs/default.nix { pkgs = pkgs; };
+  localPkgs = import ../../pkgs/default.nix { pkgs = pkgs; };
 in
-with lib.mkOption;
 {
-  imports =
-    [
-      ./hardware-configuration.nix
+  imports = [
+    nixos-hardware.nixosModules.lenovo-thinkpad-t480
+    home-manager.nixosModules.home-manager
+    ./hardware-configuration.nix
+    ../../config/minimal.nix
 
-      # Create primary-user alias
-      (lib.mkAliasOptionModule [ "primary-user" "home-manager" ] [ "home-manager" "users" "james" ])
-      (lib.mkAliasOptionModule [ "primary-user" "groups" ] [ "users" "users" "james" "extraGroups" ])
+    # Create primary-user alias
+    (lib.mkAliasOptionModule [ "primary-user" "home-manager" ] [ "home-manager" "users" "james" ])
+    (lib.mkAliasOptionModule [ "primary-user" "groups" ] [ "users" "users" "james" "extraGroups" ])
 
-      ./config/desktop/theme.nix
-      ./config/desktop/sway/default.nix
-      ./config/desktop/applications.nix
+    ../../config/desktop/theme.nix
+    ../../config/desktop/sway/default.nix
+    ../../config/desktop/applications.nix
 
-      # Development
-      ./config/nvim/default.nix
-      ./config/vscode.nix
-      ./config/misc.nix
-      ./config/rust.nix
+    # Development
+    ../../config/nvim/default.nix
+    ../../config/vscode.nix
+    ../../config/misc.nix
 
-      ./config/data_analysis.nix
-    ];
+    ../../config/data_analysis.nix
+  ];
 
   config = {
 
@@ -92,16 +81,6 @@ with lib.mkOption;
       };
     };
 
-    home-manager.useUserPackages = true;
-    home-manager.useGlobalPkgs = true;
-
-    # Select internationalisation properties.
-    i18n.defaultLocale = "en_GB.UTF-8";
-    console = {
-      font = "Lat2-Terminus16";
-      keyMap = "uk";
-    };
-
     # Enable CUPS to print documents.
     services.printing.enable = true;
 
@@ -133,22 +112,7 @@ with lib.mkOption;
       corefonts
     ];
 
-    nix = { 
-      package = pkgs.nixFlakes;
-      nixPath = [ "nixpkgs-overlays=${overlaysCompat}" ];
-      extraOptions = ''
-        experimental-features = nix-command flakes
-      '';
-
-      binaryCaches = [ "https://james-atkins.cachix.org" ];
-      binaryCachePublicKeys = [ "james-atkins.cachix.org-1:Ljm14bKUUSXidZleVQejHDjDp1lrI7Rh/2WsY5ax280="];
-    };
-
-    nixpkgs.config.allowUnfree = true;
-
     primary-user.home-manager.home.stateVersion = "21.05";
     system.stateVersion = "21.05";
   };
-
 }
-

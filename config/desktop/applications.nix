@@ -12,9 +12,7 @@
 
     home.packages = with pkgs; [ 
       anki
-      dolphin
       evince
-      gnome.nautilus
       skypeforlinux
       teams
       zoom-us
@@ -25,7 +23,6 @@
       breeze-icons
       breeze-gtk
       breeze-qt5
-      okular
 
       vlc
     ];
