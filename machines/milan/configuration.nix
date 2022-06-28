@@ -1,12 +1,10 @@
-{ config, lib, pkgs, nixpkgs, home-manager, nixos-hardware, ... }:
+{ config, lib, pkgs, nixpkgs, home-manager, ... }:
 let
   localPkgs = import ../../pkgs/default.nix { pkgs = pkgs; };
 in
 {
   imports = [
-    nixos-hardware.nixosModules.lenovo-thinkpad-t480
     home-manager.nixosModules.home-manager
-    ./hardware-configuration.nix
     ../../config/minimal.nix
 
     # Create primary-user alias

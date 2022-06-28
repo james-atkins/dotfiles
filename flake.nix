@@ -8,11 +8,15 @@
     };
   };
 
-  outputs = { self, nixpkgs, ... }@attrs: rec {
+  outputs = { self, nixpkgs, nixos-hardware, ... }@attrs: rec {
     nixosConfigurations.milan = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = attrs;
-      modules = [ ./machines/milan/configuration.nix ];
+      modules = [
+        nixos-hardware.nixosModules.lenovo-thinkpad-t480
+        ./machines/milan/hardware-configuration.nix
+        ./machines/milan/configuration.nix
+      ];
     };
 
     githubActionsPkgs =
