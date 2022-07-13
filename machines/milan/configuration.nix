@@ -94,6 +94,7 @@ in
     services.blueman.enable = true;
 
     environment.systemPackages = with pkgs; [
+      lm_sensors
       git
       htop
       tree
