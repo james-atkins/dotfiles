@@ -18,6 +18,9 @@
   };
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.permittedInsecurePackages = [
+    "python3.9-mistune-0.8.4"
+  ];
 
   i18n.defaultLocale = "en_GB.UTF-8";
   console = {
