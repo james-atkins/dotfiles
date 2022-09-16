@@ -8,13 +8,13 @@
 
 stdenv.mkDerivation rec {
   pname = "duckdb";
-  version = "0.4.0";
+  version = "0.5.0";
 
   src = fetchFromGitHub {
     owner = pname;
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-pQ/t26dv9ZWLl0MHcAn0sgxryW2T2hM8XyOkXyfC5CY=";
+    sha256 = "sha256-dU8JXb++8OMEokr+4OyxLvcEc0vmdBvKDLxjeaWNkq0=";
   };
 
   patches = [ ./version.patch ];
