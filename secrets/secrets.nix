@@ -3,4 +3,5 @@ let
 in {
   "password_root.age".publicKeys = [ james-age ];
   "password_james.age".publicKeys = [ james-age ];
+  "stata_licence.age".publicKeys = [ james-age ];
 }

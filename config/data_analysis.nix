@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 let
   localPkgs = import ../pkgs/default.nix { pkgs = pkgs; };
@@ -57,6 +57,13 @@ let
 
 in
   {
+    age.secrets.stataLicence = {
+     file = ../secrets/stata_licence.age;
+     owner = config.users.users.james.name;
+     group = config.users.users.james.group;
+    };
+    environment.etc."stata.lic".source = config.age.secrets.stataLicence.path;
+
     primary-user.home-manager = {
       home.packages = with pkgs; [
         localPkgs.duckdb
@@ -67,6 +74,7 @@ in
         pythonWithPackages
         julia_17-bin
         (sqlite.override { interactive = true; })
+        localPkgs.stata16
       ];
 
       home.file.".sqliterc".text = ''
