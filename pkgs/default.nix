@@ -6,4 +6,5 @@ rec {
   rstudio = pkgs.libsForQt5.callPackage ./rstudio/default.nix {};
   pyblp = pythonPackages: pythonPackages.callPackage ./pyblp.nix {};
   tailscale = pkgs.callPackage ./tailscale/default.nix {};
+  stata16 = pkgs.callPackage ./stata16/default.nix {};
 }
