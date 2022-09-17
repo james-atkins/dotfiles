@@ -60,7 +60,7 @@ in
       checkReversePath = "loose";
     };
 
-    time.timeZone = "Europe/London";
+    time.timeZone = "America/Chicago";
 
     users.users = { 
       root.initialHashedPassword = "";
