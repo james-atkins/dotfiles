@@ -23,6 +23,7 @@
         "tray"
         "network"
         "battery"
+        "idle_inhibitor"
         "clock"
       ];
 
@@ -63,6 +64,14 @@
           format = "{capacity}% {icon}";
           full-at = 80;
           format-icons = [ "" "" "" "" "" ];
+        };
+
+        "idle_inhibitor" = {
+          format = "{icon}";
+          format-icons = {
+            activated = "";
+            deactivated = "";
+          };
         };
         
         "clock" = { 
