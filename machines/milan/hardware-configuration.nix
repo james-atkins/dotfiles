@@ -24,6 +24,7 @@
   fileSystems."/home" =
     { device = "/dev/disk/by-uuid/0fbb1146-582c-4454-93b9-d45225fd4b18";
       fsType = "ext4";
+      neededForBoot = true;
     };
 
   fileSystems."/nix/store" =
