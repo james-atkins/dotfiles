@@ -62,6 +62,9 @@ in
       checkReversePath = "loose";
     };
 
+    services.openssh.enable = true;
+    programs.mosh.enable = true;
+
     time.timeZone = "America/Chicago";
 
     users.users = { 
