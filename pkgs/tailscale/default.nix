@@ -1,39 +1,43 @@
-{ lib, stdenv, buildGoModule, fetchFromGitHub, makeWrapper, iptables, iproute2, procps, go_1_18 }:
+{ lib
+, stdenv
+, fetchzip
+, makeWrapper
+, iproute2
+, iptables
+, getent
+, procps
+, shadow
+}:
 
-buildGoModule.override { go = go_1_18; } rec {
+let
   pname = "tailscale";
-  version = "1.26.1";
+  version = "1.30.2";
+in
+stdenv.mkDerivation {
+  inherit pname version;
 
-  src = fetchFromGitHub {
-    owner = "tailscale";
-    repo = "tailscale";
-    rev = "v${version}";
-    sha256 = "sha256-3WBvJI9uyzreUbk8ROYxXQgvttZ95OEepdzA4ZhdaJ0=";
+  src = fetchzip {
+    name = "tailscale-${version}-source";
+    url = "https://pkgs.tailscale.com/stable/tailscale_${version}_amd64.tgz";
+    sha256 = "sha256-4WmVSUDN3hH1u29ke3dYM74jMnHHjIVs5MSEDJFvVfQ=";
   };
-  vendorSha256 = "sha256-NHmMkYfGgAEFjvFvKaPoaAuzeDbTJAw+85fZcxVA2jY=";
 
-  nativeBuildInputs = lib.optionals stdenv.isLinux [ makeWrapper ];
+  nativeBuildInputs = [ makeWrapper ];
 
-  CGO_ENABLED = 0;
+  installPhase = ''
+    runHook preInstall
 
-  subPackages = [ "cmd/tailscale" "cmd/tailscaled" ];
+    install -D -m0555 $src/tailscale $out/bin/tailscale
+    install -D -m0555 $src/tailscaled $out/bin/tailscaled
 
-  ldflags = [ "-X tailscale.com/version.Long=${version}" "-X tailscale.com/version.Short=${version}" ];
-
-  doCheck = false;
-
-  postInstall = lib.optionalString stdenv.isLinux ''
-    wrapProgram $out/bin/tailscaled --prefix PATH : ${lib.makeBinPath [ iproute2 iptables ]}
+    wrapProgram $out/bin/tailscaled --prefix PATH : ${lib.makeBinPath [ iproute2 iptables getent shadow ]}
     wrapProgram $out/bin/tailscale --suffix PATH : ${lib.makeBinPath [ procps ]}
 
-    sed -i -e "s#/usr/sbin#$out/bin#" -e "/^EnvironmentFile/d" ./cmd/tailscaled/tailscaled.service
-    install -D -m0444 -t $out/lib/systemd/system ./cmd/tailscaled/tailscaled.service
-  '';
+    mkdir -p $out/lib/systemd/system
+    sed -e "s#/usr/sbin#$out/bin#" -e "/^EnvironmentFile/d" $src/systemd/tailscaled.service > $out/lib/systemd/system/tailscaled.service
+    chmod 0444 $out/lib/systemd/system/tailscaled.service
 
-  meta = with lib; {
-    homepage = "https://tailscale.com";
-    description = "The node agent for Tailscale, a mesh VPN built on WireGuard";
-    license = licenses.bsd3;
-    maintainers = with maintainers; [ danderson mbaillie twitchyliquid64 jk ];
-  };
+    runHook postInstall
+  '';
 }
+
