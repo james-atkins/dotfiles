@@ -43,6 +43,8 @@ in
       }
     '';
 
+    boot.plymouth.enable = true;
+
     networking.hostName = "milan";
     networking.networkmanager.enable = true;
 
