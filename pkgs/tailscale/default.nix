@@ -11,7 +11,7 @@
 
 let
   pname = "tailscale";
-  version = "1.30.2";
+  version = "1.32.1";
 in
 stdenv.mkDerivation {
   inherit pname version;
@@ -19,7 +19,7 @@ stdenv.mkDerivation {
   src = fetchzip {
     name = "tailscale-${version}-source";
     url = "https://pkgs.tailscale.com/stable/tailscale_${version}_amd64.tgz";
-    sha256 = "sha256-4WmVSUDN3hH1u29ke3dYM74jMnHHjIVs5MSEDJFvVfQ=";
+    sha256 = "sha256-a6zZQ+hn6wQcacEJskxVwLbO734fEkbgqQJ3Yrv9F9U=";
   };
 
   nativeBuildInputs = [ makeWrapper ];
@@ -39,5 +39,12 @@ stdenv.mkDerivation {
 
     runHook postInstall
   '';
+
+  meta = with lib; {
+    homepage = "https://tailscale.com";
+    description = "The node agent for Tailscale, a mesh VPN built on WireGuard";
+    license = licenses.bsd3;
+    platforms = [ "x86_64-linux" ];
+  };
 }
 
