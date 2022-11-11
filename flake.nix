@@ -22,7 +22,6 @@
         ./machines/milan/hardware-configuration.nix
         ./machines/milan/configuration.nix
         {
-          age.identityPaths = [ "/home/james/key.txt" ];
           age.secrets.rootPassword.file = ./secrets/password_root.age;
         }
       ];
