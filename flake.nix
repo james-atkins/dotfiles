@@ -13,9 +13,9 @@
   };
 
   outputs = { self, nixpkgs, nixos-hardware, agenix, ... }@attrs: rec {
-    nixosConfigurations.milan = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.milan = nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
-      specialArgs = attrs;
+      specialArgs = attrs // { localPkgs = import ./pkgs/default.nix { pkgs = nixpkgs.legacyPackages.${system}; }; };
       modules = [
         nixos-hardware.nixosModules.lenovo-thinkpad-t480
         agenix.nixosModule

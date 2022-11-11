@@ -6,6 +6,7 @@ in
   imports = [
     home-manager.nixosModules.home-manager
     ../../config/minimal.nix
+    ../../config/tailscale.nix
 
     # Create primary-user alias
     (lib.mkAliasOptionModule [ "primary-user" "home-manager" ] [ "home-manager" "users" "james" ])
@@ -47,20 +48,6 @@ in
 
     networking.hostName = "milan";
     networking.networkmanager.enable = true;
-
-    # Enable tailscale and configure firewall accordingly: always allow
-    # traffic from my tailnet and allow tailscale's UDP port through the
-    # firewall.
-    services.tailscale = {
-      enable = true;
-      package = localPkgs.tailscale;
-    };
-    networking.firewall = {
-      enable = true;
-      trustedInterfaces = [ "tailscale0" ];
-      allowedUDPPorts = [ config.services.tailscale.port ];
-      checkReversePath = "loose";
-    };
 
     services.openssh.enable = true;
     programs.mosh.enable = true;
