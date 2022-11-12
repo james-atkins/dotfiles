@@ -4,8 +4,7 @@ let
 in
 {
   imports = [
-    ../../config/minimal.nix
-    ../../config/tailscale.nix
+    ../../config/core
 
     # Create primary-user alias
     (lib.mkAliasOptionModule [ "primary-user" "home-manager" ] [ "home-manager" "users" "james" ])

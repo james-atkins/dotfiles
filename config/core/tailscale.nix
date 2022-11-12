@@ -2,7 +2,7 @@
 
 let
   cfg = config.ja.tailscale;
-  localPkgs = import ../pkgs/default.nix { inherit pkgs; };
+  localPkgs = import ../../pkgs/default.nix { inherit pkgs; };
 in
 {
   options = {
@@ -26,5 +26,8 @@ in
       "net.ipv4.conf.all.forwarding" = true;
       "net.ipv6.conf.all.forwarding" = true;
     };
+
+    services.openssh.enable = true;
+    programs.mosh.enable = true;
   };
 }
