@@ -1,10 +1,9 @@
-{ config, lib, pkgs, nixpkgs, home-manager, ... }:
+{ config, lib, pkgs, ... }:
 let
   localPkgs = import ../../pkgs/default.nix { pkgs = pkgs; };
 in
 {
   imports = [
-    home-manager.nixosModules.home-manager
     ../../config/minimal.nix
     ../../config/tailscale.nix
 

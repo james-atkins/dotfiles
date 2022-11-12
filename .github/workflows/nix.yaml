@@ -36,8 +36,8 @@ jobs:
       run: nix flake update
       if: ${{ github.event_name == 'schedule' || github.event_name == 'pull_request' }}
     
-    - name: Build all packages
-      run: nix build --verbose --print-build-logs .#githubActionsPkgs
+    - name: Build all machines
+      run: nix flake show --json | jq --raw-output '.nixosConfigurations | keys[]' | xargs -L1 -I'{}' nix build --verbose --print-build-logs .#nixosConfigurations.{}.config.system.build.toplevel
     
     - name: Commit and push
       run: |-

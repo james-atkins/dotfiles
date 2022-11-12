@@ -1,11 +1,11 @@
 { self, config, pkgs, nixpkgs, ... }:
 {
-  system.configurationRevision = if self ? rev then self.rev else "dirty";
-
   home-manager = {
     useUserPackages = true;
     useGlobalPkgs = true;
   };
+
+  system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
 
   nix = {
     package = pkgs.nixFlakes;
@@ -18,9 +18,6 @@
   };
 
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.permittedInsecurePackages = [
-    "python3.9-mistune-0.8.4"
-  ];
 
   i18n.defaultLocale = "en_GB.UTF-8";
   console = {

@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 let
-  localPkgs = import ../pkgs/default.nix { pkgs = pkgs; };
+  localPkgs = import ../pkgs { inherit pkgs; };
 
   RWithPackages = pkgs.rWrapper.override {
     packages = with localPkgs.cran; [
