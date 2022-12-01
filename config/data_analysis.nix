@@ -72,7 +72,7 @@ in
         RWithPackages
         pandoc
         pythonWithPackages
-        julia_17-bin
+        julia-bin
         (sqlite.override { interactive = true; })
         localPkgs.stata16
       ];

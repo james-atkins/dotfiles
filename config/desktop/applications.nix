@@ -13,9 +13,6 @@
     home.packages = with pkgs; [ 
       anki
       evince
-      skypeforlinux
-      teams
-      zoom-us
       keepassxc
       libreoffice-fresh
       xfce.thunar

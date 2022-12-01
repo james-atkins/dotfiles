@@ -19,7 +19,7 @@ in
     ../../config/vscode.nix
     ../../config/misc.nix
 
-    ../../config/data_analysis.nix
+    # ../../config/data_analysis.nix
   ];
 
   config = {

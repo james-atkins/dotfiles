@@ -65,9 +65,6 @@
       pamixer # for sound up and down
     ];
 
-    # Force Firefox is use wayland
-    programs.firefox.package = pkgs.firefox-wayland;
-
     services.gammastep = {
       enable = true;
       latitude = 50.9488;
