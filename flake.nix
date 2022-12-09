@@ -34,5 +34,9 @@
             ];
           };
       };
+
+      packages = with nixpkgs.lib; forAllSystems (system:
+        filterAttrs (n: v: isDerivation v) (import ./pkgs/default.nix { pkgs = nixpkgs.legacyPackages.${system}; })
+      );
     };
 }
