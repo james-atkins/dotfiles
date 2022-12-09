@@ -45,7 +45,11 @@ in
     boot.plymouth.enable = true;
 
     networking.hostName = "milan";
-    networking.networkmanager.enable = true;
+    networking.networkmanager = {
+      enable = true;
+      unmanaged = [ "tailscale0" ];
+    };
+    services.resolved.enable = true;
 
     services.openssh.enable = true;
     programs.mosh.enable = true;
