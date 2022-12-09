@@ -67,8 +67,9 @@
 
     services.gammastep = {
       enable = true;
-      latitude = 50.9488;
-      longitude = -0.510671;
+      temperature.night = 3000;
+      latitude = 42.029870;
+      longitude = -87.683280;
     };
   };
 }
