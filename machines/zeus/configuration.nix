@@ -5,6 +5,10 @@
 { config, lib, pkgs, ... }:
 
 {
+  imports = [
+    ../../common/users.nix
+  ];
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
@@ -79,5 +83,6 @@
     defaults.autodetected = "-a  -s (S/../.././01|L/../../7/02) -I 194 -W 0,40,45";
   };
 
+  home-manager.users.james.home.stateVersion = "22.11";
   system.stateVersion = "22.11"; # Did you read the comment?
 }
