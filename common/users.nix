@@ -5,6 +5,7 @@
   users.users."james" = {
     isNormalUser = true;
     description = "James Atkins";
+    passwordFile = config.age.secrets.jamesPassword.path;
     extraGroups = with lib; [ "wheel" ]
       ++ optionals config.networking.networkmanager.enable [ "networkmanager" ]
       ++ optionals config.services.printing.enable [ "lp" ]
