@@ -23,7 +23,7 @@
   time.timeZone = "America/Chicago";
 
   services.tailscale.exitNode = true;
-  systemd.services.tailscale.serviceConfig.BindPaths = lib.mkForce "/persist/var/lib/tailscale:/var/lib/tailscale";
+  systemd.services.tailscaled.serviceConfig.BindPaths = lib.mkForce "/persist/var/lib/tailscale:/var/lib/tailscale";
 
   hardware.opengl = {
     enable = true;
