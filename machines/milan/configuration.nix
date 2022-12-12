@@ -1,111 +1,62 @@
 { config, lib, pkgs, ... }:
-let
-  localPkgs = import ../../pkgs/default.nix { pkgs = pkgs; };
-in
+
 {
   imports = [
-    ../../config/core
-
-    # Create primary-user alias
-    (lib.mkAliasOptionModule [ "primary-user" "home-manager" ] [ "home-manager" "users" "james" ])
-    (lib.mkAliasOptionModule [ "primary-user" "groups" ] [ "users" "users" "james" "extraGroups" ])
-
-    ../../config/desktop/theme.nix
-    ../../config/desktop/sway/default.nix
-    ../../config/desktop/applications.nix
-
-    # Development
-    ../../config/nvim/default.nix
-    ../../config/vscode.nix
-    ../../config/misc.nix
-
-    # ../../config/data_analysis.nix
+    ../../common/users.nix
   ];
 
-  config = {
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.efi.efiSysMountPoint = "/boot/efi";
+  
+  boot.loader.grub.enable = true;
+  boot.loader.grub.version = 2;
+  boot.loader.grub.device = "nodev";
+  boot.loader.grub.efiSupport = true;
+  # boot.loader.grub.useOSProber = true;
 
-    boot.loader.efi.canTouchEfiVariables = true;
-    boot.loader.efi.efiSysMountPoint = "/boot/efi";
-    
-    boot.loader.grub.enable = true;
-    boot.loader.grub.version = 2;
-    boot.loader.grub.device = "nodev";
-    boot.loader.grub.efiSupport = true;
-    # boot.loader.grub.useOSProber = true;
+  boot.loader.grub.extraEntries = ''
+    menuentry 'Windows 10' --class windows --class os {
+      insmod part_gpt
+      insmod fat
+      search --no-floppy --fs-uuid --set=root CEAB-049E
+      chainloader /EFI/Microsoft/Boot/bootmgfw.efi
+    }
+  '';
 
-    boot.loader.grub.extraEntries = ''
-      menuentry 'Windows 10' --class windows --class os {
-        insmod part_gpt
-        insmod fat
-        search --no-floppy --fs-uuid --set=root CEAB-049E
-        chainloader /EFI/Microsoft/Boot/bootmgfw.efi
-      }
-    '';
+  boot.plymouth.enable = true;
 
-    boot.plymouth.enable = true;
+  networking.networkmanager.enable = true;
+  services.resolved.enable = true;
 
-    networking.hostName = "milan";
-    networking.networkmanager = {
-      enable = true;
-      unmanaged = [ "tailscale0" ];
-    };
-    services.resolved.enable = true;
+  time.timeZone = "America/Chicago";
 
-    services.openssh.enable = true;
-    programs.mosh.enable = true;
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
 
-    time.timeZone = "America/Chicago";
+  # ES-60W scanner
+  # https://gitlab.com/utsushi/utsushi/blob/master/README
+  hardware.sane.enable = true;
+  hardware.sane.extraBackends = [ pkgs.utsushi ];
+  services.udev.packages = [ pkgs.utsushi ];
+  home-manager.users.james.home.packages = [ pkgs.simple-scan ];
 
-    users.users = { 
-      root.initialHashedPassword = "";
+  # Wireless headphones
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
 
-      james = {
-        isNormalUser = true;
-        uid = 1000;
-        home = "/home/james";
-        description = "James Atkins";
-        extraGroups = [
-          "wheel"
-          "networkmanager"
-          "sane"
-          "lp"
-        ];
-      };
-    };
+  fonts.fonts = with pkgs; [
+    noto-fonts
+    fira-code
+    fira-code-symbols
+    font-awesome
+    corefonts
+  ];
 
-    # Enable CUPS to print documents.
-    services.printing.enable = true;
+  services.xserver.enable = true;
+  services.xserver.displayManager.sddm.enable = true;
+  services.xserver.desktopManager.plasma5.enable = true;
+  environment.systemPackages = with pkgs; [ firefox vscode ];
 
-    # ES-60W scanner
-    # https://gitlab.com/utsushi/utsushi/blob/master/README
-    hardware.sane.enable = true;
-    hardware.sane.extraBackends = [ pkgs.utsushi ];
-    services.udev.packages = [ pkgs.utsushi ];
-    primary-user.home-manager.home.packages = [ pkgs.simple-scan ];
-
-    # Wireless headphones
-    hardware.bluetooth.enable = true;
-    services.blueman.enable = true;
-
-    environment.systemPackages = with pkgs; [
-      lm_sensors
-      git
-      htop
-      tree
-      vim
-      wget
-      zip unzip
-    ];
-
-    fonts.fonts = with pkgs; [
-      noto-fonts
-      fira-code
-      fira-code-symbols
-      font-awesome
-      corefonts
-    ];
-
-    primary-user.home-manager.home.stateVersion = "21.05";
-    system.stateVersion = "21.05";
-  };
+  home-manager.users.james.home.stateVersion = "21.05";
+  system.stateVersion = "21.05";
 }
