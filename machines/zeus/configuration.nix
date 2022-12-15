@@ -123,6 +123,13 @@
     defaults.autodetected = "-a  -s (S/../.././01|L/../../7/02) -I 194 -W 0,40,45";
   };
 
+  services.jellyfin = {
+    enable = true;
+    openFirewall = true;
+  };
+  systemd.services.jellyfin.persist.state = true;
+  systemd.services.jellyfin.persist.cache = true;
+
   home-manager.users.james.home.stateVersion = "22.11";
   system.stateVersion = "22.11"; # Did you read the comment?
 }
