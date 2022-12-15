@@ -29,6 +29,8 @@
         import ./pkgs/default.nix { pkgs = pkgs.${system}; }
       );
 
+      localModules.persistence = import ./modules/persistence.nix;
+
       mkSystems = systems:
         let
           mkSystem = { name, system, hardware ? null }:
@@ -39,6 +41,7 @@
               modules = [
                 agenix.nixosModule
                 home-manager.nixosModule
+                localModules.persistence
 
                 {
                   networking.hostName = name;
@@ -70,6 +73,8 @@
           builtins.listToAttrs (map (sys: nixpkgs.lib.nameValuePair sys.name (mkSystem sys)) systems);
 
     in {
+      nixosModules = localModules;
+
       nixosConfigurations = mkSystems [
         { name = "milan"; system = "x86_64-linux"; hardware = "lenovo-thinkpad-t480"; }
         { name = "zeus"; system = "x86_64-linux"; }
