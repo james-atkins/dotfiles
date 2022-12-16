@@ -7,6 +7,8 @@
 {
   imports = [
     ../../common/users.nix
+    
+    ./fossil.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
