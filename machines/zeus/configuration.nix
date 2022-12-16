@@ -96,7 +96,13 @@
     };
     accounts.default = {
       host = "smtp.fastmail.com";
-      user = "jamesatkins@fastmail.co.uk";
+      user = with lib; concatStrings (
+        reverseList [ "s" "e" "m" "a" "j" ] ++
+        reverseList [ "s" "n" "i" "k" "t" "a" ] ++
+        singleton "@" ++
+        reverseList [ "l" "i" "a" "m" "t" "s" "a" "f"] ++
+        singleton "." ++
+        reverseList [ "k" "u" "." "o" "c"] );
       passwordeval = "${pkgs.coreutils}/bin/cat ${config.age.secrets.fastmail.path}";
       from = "${config.networking.hostName}@jamesatkins.net";
     };
