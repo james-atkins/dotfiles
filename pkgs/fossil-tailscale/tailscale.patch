@@ -1,0 +1,42 @@
+--- a/src/cgi.c
++++ b/src/cgi.c
+@@ -2593,13 +2593,36 @@
+ 
+ /*
+ ** Return true if information is coming from the loopback network.
+ */
+ int cgi_is_loopback(const char *zIpAddr){
+-  return fossil_strcmp(zIpAddr, "127.0.0.1")==0 ||
++  if( fossil_strcmp(zIpAddr, "127.0.0.1")==0 ||
+          fossil_strcmp(zIpAddr, "::ffff:127.0.0.1")==0 ||
+-         fossil_strcmp(zIpAddr, "::1")==0;
++         fossil_strcmp(zIpAddr, "::1")==0 ) return 1;
++
++  // Check if address is coming from Tailscale, i.e. from 100.64.0.0/10
++  struct in_addr ip_addr, ts_subnet_addr, ts_subnet_mask;
++
++  if (inet_pton(AF_INET, zIpAddr, &ip_addr) != 1) {
++    fprintf(stderr, "Invalid IPv4 address: %s\n", zIpAddr);
++    return 0;
++  }
++
++  if ( inet_pton(AF_INET, "100.64.0.0", &ts_subnet_addr ) != 1) {
++    fprintf(stderr, "Invalid Tailscale subnet address\n");
++    abort();
++  }
++  if ( inet_pton(AF_INET, "255.192.0.0", &ts_subnet_mask ) != 1) {
++    fprintf(stderr, "Invalid Tailscale subnet mask\n");
++    abort();
++  }
++
++  // Perform bitwise AND operation on the IP address and the subnet mask, and then check
++  // if this equals the subnet address.
++  if ( ts_subnet_addr.s_addr == (uint32_t)(ip_addr.s_addr & ts_subnet_mask.s_addr) ) return 1;
++
++  return 0;
+ }
+ 
+ /*
+ ** Return true if the HTTP request is likely to be from a small-screen
+ ** mobile device.
+
