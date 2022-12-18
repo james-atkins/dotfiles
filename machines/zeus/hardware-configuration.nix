@@ -16,6 +16,8 @@
   fileSystems."/boot/efi" =
     { device = "/dev/disk/by-uuid/8B80-74B4";
       fsType = "vfat";
+      # Use automount for data safety https://0pointer.net/blog/linux-boot-partitions.html
+      options = [ "x-systemd.automount" "x-systemd.idle-timeout=5s" ];
     };
 
   fileSystems."/" =
