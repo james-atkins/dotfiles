@@ -5,30 +5,19 @@
     ../../common/users.nix
   ];
 
+  boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot/efi";
-  
-  boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  boot.loader.grub.device = "nodev";
-  boot.loader.grub.efiSupport = true;
-  # boot.loader.grub.useOSProber = true;
+  boot.loader.efi.efiSysMountPoint = "/efi";
 
-  boot.loader.grub.extraEntries = ''
-    menuentry 'Windows 10' --class windows --class os {
-      insmod part_gpt
-      insmod fat
-      search --no-floppy --fs-uuid --set=root CEAB-049E
-      chainloader /EFI/Microsoft/Boot/bootmgfw.efi
-    }
-  '';
-
-  boot.plymouth.enable = true;
+  boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+  boot.supportedFilesystems = [ "zfs" ];
+  networking.hostId = "013802bf";
 
   networking.networkmanager.enable = true;
+  systemd.services.NetworkManager.persist.state = true;
   services.resolved.enable = true;
 
-  time.timeZone = "America/Chicago";
+  time.timeZone = "Europe/London";
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -39,6 +28,10 @@
   hardware.sane.extraBackends = [ pkgs.utsushi ];
   services.udev.packages = [ pkgs.utsushi ];
   home-manager.users.james.home.packages = [ pkgs.simple-scan ];
+
+  # TODO: promote to persistence
+  systemd.services.tailscaled.serviceConfig.StateDirectory = "tailscale";
+  systemd.services.tailscaled.persist.state = true;
 
   # Wireless headphones
   hardware.bluetooth.enable = true;
@@ -53,10 +46,10 @@
   ];
 
   services.xserver.enable = true;
-  services.xserver.displayManager.sddm.enable = true;
-  services.xserver.desktopManager.plasma5.enable = true;
-  environment.systemPackages = with pkgs; [ firefox vscode ];
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
+  environment.systemPackages = with pkgs; [ firefox vscode vlc ];
 
-  home-manager.users.james.home.stateVersion = "21.05";
-  system.stateVersion = "21.05";
+  home-manager.users.james.home.stateVersion = "22.11";
+  system.stateVersion = "22.11";
 }
