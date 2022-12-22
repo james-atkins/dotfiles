@@ -8,6 +8,9 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/efi";
+  boot.initrd.postDeviceCommands = lib.mkAfter ''
+    zfs rollback -r rpool/root@blank
+  '';
 
   boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
   boot.supportedFilesystems = [ "zfs" ];
