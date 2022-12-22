@@ -42,12 +42,15 @@ with lib;
   config =
     let
       bindMounts = builtins.listToAttrs (
-        map (dir: lib.nameValuePair dir {
-          device = strings.normalizePath "/persist/${dir}";
-          options = [ "bind" "x-gvfs-hide" ];
-        }) config.ja.persistence.directories
+        map
+          (dir: lib.nameValuePair dir {
+            device = strings.normalizePath "/persist/${dir}";
+            options = [ "bind" "x-gvfs-hide" ];
+          })
+          config.ja.persistence.directories
       );
-    in {
+    in
+    {
       # TODO: Check for relative paths, not containing .. etc,
       assertions = builtins.concatLists (mapAttrsToList
         (name: service: [
@@ -71,7 +74,7 @@ with lib;
         config.systemd.services);
 
       ja.persistence.directories = [
-        "/var/lib/nixos"  # to persist user/group ids dynamically allocated by NixOS
+        "/var/lib/nixos" # to persist user/group ids dynamically allocated by NixOS
         "/var/lib/systemd"
       ];
 
@@ -128,9 +131,11 @@ with lib;
                 )
                 cacheDirs;
 
-              mkBindMountDirCmds = lib.mapAttrsToList (
-                dir: bm: "mkdir -p ${bm.device}"
-              ) bindMounts;
+              mkBindMountDirCmds = lib.mapAttrsToList
+                (
+                  dir: bm: "mkdir -p ${bm.device}"
+                )
+                bindMounts;
             in
             ''
               mkdir -p /persist/var/cache
@@ -145,6 +150,6 @@ with lib;
             '';
         };
       };
-  };
+    };
 }
 

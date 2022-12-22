@@ -23,7 +23,8 @@ let
         what.overrideAttrs (attrs: {
           nativeBuildInputs = attrs.nativeBuildInputs ++ inputs;
         });
-    in old // {
+    in
+    old // {
       arrow =
         old.arrow.overrideAttrs (attrs: {
           nativeBuildInputs = with pkgs; attrs.nativeBuildInputs ++ [ pkg-config arrow-cpp ];
@@ -62,5 +63,5 @@ let
   self = (overrides self _self);
   _self = { inherit (rPackages) buildRPackage; } // import ./cran.nix { inherit self; inherit mkCranDerive; };
 in
-  self
+self
 

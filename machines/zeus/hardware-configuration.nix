@@ -5,7 +5,8 @@
 
 {
   imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
+    [
+      (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "sd_mod" "sr_mod" ];
@@ -14,35 +15,41 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/boot/efi" =
-    { device = "/dev/disk/by-uuid/8B80-74B4";
+    {
+      device = "/dev/disk/by-uuid/8B80-74B4";
       fsType = "vfat";
       # Use automount for data safety https://0pointer.net/blog/linux-boot-partitions.html
       options = [ "x-systemd.automount" "x-systemd.idle-timeout=5s" ];
     };
 
   fileSystems."/" =
-    { device = "rpool/enc/root";
+    {
+      device = "rpool/enc/root";
       fsType = "zfs";
     };
 
   fileSystems."/nix" =
-    { device = "rpool/nix";
+    {
+      device = "rpool/nix";
       fsType = "zfs";
     };
 
   fileSystems."/persist" =
-    { device = "rpool/enc/persist";
+    {
+      device = "rpool/enc/persist";
       fsType = "zfs";
       neededForBoot = true;
     };
 
   fileSystems."/home" =
-    { device = "rpool/enc/home";
+    {
+      device = "rpool/enc/home";
       fsType = "zfs";
     };
 
   fileSystems."/var/log" =
-    { device = "rpool/enc/log";
+    {
+      device = "rpool/enc/log";
       fsType = "zfs";
     };
 

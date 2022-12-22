@@ -21,7 +21,7 @@
           inherit system;
           hostPlatform = system;
           config.allowUnfree = true;
-          overlays = [];
+          overlays = [ ];
         }
       );
 
@@ -67,12 +67,15 @@
 
                 ./machines/${name}/hardware-configuration.nix
                 ./machines/${name}/configuration.nix
-              ] ++ (if hardware != null then [ nixos-hardware.nixosModules.${hardware} ] else []);
+              ] ++ (if hardware != null then [ nixos-hardware.nixosModules.${hardware} ] else [ ]);
             };
         in
-          builtins.listToAttrs (map (sys: nixpkgs.lib.nameValuePair sys.name (mkSystem sys)) systems);
+        builtins.listToAttrs (map (sys: nixpkgs.lib.nameValuePair sys.name (mkSystem sys)) systems);
 
-    in {
+    in
+    {
+      formatter = forAllSystems (system: pkgs.${system}.nixpkgs-fmt);
+
       nixosModules = localModules;
 
       nixosConfigurations = mkSystems [
@@ -80,7 +83,7 @@
         { name = "zeus"; system = "x86_64-linux"; }
       ];
 
-      devShells = forAllSystems(system: {
+      devShells = forAllSystems (system: {
         default = with pkgs.${system}; mkShellNoCC {
           nativeBuildInputs = [ agenix.packages.${system}.agenix ];
         };

@@ -7,14 +7,15 @@ let
 
   museum = "/tank/fossil";
   port = 8080;
-  fossilPort = 61519;  # spells FOS
+  fossilPort = 61519; # spells FOS
   maxLatency = 30;
-in {
+in
+{
   users.users.fossil = {
     group = config.users.groups.fossil.name;
     isSystemUser = true;
   };
-  users.groups.fossil = {};
+  users.groups.fossil = { };
 
   # Allow Caddy to get HTTPS certificates from tailscale
   services.tailscale.permitCertUid = config.services.caddy.user;
@@ -30,13 +31,13 @@ in {
 
   systemd.services.fossil-tailscale = {
     wantedBy = [ "multi-user.target" ];
-    after = [ "network.target" ]; 
+    after = [ "network.target" ];
 
     confinement = {
       enable = true;
       binSh = null;
     };
-    
+
     serviceConfig = {
       User = config.users.users.fossil.name;
       # TODO: --errorlog
@@ -65,7 +66,7 @@ in {
       RestrictRealtime = true;
       RestrictSUIDSGID = true;
       RemoveIPC = true;
-      
+
       SystemCallFilter = [ "@system-service" "~@privileged" "~@mount" "~@resources" ];
       SystemCallErrorNumber = "EPERM";
       SystemCallArchitectures = "native";

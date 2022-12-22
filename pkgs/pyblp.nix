@@ -4,7 +4,7 @@
 , numpy
 , patsy
 , pytest
-, scipy 
+, scipy
 , sympy
 }:
 
@@ -31,28 +31,28 @@ let
     };
   };
 in
-  buildPythonPackage rec {
-    pname = "pyblp";
-    version = "0.13.0";
+buildPythonPackage rec {
+  pname = "pyblp";
+  version = "0.13.0";
 
-    src = fetchPypi {
-      inherit pname version;
-      sha256 = "sha256-jePgbP0yqR+Agz1wv95CEnRQ5HV40VHTL7yPGTa5kg4=";
-    };
+  src = fetchPypi {
+    inherit pname version;
+    sha256 = "sha256-jePgbP0yqR+Agz1wv95CEnRQ5HV40VHTL7yPGTa5kg4=";
+  };
 
-    checkInputs = [ pytest ];
-    propagatedBuildInputs = [
-      numpy
-      patsy
-      pyhdfe
-      scipy
-      sympy
-    ];
+  checkInputs = [ pytest ];
+  propagatedBuildInputs = [
+    numpy
+    patsy
+    pyhdfe
+    scipy
+    sympy
+  ];
 
-    meta = with lib; {
-      homepage = "https://github.com/jeffgortmaker/pyblp";
-      description = "BLP Demand Estimation with Python";
-      license = licenses.mit;
-    };
-  }
+  meta = with lib; {
+    homepage = "https://github.com/jeffgortmaker/pyblp";
+    description = "BLP Demand Estimation with Python";
+    license = licenses.mit;
+  };
+}
 

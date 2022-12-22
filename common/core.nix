@@ -42,7 +42,7 @@
     settings = {
       auto-optimise-store = true;
       substituters = [ "https://james-atkins.cachix.org" ];
-      trusted-public-keys = [ "james-atkins.cachix.org-1:Ljm14bKUUSXidZleVQejHDjDp1lrI7Rh/2WsY5ax280="];
+      trusted-public-keys = [ "james-atkins.cachix.org-1:Ljm14bKUUSXidZleVQejHDjDp1lrI7Rh/2WsY5ax280=" ];
     };
   };
 }
