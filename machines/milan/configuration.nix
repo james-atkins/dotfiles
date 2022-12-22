@@ -17,7 +17,6 @@
   networking.hostId = "013802bf";
 
   networking.networkmanager.enable = true;
-  systemd.services.NetworkManager.persist.state = true;
   services.resolved.enable = true;
 
   time.timeZone = "Europe/London";
