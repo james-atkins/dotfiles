@@ -19,7 +19,6 @@
   '';
   boot.zfs.extraPools = [ "tank" ];
 
-  boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
   networking.hostId = "508fcc6d";
   boot.supportedFilesystems = [ "zfs" ];
 
