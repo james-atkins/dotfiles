@@ -65,21 +65,13 @@
   time.timeZone = "America/Chicago";
 
   services.tailscale.exitNode = true;
-  systemd.services.tailscaled.serviceConfig.BindPaths = lib.mkForce "/persist/var/lib/tailscale:/var/lib/tailscale";
 
   hardware.opengl = {
     enable = true;
     extraPackages = with pkgs; [ intel-media-driver ];
   };
 
-  # THIS IS VERY IMPORTANT ELSE AGENIX CANNOT DECRYPT PASSWORD FILES AT LOGIN.
-  services.openssh = {
-    enable = true;
-    hostKeys = [
-      { path = "/persist/etc/ssh/ssh_host_ed25519_key"; type = "ed25519"; }
-      { path = "/persist/etc/ssh/ssh_host_rsa_key"; type = "rsa"; bits = 4096; }
-    ];
-  };
+  services.openssh.enable = true;
 
   environment.etc."aliases".text = ''
     root: zeus@jamesatkins.net

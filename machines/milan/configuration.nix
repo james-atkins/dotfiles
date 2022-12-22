@@ -31,10 +31,6 @@
   services.udev.packages = [ pkgs.utsushi ];
   home-manager.users.james.home.packages = [ pkgs.simple-scan ];
 
-  # TODO: promote to persistence
-  systemd.services.tailscaled.serviceConfig.StateDirectory = "tailscale";
-  systemd.services.tailscaled.persist.state = true;
-
   # Wireless headphones
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;

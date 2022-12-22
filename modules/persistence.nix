@@ -161,6 +161,11 @@ with lib;
             mkdir -p /persist/etc/NetworkManager/system-connections
           '';
         })
+      (mkIf config.services.tailscale.enable
+        {
+          systemd.services.tailscaled.serviceConfig.StateDirectory = "tailscale";
+          systemd.services.tailscaled.persist.state = true;
+        })
     ];
 }
 
