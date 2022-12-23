@@ -13,4 +13,15 @@
     userName = "James Atkins";
     userEmail = "code@jamesatkins.net";
   };
+
+  programs.helix = {
+    enable = true;
+    settings = {
+      theme = "tokyonight";
+    };
+  };
+
+  home.sessionVariables = {
+    EDITOR = "hx";
+  };
 }
