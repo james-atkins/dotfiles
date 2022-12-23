@@ -1,8 +1,16 @@
 { lib, config, ... }:
 with lib;
 
+let
+  cfg = config.ja.persistence;
+in
 {
   options.ja.persistence = {
+    enable = mkOption {
+      default = true;
+      type = types.bool;
+    };
+
     directories = mkOption {
       type = types.listOf types.path;
     };
@@ -28,11 +36,11 @@ with lib;
       };
 
       config.serviceConfig.BindPaths = mkMerge [
-        (mkIf config.persist.state
+        (mkIf (cfg.enable && config.persist.state)
           [ "/persist/var/lib/${config.serviceConfig.StateDirectory}:/var/lib/${config.serviceConfig.StateDirectory}" ]
         )
 
-        (mkIf config.persist.cache
+        (mkIf (cfg.enable && config.persist.cache)
           [ "/persist/var/cache/${config.serviceConfig.CacheDirectory}:/var/cache/${config.serviceConfig.CacheDirectory}" ]
         )
       ];
@@ -47,10 +55,10 @@ with lib;
             device = strings.normalizePath "/persist/${dir}";
             options = [ "bind" "x-gvfs-hide" ];
           })
-          config.ja.persistence.directories
+          cfg.directories
       );
     in
-    mkMerge [
+    mkIf cfg.enable (mkMerge [
       {
         # TODO: Check for relative paths, not containing .. etc,
         assertions = builtins.concatLists (mapAttrsToList
@@ -166,6 +174,6 @@ with lib;
           systemd.services.tailscaled.serviceConfig.StateDirectory = "tailscale";
           systemd.services.tailscaled.persist.state = true;
         })
-    ];
+    ]);
 }
 

@@ -33,7 +33,19 @@
 
       mkSystems = systems:
         let
-          mkSystem = { name, system, hardware ? null }:
+          global = {
+            tailscaleDomain = "crocodile-major.ts.net";
+
+            # Information about all the machines
+            machines = builtins.listToAttrs
+              (map
+                (sys:
+                  nixpkgs.lib.nameValuePair sys.name { syncthing = sys.syncthing or null; }
+                )
+                systems);
+          };
+
+          mkSystem = { name, system, hardware ? null, ... }:
 
             nixpkgs.lib.nixosSystem {
               inherit system;
@@ -58,6 +70,7 @@
                   home-manager.useUserPackages = true;
 
                   _module.args = {
+                    inherit global;
                     localPkgs = localPkgs.${system};
                   };
                 }
@@ -80,7 +93,7 @@
 
       nixosConfigurations = mkSystems [
         { name = "milan"; system = "x86_64-linux"; hardware = "lenovo-thinkpad-t480"; }
-        { name = "zeus"; system = "x86_64-linux"; }
+        { name = "zeus"; system = "x86_64-linux"; syncthing = "HFBRTRE-N2GEJCZ-5BSF36N-XNKNKXY-YDBKXYW-IVAWZRQ-TKKY7OI-M27EEQO"; }
       ];
 
       devShells = forAllSystems (system: {

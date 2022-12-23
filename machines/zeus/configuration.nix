@@ -2,12 +2,13 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, lib, pkgs, localPkgs, ... }:
+{ config, lib, pkgs, localPkgs, global, ... }:
 
 {
   imports = [
     ../../common/users.nix
 
+    ../../common/syncthing.nix
     ./fossil.nix
   ];
 
