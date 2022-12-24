@@ -58,6 +58,9 @@ in
     systemd.services.syncthing-init.serviceConfig = {
       User = mkForce cfg.user;
       Group = mkForce config.users.users.${cfg.user}.group;
+      BindPaths = mkIf (cfg.user == "syncthing" && config.ja.persistence.enable) [
+        "/persist/var/lib/syncthing:/var/lib/syncthing"
+      ];
     };
 
     services.caddy = mkIf cfg.tailscaleReverseProxy {
