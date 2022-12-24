@@ -8,7 +8,6 @@
   imports = [
     ../../common/users.nix
 
-    ../../common/syncthing.nix
     ./fossil.nix
   ];
 
@@ -73,6 +72,11 @@
   };
 
   services.openssh.enable = true;
+
+  ja.services.syncthing = {
+    enable = true;
+    tailscaleReverseProxy = true;
+  };
 
   environment.etc."aliases".text = ''
     root: zeus@jamesatkins.net

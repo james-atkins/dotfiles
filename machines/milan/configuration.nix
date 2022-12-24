@@ -48,6 +48,11 @@
   services.xserver.desktopManager.gnome.enable = true;
   environment.systemPackages = with pkgs; [ firefox vscode vlc ];
 
+  ja.services.syncthing = {
+    enable = true;
+    user = config.users.users.james.name;
+  };
+
   home-manager.users.james.home.stateVersion = "22.11";
   system.stateVersion = "22.11";
 }
