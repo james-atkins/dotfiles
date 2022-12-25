@@ -10,6 +10,10 @@ let
 
 in
 {
+  imports = [
+    ../../common/users.nix
+  ];
+
   # Erase on boot
   boot.initrd.postMountCommands = ''
     find /mnt-root -mindepth 1 -maxdepth 1 -not \( -name boot -o -name home -o -name persist -o -name nix -o -name var \) -exec rm -rf {} +
