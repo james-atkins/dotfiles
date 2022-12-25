@@ -31,6 +31,11 @@ in
 
   services.openssh.enable = true;
 
+  ja.services.syncthing = {
+    enable = true;
+    tailscaleReverseProxy = true;
+  };
+
   # TODO: tailscale DNS
   # DNS over HTTP / DNS over SSL
   services.unbound = {
