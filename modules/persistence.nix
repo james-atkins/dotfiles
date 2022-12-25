@@ -61,33 +61,39 @@ in
     mkIf cfg.enable (mkMerge [
       {
         # TODO: Check for relative paths, not containing .. etc,
-        assertions = builtins.concatLists (mapAttrsToList
-          (name: service: [
-            {
-              assertion = service.persist.state -> service.serviceConfig ? StateDirectory;
-              message = "Cannot persist state of ${name} service as serviceConfig.StateDirectory is not set.";
-            }
-            {
-              assertion = service.persist.cache -> service.serviceConfig ? CacheDirectory;
-              message = "Cannot persist cache of ${name} service as serviceConfig.CacheDirectory is not set.";
-            }
-            {
-              assertion = service.persist.state -> (builtins.typeOf service.serviceConfig.StateDirectory == "string");
-              message = "StateDirectory must be a string.";
-            }
-            {
-              assertion = service.persist.cache -> (builtins.typeOf service.serviceConfig.CacheDirectory == "string");
-              message = "CacheDirectory must be a string.";
-            }
-          ])
-          config.systemd.services);
+        assertions =
+          [{
+            assertion = config.fileSystems ? "/persist" -> config.fileSystems."/persist".neededForBoot;
+            message = "Persistent filesystem must be needed for boot";
+          }] ++
+
+          builtins.concatLists (mapAttrsToList
+            (name: service: [
+              {
+                assertion = service.persist.state -> service.serviceConfig ? StateDirectory;
+                message = "Cannot persist state of ${name} service as serviceConfig.StateDirectory is not set.";
+              }
+              {
+                assertion = service.persist.cache -> service.serviceConfig ? CacheDirectory;
+                message = "Cannot persist cache of ${name} service as serviceConfig.CacheDirectory is not set.";
+              }
+              {
+                assertion = service.persist.state -> (builtins.typeOf service.serviceConfig.StateDirectory == "string");
+                message = "StateDirectory must be a string.";
+              }
+              {
+                assertion = service.persist.cache -> (builtins.typeOf service.serviceConfig.CacheDirectory == "string");
+                message = "CacheDirectory must be a string.";
+              }
+            ])
+            config.systemd.services);
 
         ja.persistence.directories = [
           "/var/lib/nixos" # to persist user/group ids dynamically allocated by NixOS
           "/var/lib/systemd"
         ];
 
-        fileSystems = bindMounts // { "/persist".neededForBoot = true; };
+        fileSystems = bindMounts;
 
         services.openssh = {
           hostKeys = [

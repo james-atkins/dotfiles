@@ -30,6 +30,7 @@
     {
       device = "rpool/persist";
       fsType = "zfs";
+      neededForBoot = true;
     };
 
   fileSystems."/home" =
