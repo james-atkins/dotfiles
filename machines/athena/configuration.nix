@@ -163,5 +163,6 @@ in
     publish.userServices = true;
   };
 
+  home-manager.users.james.home.stateVersion = "22.11";
   system.stateVersion = "22.11";
 }
