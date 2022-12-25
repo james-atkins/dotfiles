@@ -64,6 +64,11 @@
 
   time.timeZone = "America/Chicago";
 
+  users.groups.photos.members = [
+    config.users.users.james.name
+    config.users.users.syncthing.name
+  ];
+
   services.tailscale.exitNode = true;
 
   hardware.opengl = {

@@ -31,6 +31,11 @@ in
 
   services.openssh.enable = true;
 
+  users.groups.photos.members = [
+    config.users.users.james.name
+    config.users.users.syncthing.name
+  ];
+
   ja.services.syncthing = {
     enable = true;
     tailscaleReverseProxy = true;
