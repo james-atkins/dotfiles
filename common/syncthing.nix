@@ -33,8 +33,7 @@ in
         (name: machine:
           lib.nameValuePair name {
             id = machine.syncthing;
-            # TODO: support local ip addresses
-            addresses = [ "tcp://${name}.${global.tailscaleDomain}" ];
+            addresses = [ "dynamic" "tcp://${name}.${global.tailscaleDomain}" ];
           }
         )
         (lib.filterAttrs (name: system: name != config.networking.hostName && system.syncthing != null) global.machines));
