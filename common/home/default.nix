@@ -21,6 +21,10 @@
     };
   };
 
+  home.packages = with pkgs; [
+    fossil
+  ];
+
   home.sessionVariables = {
     EDITOR = "hx";
   };
