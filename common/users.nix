@@ -15,5 +15,5 @@
     ];
   };
 
-  home-manager.users.james = import ./home;
+  home-manager.users.james.imports = [ ./home ];
 }

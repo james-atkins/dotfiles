@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, localPkgs, ... }:
 
 {
   programs.bash.enable = true;
@@ -16,6 +16,7 @@
 
   programs.helix = {
     enable = true;
+    package = localPkgs.helix;
     settings = {
       theme = "tokyonight";
     };

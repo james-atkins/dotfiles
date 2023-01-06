@@ -50,7 +50,12 @@
           };
 
           mkSystem = { name, system, hardware ? null, ... }:
-
+            let
+              args = {
+                inherit global;
+                localPkgs = localPkgs.${system};
+              };
+            in
             nixpkgs.lib.nixosSystem {
               inherit system;
               pkgs = pkgs.${system};
@@ -70,13 +75,13 @@
 
                   system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
 
-                  home-manager.useGlobalPkgs = true;
-                  home-manager.useUserPackages = true;
-
-                  _module.args = {
-                    inherit global;
-                    localPkgs = localPkgs.${system};
+                  home-manager = {
+                    useGlobalPkgs = true;
+                    useUserPackages = true;
+                    extraSpecialArgs = args;
                   };
+
+                  _module.args = args;
                 }
 
                 ./common/core.nix
