@@ -1,8 +1,5 @@
 name: "nix"
 
-env:
-  NIXPKGS_ALLOW_INSECURE: 1
-
 on:
   push:
   
