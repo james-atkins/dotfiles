@@ -30,6 +30,21 @@
 
   time.timeZone = "America/Chicago";
 
+  # Enable TLP for power management
+  services.tlp = {
+    enable = true;
+    settings = {
+      TLP_ENABLE = 1;
+      START_CHARGE_THRESH_BAT0 = 75;
+      STOP_CHARGE_THRESH_BAT0 = 80;
+      START_CHARGE_THRESH_BAT1 = 75;
+      STOP_CHARGE_THRESH_BAT1 = 80;
+      CPU_HWP_ON_BAT = "balance_power";
+      CPU_HWP_ON_AC = "performance";
+    };
+  };
+  services.power-profiles-daemon.enable = false;
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
