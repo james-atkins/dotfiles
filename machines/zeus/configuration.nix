@@ -22,6 +22,14 @@
   networking.hostId = "508fcc6d";
   boot.supportedFilesystems = [ "zfs" ];
 
+  services.zfs.autoSnapshot = {
+    enable = true;
+    hourly = 48;
+    daily = 28;
+    weekly = 12;
+    monthly = 24;
+  };
+
   # Remote unlock over tailscale
   boot.initrd = {
     kernelModules = [ "e1000e" "tun" ];

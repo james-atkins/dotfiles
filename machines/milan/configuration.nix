@@ -16,6 +16,15 @@
   boot.supportedFilesystems = [ "zfs" ];
   networking.hostId = "013802bf";
 
+  services.zfs.autoSnapshot = {
+    enable = true;
+    frequent = 12;
+    hourly = 48;
+    daily = 14;
+    weekly = 4;
+    monthly = 6;
+  };
+
   networking.networkmanager.enable = true;
   services.resolved.enable = true;
 
