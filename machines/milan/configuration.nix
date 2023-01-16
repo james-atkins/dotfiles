@@ -45,6 +45,9 @@
   };
   services.power-profiles-daemon.enable = false;
 
+  # Northwestern VPN
+  services.globalprotect.enable = true;
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
@@ -70,7 +73,7 @@
   services.xserver.enable = true;
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
-  environment.systemPackages = with pkgs; [ firefox vscode vlc ];
+  environment.systemPackages = with pkgs; [ firefox vscode vlc globalprotect-openconnect ];
 
   ja.services.syncthing = {
     enable = true;
