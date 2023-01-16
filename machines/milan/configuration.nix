@@ -28,7 +28,7 @@
   networking.networkmanager.enable = true;
   services.resolved.enable = true;
 
-  time.timeZone = "Europe/London";
+  time.timeZone = "America/Chicago";
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
