@@ -136,10 +136,10 @@
       enable = true;
       mailer = "${pkgs.msmtp}/bin/msmtp";
     };
-    # Short self-test every day between 1-2am, and an extended self test weekly on Sundays between 2-3am: 
+    # Short self-test every day between 1-2am, and an extended self test weekly on Mondays between 2-3am:
     # Ignore tracking of normalised temperature attributes - instead log temperatures of 40 degrees
     # or higher, and warn on temperatures of 45 degrees or higher.
-    defaults.autodetected = "-a  -s (S/../.././01|L/../../7/02) -I 194 -W 0,40,45";
+    defaults.autodetected = "-a  -s (S/../.././01|L/../../1/02) -I 194 -W 0,40,45";
   };
 
   services.jellyfin = {
