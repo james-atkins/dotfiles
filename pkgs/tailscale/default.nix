@@ -11,7 +11,7 @@
 
 let
   pname = "tailscale";
-  version = "1.34.1";
+  version = "1.36.1";
 in
 stdenv.mkDerivation {
   inherit pname version;
@@ -19,10 +19,15 @@ stdenv.mkDerivation {
   src = fetchzip {
     name = "tailscale-${version}-source";
     url = "https://pkgs.tailscale.com/stable/tailscale_${version}_amd64.tgz";
-    sha256 = "sha256-rAsbmmAS/cZHEnwLGmydq291pf/OYM/kcdmHnUNl0FI=";
+    sha256 = "sha256-d4YBGQFiEIkNRlSNyUIlFpTzO3Zg0MbtSO4BHc2kSjQ=";
   };
 
   nativeBuildInputs = [ makeWrapper ];
+
+  doCheck = true;
+  checkPhase = ''
+    $src/tailscale version | head -1 | grep --fixed-strings --quiet ${version}
+  '';
 
   installPhase = ''
     runHook preInstall
