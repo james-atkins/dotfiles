@@ -85,6 +85,7 @@
                 }
 
                 ./common/core.nix
+                ./common/backup.nix
                 ./common/tailscale.nix
                 ./common/syncthing.nix
 
