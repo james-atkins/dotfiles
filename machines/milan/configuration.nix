@@ -50,6 +50,9 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+  services.printing.drivers = with pkgs; [
+    (writeTextDir "share/cups/model/IM9000.ppd" (builtins.readFile ./IM9000.ppd))
+  ];
 
   # ES-60W scanner
   # https://gitlab.com/utsushi/utsushi/blob/master/README
