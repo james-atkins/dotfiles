@@ -53,6 +53,8 @@
   services.printing.drivers = with pkgs; [
     (writeTextDir "share/cups/model/IM9000.ppd" (builtins.readFile ./IM9000.ppd))
   ];
+  environment.etc.cups.source = lib.mkForce "/persist/var/lib/cups";
+  systemd.services.cups.serviceConfig.BindPaths = [ "/persist/var/lib/cups:/var/lib/cups" ];
 
   # ES-60W scanner
   # https://gitlab.com/utsushi/utsushi/blob/master/README
