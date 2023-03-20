@@ -1,0 +1,57 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 30,
+    "modules-left": ["sway/workspaces", "sway/mode"],
+    "modules-center": ["sway/window"],
+    "modules-right": [ "tray", "network", "pulseaudio", "battery", "idle_inhibitor", "clock"],
+    "sway/window": {
+        "tooltip": false,
+        "max-length": 50
+    },
+    "pulseaudio": { 
+        "scroll-step": 5,
+        "format": "{volume}% {icon}",
+        "format-bluetooth": "{volume}% {icon}",
+        "format-muted": "",
+        "format-icons": {
+            "headphones": "",
+            "handsfree": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": [ "", "" ]
+        },
+        "on-click": "pavucontrol"
+    },
+    "idle_inhibitor": {
+        "tooltip-format-activated": "Presentation Mode On",
+        "tooltip-format-deactivated": "Presentation Mode Off",
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        }
+    },
+    "network": { 
+        "format-wifi": "{essid} ",
+        "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
+        "format-disconnected": "Disconnected ⚠",
+        "format-alt": "{ifname}: {ipaddr}/{cidr}"
+    },
+    "battery": {
+        "format": "{capacity}% {icon}",
+      	"format-charging": "{capacity}% ",
+      	"format-full": "  {capacity}%",
+        "format-icons": ["", "", "", "", ""],
+        "states": {
+            "warning": 30,
+            "critical": 15
+        }
+    },
+    "clock": {
+        // Change to %-I:%M %p after https://github.com/Alexays/Waybar/issues/1469 merged
+        "format": "{:%A %e %B %Y %H:%M}",
+    }
+}

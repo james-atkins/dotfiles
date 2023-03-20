@@ -24,7 +24,6 @@
 
   home.packages = with pkgs; [
     fossil
-    slack
   ];
 
   home.sessionVariables = {

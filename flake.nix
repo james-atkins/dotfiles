@@ -89,6 +89,8 @@
                 ./common/tailscale.nix
                 ./common/syncthing.nix
 
+                ./modules
+
                 ./machines/${name}/hardware-configuration.nix
                 ./machines/${name}/configuration.nix
               ] ++ (if hardware != null then [ nixos-hardware.nixosModules.${hardware} ] else [ ]);
