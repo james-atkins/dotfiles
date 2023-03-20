@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 lib.mkIf config.ja.desktop.enable {
-  fonts.fonts = with pkgs; [ font-awesome_5 noto-fonts ];
+  fonts.fonts = with pkgs; [ fira-code font-awesome_5 noto-fonts ];
 
   # Use Pipewire rather for sound rather than PulseAudio
   security.rtkit.enable = true;
@@ -33,7 +33,7 @@ lib.mkIf config.ja.desktop.enable {
       enable = true;
       settings = {
         main = {
-          font = "Fira Code:size=11,monospace:size=11";
+          font = "Fira Code:monospace:size=12";
         };
         mouse = {
           hide-when-typing = "yes";
