@@ -24,6 +24,7 @@ lib.mkIf config.ja.desktop.enable {
     };
 
     home.packages = with pkgs; [
+      keepassxc
       libreoffice
       slack
       vlc
