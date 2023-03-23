@@ -39,9 +39,9 @@ lib.mkIf config.ja.desktop.enable {
           hide-when-typing = "yes";
         };
         colors = {
-          "background" = "1a1b26";
+          "background" = "24283b";
           "foreground" = "c0caf5";
-          "regular0" = "15161E";
+          "regular0" = "1D202F";
           "regular1" = "f7768e";
           "regular2" = "9ece6a";
           "regular3" = "e0af68";

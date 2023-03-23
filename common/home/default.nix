@@ -18,7 +18,7 @@
     enable = true;
     package = localPkgs.helix;
     settings = {
-      theme = "tokyonight";
+      theme = "tokyonight_storm";
     };
   };
 
