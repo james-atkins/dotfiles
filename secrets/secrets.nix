@@ -8,7 +8,7 @@ in
 {
   "password_root.age".publicKeys = keys;
   "password_james.age".publicKeys = keys;
-  "stata_licence.age".publicKeys = keys;
+  "stata16_licence.age".publicKeys = keys;
   "fastmail.age".publicKeys = keys;
   "borg.age".publicKeys = keys;
 }

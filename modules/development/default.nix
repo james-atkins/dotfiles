@@ -2,8 +2,7 @@
 
 {
   imports = [
-    ./desktop
-    ./development
+    ./data_analysis.nix
   ];
 }
 

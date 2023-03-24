@@ -22,7 +22,7 @@ let
 
   desktopItem = makeDesktopItem {
     name = pname;
-    exec = "xstata %F";
+    exec = "xstata16 %F";
     icon = "stata16";
     desktopName = "Stata SE";
     genericName = "IDE";
@@ -66,11 +66,11 @@ stdenv.mkDerivation {
     rm stata xstata stata-mp xstata-mp
 
     # Link to license
-    ln -s /etc/stata.lic stata.lic
+    ln -s /etc/stata16.lic stata.lic
 
     mkdir $out/bin
-    ln -s $out/stata-se $out/bin/stata
-    ln -s $out/xstata-se $out/bin/xstata
+    ln -s $out/stata-se $out/bin/stata16
+    ln -s $out/xstata-se $out/bin/xstata16
 
     mkdir -p $out/share/icons/hicolor/128x128/apps
     ln -s $out/stata16.png $out/share/icons/hicolor/128x128/apps

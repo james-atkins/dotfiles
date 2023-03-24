@@ -12,11 +12,20 @@
 }:
 
 buildPythonPackage rec {
-  pname = "duckdb";
-  inherit (duckdb) version src;
+  inherit (duckdb) pname version src patches;
   format = "setuptools";
 
-  sourceRoot = "source/tools/pythonpkg";
+  # we can't use sourceRoot otherwise patches don't apply, because the patches
+  # apply to the C++ library
+  postPatch = ''
+    cd tools/pythonpkg
+
+    # 1. let nix control build cores
+    # 2. unconstrain setuptools_scm version
+    substituteInPlace setup.py \
+      --replace "multiprocessing.cpu_count()" "$NIX_BUILD_CORES" \
+      --replace "setuptools_scm<7.0.0" "setuptools_scm"
+  '';
 
   SETUPTOOLS_SCM_PRETEND_VERSION = version;
 
@@ -41,3 +50,4 @@ buildPythonPackage rec {
     "duckdb"
   ];
 }
+

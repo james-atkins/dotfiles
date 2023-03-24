@@ -25,12 +25,6 @@ let
         });
     in
     old // {
-      arrow =
-        old.arrow.overrideAttrs (attrs: {
-          nativeBuildInputs = with pkgs; attrs.nativeBuildInputs ++ [ pkg-config arrow-cpp ];
-          patchPhase = "patchShebangs configure";
-        });
-
       curl = withNativeBuildInputs old.curl [ pkgs.curl.dev ];
 
       data_table = old.data_table.overrideAttrs (attrs: {
@@ -55,7 +49,17 @@ let
         patchPhase = "patchShebangs configure";
       });
 
+      purrr = old.purrr.overrideAttrs (attrs: {
+        patchPhase = "patchShebangs configure";
+      });
+
+      ragg = withNativeBuildInputs old.ragg [ pkgs.freetype.dev pkgs.libtiff.dev ];
+
+      systemfonts = withNativeBuildInputs old.systemfonts [ pkgs.fontconfig ];
+
       stringi = withNativeBuildInputs old.stringi [ pkgs.icu.dev ];
+
+      textshaping = withNativeBuildInputs old.textshaping [ pkgs.pkg-config pkgs.harfbuzz.dev pkgs.freetype.dev pkgs.fribidi ];
 
       xml2 = withNativeBuildInputs old.xml2 [ pkgs.libxml2.dev ];
     };
