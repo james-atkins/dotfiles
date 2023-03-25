@@ -91,6 +91,12 @@
     tailscaleReverseProxy = true;
   };
 
+  ja.backups = {
+    enable = true;
+    paths = [ "/tank" ];
+    zfs_snapshots = [ "rpool/enc/home" "tank" ];
+  };
+
   environment.etc."aliases".text = ''
     root: zeus@jamesatkins.net
   '';

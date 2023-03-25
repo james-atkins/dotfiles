@@ -1,9 +1,13 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, localPkgs, ... }:
 
 let cfg = config.ja.backups;
 in with lib; {
   options.ja.backups = {
     enable = mkEnableOption "Enables backups to rsync.net";
+    zfs_snapshots = mkOption {
+      type = with types; listOf str;
+      description = "ZFS datasets to snapshot before backing up";
+    };
     paths = mkOption {
       type = with types; listOf str;
       default = [
@@ -60,6 +64,9 @@ in with lib; {
         { name = "data"; frequency = "3 months"; }
       ];
     };
+
+    environment.etc."borgmatic/zfs-snapshots".text = lib.concatMapStrings (s: s + "\n") cfg.zfs_snapshots;
+    environment.systemPackages = [ localPkgs.borgmatic-zfs-snapshot ];
   };
 }
 
