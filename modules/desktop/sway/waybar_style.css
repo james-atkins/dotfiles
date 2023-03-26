@@ -65,11 +65,11 @@ window#waybar {
   }
 }
 
-#battery.warning, #battery.critical {
+#battery.discharging.warning, #battery.discharging.critical {
     color: red;
 }
 
-#battery.critical {
+#battery.discharging.critical {
     animation: blinker 1s linear infinite;
 }
 
