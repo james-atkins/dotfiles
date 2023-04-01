@@ -1,6 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs";
     nixos-hardware.url = "github:nixos/nixos-hardware";
     home-manager = {
       url = "github:nix-community/home-manager/release-22.11";
@@ -12,7 +13,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, agenix, home-manager }:
+  outputs = { self, nixpkgs, nixpkgs-unstable, nixos-hardware, home-manager, agenix }:
     let
       forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
 
@@ -29,8 +30,19 @@
         }
       );
 
+      pkgs-unstable = forAllSystems (system:
+        import nixpkgs-unstable {
+          inherit system;
+          hostPlatform = system;
+          config.allowUnfree = true;
+        }
+      );
+
       localPkgs = forAllSystems (system:
-        import ./pkgs/default.nix { pkgs = pkgs.${system}; }
+        import ./pkgs/default.nix {
+          pkgs = pkgs.${system};
+          pkgs-unstable = pkgs-unstable.${system};
+        }
       );
 
       localModules.persistence = import ./modules/persistence.nix;
@@ -53,6 +65,7 @@
             let
               args = {
                 inherit global;
+                pkgs-unstable = pkgs-unstable.${system};
                 localPkgs = localPkgs.${system};
               };
             in
