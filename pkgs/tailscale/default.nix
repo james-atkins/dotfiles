@@ -11,7 +11,7 @@
 
 let
   pname = "tailscale";
-  version = "1.38.2";
+  version = "1.38.3";
 in
 stdenv.mkDerivation {
   inherit pname version;
@@ -19,7 +19,7 @@ stdenv.mkDerivation {
   src = fetchzip {
     name = "tailscale-${version}-source";
     url = "https://pkgs.tailscale.com/stable/tailscale_${version}_amd64.tgz";
-    sha256 = "sha256-aajf3fj3kq0+BMjvhmphQRlxCD/oBd5MOIrfo/3+6Cg=";
+    sha256 = "sha256-ahtbUr2Y2zJYkpOhgiRBLrPBY9iM6xqNTleDydPf1Uw=";
   };
 
   nativeBuildInputs = [ makeWrapper ];
