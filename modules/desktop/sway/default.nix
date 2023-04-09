@@ -1,4 +1,4 @@
-{ config, lib, pkgs, localPkgs, ... }:
+{ config, lib, pkgs, pkgs-unstable, localPkgs, ... }:
 
 lib.mkIf config.ja.desktop.enable {
   fonts.fonts = with pkgs; [ fira-code font-awesome_5 noto-fonts ];
@@ -74,7 +74,7 @@ lib.mkIf config.ja.desktop.enable {
       pamixer
 
       wl-clipboard
-      waybar
+      pkgs-unstable.waybar
       wofi
 
       qt5.qtwayland # for QT_QPA_PLATFORM=wayland
