@@ -155,6 +155,9 @@
   systemd.services.jellyfin.persist.state = true;
   systemd.services.jellyfin.persist.cache = true;
 
+  services.changedetection-io.enable = true;
+  systemd.services.changedetection-io.persist.state = true;
+
   home-manager.users.james.home.stateVersion = "22.11";
   system.stateVersion = "22.11"; # Did you read the comment?
 }
