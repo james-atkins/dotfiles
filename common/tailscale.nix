@@ -1,4 +1,4 @@
-{ lib, config, pkgs, localPkgs, ... }:
+{ lib, config, pkgs, pkgs-unstable, ... }:
 
 let
   cfg = config.services.tailscale;
@@ -11,7 +11,7 @@ in
   config = {
     services.tailscale = {
       enable = true;
-      package = localPkgs.tailscale;
+      package = pkgs-unstable.tailscale;
     };
 
     networking.networkmanager.unmanaged = lib.mkIf config.networking.networkmanager.enable [ config.services.tailscale.interfaceName ];
