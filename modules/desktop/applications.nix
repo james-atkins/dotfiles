@@ -11,10 +11,6 @@ let
 in
 lib.mkIf config.ja.desktop.enable {
   home-manager.users.james = { pkgs, ... }: {
-    programs.firefox = {
-      enable = true;
-    };
-
     programs.sioyek.enable = true;
 
     programs.vscode = {

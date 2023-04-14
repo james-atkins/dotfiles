@@ -6,6 +6,7 @@
   imports = [
     ./sway
     ./applications.nix
+    ./firefox.nix
   ];
 }
 
