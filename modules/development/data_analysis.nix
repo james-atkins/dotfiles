@@ -1,4 +1,4 @@
-{ config, pkgs, lib, localPkgs, ... }:
+{ config, pkgs, pkgs-unstable, lib, localPkgs, ... }:
 
 let
   RWithPackages = pkgs.rWrapper.override {
@@ -32,6 +32,7 @@ let
     jupyter
     lxml
     matplotlib
+    (localPkgs.nbqa pp)
     networkx
     numba
     numexpr
@@ -68,6 +69,7 @@ in
       home.packages = with pkgs; [
         RWithPackages
         pythonWithPackages
+        pkgs-unstable.ruff
 
         localPkgs.duckdb
         localPkgs.stata16
