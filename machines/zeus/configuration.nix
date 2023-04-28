@@ -136,6 +136,11 @@
     ZED_NOTIFY_VERBOSE = true;
   };
 
+  virtualisation.containers.storage.settings.storage = {
+    driver = "zfs";
+    graphroot = "/persist/var/lib/containers/storage";
+  };
+
   services.smartd = {
     enable = true;
     notifications.mail = {
@@ -155,8 +160,16 @@
   systemd.services.jellyfin.persist.state = true;
   systemd.services.jellyfin.persist.cache = true;
 
-  services.changedetection-io.enable = true;
-  systemd.services.changedetection-io.persist.state = true;
+  services.changedetection-io = {
+    enable = true;
+    playwrightSupport = true;
+  };
+  systemd.services.changedetection-io = {
+    # Restart daily to mitigate a playwright memory leak
+    # https://github.com/dgtlmoon/changedetection.io/wiki/Playwright-content-fetcher#playwright-memory-leak
+    serviceConfig.RuntimeMaxSec = "1d";
+    persist.state = true;
+  };
 
   home-manager.users.james.home.stateVersion = "22.11";
   system.stateVersion = "22.11"; # Did you read the comment?
