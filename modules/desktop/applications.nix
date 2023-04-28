@@ -11,7 +11,9 @@ let
 in
 lib.mkIf config.ja.desktop.enable {
   home-manager.users.james = { pkgs, ... }: {
-    programs.sioyek.enable = true;
+    programs.zathura = {
+      enable = true;
+    };
 
     programs.vscode = {
       enable = true;
