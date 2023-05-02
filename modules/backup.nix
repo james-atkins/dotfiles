@@ -1,6 +1,10 @@
 { config, lib, pkgs, localPkgs, ... }:
 
-let cfg = config.ja.backups;
+let
+  cfg = config.ja.backups;
+  fingerprints = pkgs.writeText "known_hosts" ''
+    de2429.rsync.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIObQN4P/deJ/k4P4kXh6a9K4Q89qdyywYetp9h3nwfPo
+  '';
 in with lib; {
   options.ja.backups = {
     enable = mkEnableOption "Enables backups to rsync.net";
@@ -55,7 +59,7 @@ in with lib; {
       storage = {
         compression = "auto,zstd,3";
         encryption_passcommand = "cat ${config.age.secrets.borg.path}";
-        ssh_command = "ssh -o PubkeyAuthentication=yes -i /persist/etc/secrets/id_borg_ed25519";
+        ssh_command = "ssh -o PubkeyAuthentication=yes -o StrictHostKeyChecking=yes -o GlobalKnownHostsFile=${fingerprints} -i /persist/etc/secrets/id_borg_ed25519";
       };
 
       consistency.checks = [
