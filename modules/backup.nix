@@ -59,7 +59,7 @@ in with lib; {
       storage = {
         compression = "auto,zstd,3";
         encryption_passcommand = "cat ${config.age.secrets.borg.path}";
-        ssh_command = "ssh -o PubkeyAuthentication=yes -o StrictHostKeyChecking=yes -o GlobalKnownHostsFile=${fingerprints} -i /persist/etc/secrets/id_borg_ed25519";
+        ssh_command = "ssh -o ServerAliveInterval=120 -o PubkeyAuthentication=yes -o StrictHostKeyChecking=yes -o GlobalKnownHostsFile=${fingerprints} -i /persist/etc/secrets/id_borg_ed25519";
       };
 
       consistency.checks = [
