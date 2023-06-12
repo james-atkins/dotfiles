@@ -1,27 +1,6 @@
 { config, pkgs, pkgs-unstable, lib, localPkgs, ... }:
 
 let
-  RWithPackages = pkgs.rWrapper.override {
-    packages = with localPkgs.cran; [
-      localPkgs.duckdb.R
-
-      # arrow
-      conflicted
-      countrycode
-      data_table
-      devtools
-      markdown
-      reticulate
-      RSQLite
-      shiny
-      targets
-      tarchetypes
-      testthat
-      tidyverse
-      usethis
-    ];
-  };
-
   pythonWithPackages = pkgs.python3.withPackages (pp: with pp; [
     beautifulsoup4
     cython
@@ -67,7 +46,6 @@ in
 
     home-manager.users.james = { pkgs, ... }: {
       home.packages = with pkgs; [
-        RWithPackages
         pythonWithPackages
         pkgs-unstable.ruff
 
