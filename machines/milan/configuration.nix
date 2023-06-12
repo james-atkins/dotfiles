@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, localPkgs, ... }:
 
 {
   imports = [
@@ -44,6 +44,8 @@
     };
   };
 
+  services.tailscale.useRoutingFeatures = "client";
+
   ja.backups = {
     enable = true;
     zfs_snapshots = [ "rpool/home" ];
@@ -62,8 +64,8 @@
   # ES-60W scanner
   # https://gitlab.com/utsushi/utsushi/blob/master/README
   hardware.sane.enable = true;
-  hardware.sane.extraBackends = [ pkgs.utsushi ];
-  services.udev.packages = [ pkgs.utsushi ];
+  hardware.sane.extraBackends = [ localPkgs.utsushi ];
+  services.udev.packages = [ localPkgs.utsushi ];
   home-manager.users.james.home.packages = [ pkgs.simple-scan ];
 
   # Wireless headphones

@@ -25,7 +25,7 @@ lib.mkIf config.ja.desktop.enable {
   };
 
   home-manager.users.james = { pkgs, ... }: {
-    programs.mako = {
+    services.mako = {
       enable = true;
     };
 

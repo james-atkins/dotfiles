@@ -77,7 +77,7 @@
     config.users.users.syncthing.name
   ];
 
-  services.tailscale.exitNode = true;
+  services.tailscale.useRoutingFeatures = "server";
 
   hardware.opengl = {
     enable = true;
