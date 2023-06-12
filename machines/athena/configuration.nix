@@ -83,7 +83,7 @@ in
   };
   systemd.services.dhcpd4.serviceConfig.BindPaths = [ "/persist/var/lib/private/dhcpd4:/var/lib/private/dhcpd4" ];
 
-  services.tailscale.exitNode = true;
+  services.tailscale.useRoutingFeatures = "server";
 
   networking.firewall = {
     enable = true;
@@ -122,7 +122,7 @@ in
     '';
   };
 
-  services.rtsp-simple-server = {
+  services.mediamtx = {
     enable = true;
     settings = {
       logLevel = "warn";

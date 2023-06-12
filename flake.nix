@@ -24,7 +24,7 @@
           config.allowUnfree = true;
           overlays = [
             (final: prev: {
-              rtsp-simple-server = prev.callPackage ./pkgs/rtsp-simple-server { };
+              mediamtx = pkgs-unstable.${system}.mediamtx;
             })
           ];
         }
