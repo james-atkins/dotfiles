@@ -1,4 +1,4 @@
-{ config, lib, pkgs, localPkgs, ... }:
+{ config, lib, pkgs, pkgs-local, ... }:
 
 {
   boot.loader.systemd-boot.enable = true;
@@ -60,8 +60,8 @@
   # ES-60W scanner
   # https://gitlab.com/utsushi/utsushi/blob/master/README
   hardware.sane.enable = true;
-  hardware.sane.extraBackends = [ localPkgs.utsushi ];
-  services.udev.packages = [ localPkgs.utsushi ];
+  hardware.sane.extraBackends = [ pkgs-local.utsushi ];
+  services.udev.packages = [ pkgs-local.utsushi ];
   home-manager.users.james.home.packages = [ pkgs.simple-scan ];
 
   # Wireless headphones

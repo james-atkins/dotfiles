@@ -1,17 +1,17 @@
-{ config, pkgs, pkgs-unstable, lib, localPkgs, ... }:
+{ config, pkgs, pkgs-unstable, lib, pkgs-local, ... }:
 
 let
   pythonWithPackages = pkgs.python3.withPackages (pp: with pp; [
     beautifulsoup4
     cython
     cytoolz
-    (localPkgs.duckdb.python pp)
+    (pkgs-local.duckdb.python pp)
     flake8
     ipython
     jupyter
     lxml
     matplotlib
-    (localPkgs.nbqa pp)
+    (pkgs-local.nbqa pp)
     networkx
     numba
     numexpr
@@ -20,7 +20,7 @@ let
     pandas
     patsy
     # pyarrow
-    (localPkgs.pyblp pp)
+    (pkgs-local.pyblp pp)
     pytest
     requests
     scipy
@@ -49,8 +49,8 @@ in
         pythonWithPackages
         pkgs-unstable.ruff
 
-        localPkgs.duckdb
-        localPkgs.stata16
+        pkgs-local.duckdb
+        pkgs-local.stata16
 
         jq
         pandoc

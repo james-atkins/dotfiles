@@ -1,4 +1,4 @@
-{ pkgs, localPkgs, config, lib, ... }:
+{ pkgs, pkgs-local, config, lib, ... }:
 
 with lib;
 
@@ -41,7 +41,7 @@ in
     serviceConfig = {
       User = config.users.users.fossil.name;
       # TODO: --errorlog
-      ExecStart = "${localPkgs.fossil-tailscale}/bin/fossil ui --nobrowser --baseurl https://${config.networking.hostName}.crocodile-major.ts.net --port ${toString fossilPort} --max-latency ${toString maxLatency} ${museum}";
+      ExecStart = "${pkgs-local.fossil-tailscale}/bin/fossil ui --nobrowser --baseurl https://${config.networking.hostName}.crocodile-major.ts.net --port ${toString fossilPort} --max-latency ${toString maxLatency} ${museum}";
       Restart = "always";
       RestartSec = 3;
 

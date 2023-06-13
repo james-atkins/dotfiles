@@ -1,4 +1,4 @@
-{ pkgs, localPkgs, ... }:
+{ pkgs, pkgs-local, ... }:
 
 {
   programs.bash.enable = true;
@@ -20,7 +20,7 @@
 
   programs.helix = {
     enable = true;
-    package = localPkgs.helix;
+    package = pkgs-local.helix;
     settings = {
       theme = "tokyonight_storm";
     };

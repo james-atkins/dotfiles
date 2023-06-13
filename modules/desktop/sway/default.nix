@@ -1,4 +1,4 @@
-{ config, lib, pkgs, pkgs-unstable, localPkgs, ... }:
+{ config, lib, pkgs, pkgs-unstable, pkgs-local, ... }:
 
 lib.mkIf config.ja.desktop.enable {
   fonts.fonts = with pkgs; [ fira-code font-awesome_5 noto-fonts ];
@@ -33,7 +33,7 @@ lib.mkIf config.ja.desktop.enable {
       enable = true;
       settings = {
         main = {
-          include = "${localPkgs.foot-themes}/tokyonight-storm";
+          include = "${pkgs-local.foot-themes}/tokyonight-storm";
           font = "Fira Code:monospace:size=12";
           shell = "/usr/bin/env SHELL=fish ${pkgs.fish}/bin/fish";
         };

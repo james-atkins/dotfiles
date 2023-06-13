@@ -1,4 +1,4 @@
-{ config, lib, pkgs, localPkgs, ... }:
+{ config, lib, pkgs, pkgs-local, ... }:
 
 let
   cfg = config.ja.backups;
@@ -71,7 +71,7 @@ with lib; {
     };
 
     environment.etc."borgmatic/zfs-snapshots".text = lib.concatMapStrings (s: s + "\n") cfg.zfs_snapshots;
-    environment.systemPackages = [ localPkgs.borgmatic-zfs-snapshot ];
+    environment.systemPackages = [ pkgs-local.borgmatic-zfs-snapshot ];
   };
 }
 

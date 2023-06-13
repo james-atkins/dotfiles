@@ -38,7 +38,7 @@
         }
       );
 
-      localPkgs = forAllSystems (system:
+      pkgs-local = forAllSystems (system:
         import ./pkgs/default.nix {
           pkgs = pkgs.${system};
           pkgs-unstable = pkgs-unstable.${system};
@@ -64,7 +64,7 @@
               args = {
                 inherit global;
                 pkgs-unstable = pkgs-unstable.${system};
-                localPkgs = localPkgs.${system};
+                pkgs-local = pkgs-local.${system};
               };
             in
             nixpkgs.lib.nixosSystem {
@@ -119,7 +119,7 @@
       });
 
       packages = with nixpkgs.lib; forAllSystems (system:
-        filterAttrs (n: v: isDerivation v) localPkgs.${system}
+        filterAttrs (n: v: isDerivation v) pkgs-local.${system}
       );
 
       legacyPackages = with nixpkgs.lib; forAllSystems (system:
@@ -127,7 +127,7 @@
         # them all, plus there are issues with flattening derivations. So just shove everything in
         # legacyPackages for now.
         # We can still run nix build .#cran.PKGNAME if we want to build a specific package.
-        filterAttrs (n: v: !isDerivation v) localPkgs.${system}
+        filterAttrs (n: v: !isDerivation v) pkgs-local.${system}
       );
     };
 }
