@@ -137,6 +137,7 @@
   virtualisation.containers.storage.settings.storage = {
     driver = "zfs";
     graphroot = "/persist/var/lib/containers/storage";
+    runroot = "/run/containers/storage";
   };
 
   services.smartd = {
