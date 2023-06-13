@@ -5,7 +5,8 @@ let
   fingerprints = pkgs.writeText "known_hosts" ''
     de2429.rsync.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIObQN4P/deJ/k4P4kXh6a9K4Q89qdyywYetp9h3nwfPo
   '';
-in with lib; {
+in
+with lib; {
   options.ja.backups = {
     enable = mkEnableOption "Enables backups to rsync.net";
     zfs_snapshots = mkOption {
