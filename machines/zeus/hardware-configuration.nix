@@ -9,14 +9,14 @@
       (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "sd_mod" "sr_mod" ];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "usbhid" "sd_mod" "sr_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
-  fileSystems."/boot/efi" =
+  fileSystems."/efi" =
     {
-      device = "/dev/disk/by-uuid/8B80-74B4";
+      device = "/dev/disk/by-uuid/BD51-5304";
       fsType = "vfat";
       # Use automount for data safety https://0pointer.net/blog/linux-boot-partitions.html
       options = [ "x-systemd.automount" "x-systemd.idle-timeout=5s" ];
@@ -28,9 +28,15 @@
       fsType = "zfs";
     };
 
-  fileSystems."/nix" =
+  fileSystems."/root" =
     {
-      device = "rpool/nix";
+      device = "rpool/enc/roothome";
+      fsType = "zfs";
+    };
+
+  fileSystems."/home" =
+    {
+      device = "rpool/enc/home";
       fsType = "zfs";
     };
 
@@ -41,9 +47,9 @@
       neededForBoot = true;
     };
 
-  fileSystems."/home" =
+  fileSystems."/nix/store" =
     {
-      device = "rpool/enc/home";
+      device = "rpool/nix";
       fsType = "zfs";
     };
 
@@ -53,11 +59,7 @@
       fsType = "zfs";
     };
 
-  swapDevices =
-    [
-      { device = "/dev/disk/by-uuid/527ccd2b-7a6e-4b92-ba93-6c244381d67c"; }
-      { device = "/dev/disk/by-uuid/87a23681-ff15-4e02-a720-690a4491e037"; }
-    ];
+  swapDevices = [ ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's
@@ -65,8 +67,9 @@
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
   # networking.interfaces.eno1.useDHCP = lib.mkDefault true;
+  # networking.interfaces.eno2.useDHCP = lib.mkDefault true;
+  # networking.interfaces.enp0s20f0u5u2c2.useDHCP = lib.mkDefault true;
 
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

@@ -11,7 +11,7 @@
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot/efi";
+  boot.loader.efi.efiSysMountPoint = "/efi";
   boot.initrd.postDeviceCommands = lib.mkAfter ''
     # zfs rollback -r rpool/enc/root@blank
   '';
@@ -30,7 +30,7 @@
 
   # Remote unlock over tailscale
   boot.initrd = {
-    kernelModules = [ "e1000e" "tun" ];
+    kernelModules = [ "e1000e" "igb" "tun" ];
     extraUtilsCommands = ''
       for BIN in ${pkgs.iproute2}/{s,}bin/*; do
         copy_bin_and_libs $BIN
