@@ -1,10 +1,6 @@
 { config, lib, pkgs, localPkgs, ... }:
 
 {
-  imports = [
-    ../../common/users.nix
-  ];
-
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/efi";

@@ -6,8 +6,6 @@
 
 {
   imports = [
-    ../../common/users.nix
-
     ./fossil.nix
   ];
 

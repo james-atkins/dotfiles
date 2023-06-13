@@ -45,8 +45,6 @@
         }
       );
 
-      localModules.persistence = import ./modules/persistence.nix;
-
       mkSystems = systems:
         let
           global = {
@@ -75,7 +73,6 @@
               modules = [
                 agenix.nixosModule
                 home-manager.nixosModule
-                localModules.persistence
 
                 {
                   networking.hostName = name;
@@ -97,12 +94,7 @@
                   _module.args = args;
                 }
 
-                ./common/core.nix
-                ./common/tailscale.nix
-                ./common/syncthing.nix
-
                 ./modules
-
                 ./machines/${name}/hardware-configuration.nix
                 ./machines/${name}/configuration.nix
               ] ++ (if hardware != null then [ nixos-hardware.nixosModules.${hardware} ] else [ ]);
@@ -113,8 +105,6 @@
     in
     {
       formatter = forAllSystems (system: pkgs.${system}.nixpkgs-fmt);
-
-      nixosModules = localModules;
 
       nixosConfigurations = mkSystems [
         { name = "athena"; system = "x86_64-linux"; hardware = "pcengines-apu"; syncthing = "UCXAY5Y-4CGWWRL-VZVHBS4-LGLSAWZ-N6OGXZW-ZNYNH5T-XONQFTJ-FHPIGQX"; }
