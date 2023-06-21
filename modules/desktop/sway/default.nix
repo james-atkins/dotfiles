@@ -24,6 +24,8 @@ lib.mkIf config.ja.desktop.enable {
     extraPortals = with pkgs; [ xdg-desktop-portal-gtk xdg-desktop-portal-wlr ];
   };
 
+  services.geoclue2.enable = true;
+
   home-manager.users.james = { pkgs, ... }: {
     services.mako = {
       enable = true;
@@ -61,6 +63,12 @@ lib.mkIf config.ja.desktop.enable {
           exec systemd-cat -t sway sway
       fi
     '';
+
+    services.gammastep = {
+      enable = true;
+      provider = "geoclue2";
+      temperature.night = 2700;
+    };
 
     home.packages = with pkgs; [
       brightnessctl
