@@ -10,6 +10,7 @@
     ./backup.nix
     ./desktop
     ./development
+    ./fossil.nix
   ];
 }
 

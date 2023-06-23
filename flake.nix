@@ -50,6 +50,15 @@
           global = {
             tailscaleDomain = "crocodile-major.ts.net";
 
+            email = with nixpkgs.lib; concatStrings (
+              [ "c" "o" "n" "t" "a" "c" "t" ] ++
+              singleton "@" ++
+              reverseList [ "s" "e" "m" "a" "j" ] ++
+              reverseList [ "s" "n" "i" "k" "t" "a" ] ++
+              singleton "." ++
+              [ "n" "e" "t" ]
+            );
+
             # Information about all the machines
             machines = builtins.listToAttrs
               (map

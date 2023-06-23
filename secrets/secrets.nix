@@ -11,4 +11,5 @@ in
   "stata16_licence.age".publicKeys = keys;
   "fastmail.age".publicKeys = keys;
   "borg.age".publicKeys = keys;
+  "cloudflare.age".publicKeys = [ zeus-ssh ];
 }

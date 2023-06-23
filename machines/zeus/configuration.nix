@@ -2,11 +2,11 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, lib, pkgs, pkgs-unstable, global, ... }:
+{ config, lib, pkgs, pkgs-unstable, pkgs-local, global, ... }:
 
 {
   imports = [
-    ./fossil.nix
+    ./private-services.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
@@ -140,6 +140,30 @@
     runroot = "/run/containers/storage";
   };
 
+  ja.persistence.directories = [ "/var/lib/acme" ];
+  age.secrets.cloudflare.file = ../../secrets/cloudflare.age;
+  security.acme = {
+    acceptTerms = true;
+    preliminarySelfsigned = false;
+    defaults = {
+      dnsResolver = "1.1.1.1:53";
+      email = global.email;
+      reloadServices = [ "caddy" ];
+    };
+
+    certs."jamesatkins.io" = {
+      domain = "jamesatkins.io";
+      extraDomainNames = [ "*.jamesatkins.io" ];
+      dnsProvider = "cloudflare";
+      credentialsFile = config.age.secrets.cloudflare.path;
+    };
+  };
+
+  users.users.caddy.extraGroups = [ "acme" ];
+
+  # Allow Caddy to get HTTPS certificates from tailscale
+  services.tailscale.permitCertUid = config.services.caddy.user;
+
   services.smartd = {
     enable = true;
     notifications.mail = {
@@ -159,9 +183,14 @@
   systemd.services.jellyfin.persist.state = true;
   systemd.services.jellyfin.persist.cache = true;
 
+  ja.private-services.jellyfin.caddy-config = ''
+    reverse_proxy http://127.0.0.1:8096
+  '';
+
   services.changedetection-io = {
     enable = true;
-    playwrightSupport = true;
+    baseURL = "https://changedetection.jamesatkins.io/";
+    port = 65500;
   };
   systemd.services.changedetection-io = {
     # Restart daily to mitigate a playwright memory leak
@@ -169,6 +198,64 @@
     serviceConfig.RuntimeMaxSec = "1d";
     persist.state = true;
   };
+
+  ja.private-services.changedetection.caddy-config = ''
+    reverse_proxy http://127.0.0.1:${toString config.services.changedetection-io.port} {
+      header_up Host localhost
+    }
+  '';
+
+  services.gollum = {
+    enable = true;
+    mathjax = true;
+    stateDir = "/persist/var/lib/gollum";
+    address = "127.0.0.1";
+    port = 65501;
+    extraConfig = ''
+      module Precious
+        class App
+          private
+
+          def commit_message
+            return commit_options
+          end
+
+          def commit_options
+            name = request.env['HTTP_TAILSCALE_NAME']
+            email = request.env['HTTP_TAILSCALE_USER']
+
+            msg = (params[:message].nil? or params[:message].empty?) ? "[no message]" : params[:message]
+
+            commit_message = {
+              message: msg,
+              name: name,
+              email: email
+            }
+
+            return commit_message
+          end
+        end
+      end
+    '';
+  };
+
+  ja.private-services.wiki.caddy-config = ''
+    reverse_proxy http://127.0.0.1:${toString config.services.gollum.port} {
+      header_up Host localhost
+    }
+  '';
+
+  ja.services.fossil = {
+    enable = true;
+    base-url = "https://fossil.jamesatkins.io";
+    museum = "/tank/fossil";
+    package = pkgs-local.fossil-tailscale;
+    local-auth = true;
+    localhost = true;
+  };
+  ja.private-services.fossil.caddy-config = ''
+    reverse_proxy http://127.0.0.1:${toString config.ja.services.fossil.port}
+  '';
 
   home-manager.users.james.home.stateVersion = "22.11";
   system.stateVersion = "22.11"; # Did you read the comment?
