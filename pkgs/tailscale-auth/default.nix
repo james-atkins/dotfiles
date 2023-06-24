@@ -3,7 +3,7 @@
 buildGoModule {
   name = "tailscale-auth";
   src = tailscale.src;
-  vendorHash = "sha256-7L+dvS++UNfMVcPUCbK/xuBPwtrzW4RpZTtcl7VCwQs=";
+  vendorHash = tailscale.vendorHash;
   subPackages = [ "cmd/nginx-auth" ];
 
   postInstall = ''
