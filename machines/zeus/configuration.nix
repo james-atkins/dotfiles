@@ -7,6 +7,7 @@
 {
   imports = [
     ./private-services.nix
+    ./cran.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
