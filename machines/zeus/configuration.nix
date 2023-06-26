@@ -174,6 +174,12 @@
     # Ignore tracking of normalised temperature attributes - instead log temperatures of 40 degrees
     # or higher, and warn on temperatures of 45 degrees or higher.
     defaults.autodetected = "-a  -s (S/../.././01|L/../../1/02) -I 194 -W 0,40,45";
+    devices = [
+      # Special settings for the NVME SSD
+      # Don't use -a because that implies -l error which yields lots of error log entries
+      # Warn on higher temperatures than the HDDs
+      { device = "/dev/nvme0n1"; options = "-H -f -t -l selftest -s (S/../.././01|L/../../1/02) -W 0,60,70"; }
+    ];
   };
 
   services.jellyfin = {
