@@ -79,7 +79,6 @@ with lib; {
       consistency.checks = [
         { name = "repository"; frequency = "1 week"; }
         { name = "archives"; frequency = "1 month"; }
-        { name = "data"; frequency = "3 months"; }
       ];
     };
 
