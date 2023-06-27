@@ -57,6 +57,7 @@ with lib; {
         exclude_if_present = [
           ".nobackup"
         ];
+        borgmatic_source_directory = (lib.optionalString config.ja.persistence.enable "/persist") + "/var/lib/backups/borgmatic";
       };
 
       retention = {
@@ -71,6 +72,8 @@ with lib; {
         compression = "auto,zstd,3";
         encryption_passcommand = "${pkgs.coreutils}/bin/cat ${config.age.secrets.borg.path}";
         ssh_command = "ssh -o ServerAliveInterval=120 -o PubkeyAuthentication=yes -o StrictHostKeyChecking=yes -o GlobalKnownHostsFile=${fingerprints} -i /persist/etc/secrets/id_borg_ed25519";
+        borg_config_directory = (lib.optionalString config.ja.persistence.enable "/persist") + "/var/lib/backups/borg";
+        borg_cache_directory = (lib.optionalString config.ja.persistence.enable "/persist") + "/var/cache/backups/borg";
       };
 
       consistency.checks = [
@@ -89,13 +92,21 @@ with lib; {
       after = [ "network-online.target" ];
       path = [ pkgs.zfs ];
 
+      persist.state = config.ja.persistence.enable;
+      persist.cache = config.ja.persistence.enable;
+
       serviceConfig = {
         Type = "oneshot";
         ExecStart = "${pkgs-local.borgmatic-zfs-snapshot}/bin/borgmatic-zfs-snapshot -v 2";
 
-        ProtectSystem = "strict";
-        ReadWritePaths = [ "/root/.cache/borg" "/root/.config/borg" "/root/.borgmatic" ];
+        StateDirectory = "backups";
+        StateDirectoryMode = "0700";
+        CacheDirectory = "backups";
+        CacheDirectoryMode = "0700";
 
+        ProtectSystem = "strict";
+        ProtectHome = "read-only";
+        ReadWritePaths = mkIf config.ja.persistence.enable [ "/persist/var/lib/backups" "/persist/var/cache/backups" ];
         LockPersonality = true;
         MemoryDenyWriteExecute = true;
         NoNewPrivileges = true;
