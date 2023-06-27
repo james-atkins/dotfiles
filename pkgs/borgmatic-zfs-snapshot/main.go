@@ -206,11 +206,11 @@ func runBorgmatic(mountpoints map[string]string) error {
 	runtime.LockOSThread()
 
 	if err := syscall.Unshare(syscall.CLONE_NEWNS); err != nil {
-		return err
+		return fmt.Errorf("unshare failed: %w", err)
 	}
 	// https://go-review.googlesource.com/c/go/+/38471
 	if err := syscall.Mount("", "/", "", syscall.MS_PRIVATE|syscall.MS_REC, ""); err != nil {
-		return err
+		return fmt.Errorf("mount failed: %w", err)
 	}
 	// Mount the snapshots
 	for _, mountpoint := range ms {
@@ -248,7 +248,7 @@ func runBorgmatic(mountpoints map[string]string) error {
 	}
 
 	if err := cmd.Start(); err != nil {
-		return err
+		return fmt.Errorf("error starting command: %w", err)
 	}
 
 	go func() {
@@ -313,6 +313,7 @@ func readConfig() ([]string, error) {
 func main() {
 	if err := run(true); err != nil {
 		fmt.Fprintf(os.Stderr, "%+v\n", err)
+		os.Exit(1)
 	}
 }
 
