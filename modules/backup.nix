@@ -52,6 +52,7 @@ with lib; {
           "**/.nix-profile"
           "**/.elm"
           "**/.direnv"
+          "**/.mozilla/firefox"
         ] ++ cfg.exclude;
         exclude_caches = true;
         exclude_if_present = [
