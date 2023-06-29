@@ -25,7 +25,8 @@ in
 
     systemd.services.tailscale-auth = {
       description = "Tailscale Authentication service";
-      after = [ "caddy.service" ];
+      after = [ "caddy.service" "tailscale-auth.socket" ];
+      requires = [ "tailscale-auth.socket" ];
       wants = [ "caddy.service" ];
       wantedBy = [ "default.target" ];
       serviceConfig = {
