@@ -1,10 +1,13 @@
 { config, pkgs, ... }:
 
 {
+  age.secrets.paperless.file = ../../secrets/paperless.age;
+
   services.paperless = {
     enable = true;
     dataDir = "/persist/var/lib/paperless";
     address = "localhost";
+    passwordFile = config.age.secrets.paperless.path;
     extraConfig = {
       PAPERLESS_AUTO_LOGIN_USERNAME = "admin";
     };
