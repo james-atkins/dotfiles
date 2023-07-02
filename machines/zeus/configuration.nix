@@ -8,6 +8,7 @@
   imports = [
     ./private-services.nix
     ./cran.nix
+    ./paperless.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
