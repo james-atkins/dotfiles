@@ -16,6 +16,11 @@
     enable = true;
     userName = "James Atkins";
     userEmail = "code@jamesatkins.net";
+    extraConfig = {
+      init = {
+        defaultBranch = "master";
+      };
+    };
   };
 
   programs.helix = {
