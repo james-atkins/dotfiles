@@ -58,10 +58,11 @@
   systemd.services.cups.serviceConfig.BindPaths = [ "/persist/var/lib/cups:/var/lib/cups" ];
 
   # ES-60W scanner
-  # https://gitlab.com/utsushi/utsushi/blob/master/README
-  hardware.sane.enable = true;
-  hardware.sane.extraBackends = [ pkgs-local.utsushi ];
-  services.udev.packages = [ pkgs-local.utsushi ];
+  hardware.sane = {
+    enable = true;
+    extraBackends = [ (pkgs-local.epsonscan2.override { nonfree-plugins = true; }) ];
+    disabledDefaultBackends = [ "epsonds" ];
+  };
   home-manager.users.james.home.packages = [ pkgs.simple-scan ];
 
   # Wireless headphones
