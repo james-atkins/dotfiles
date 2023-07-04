@@ -17,6 +17,7 @@
 , qtbase
 , wrapQtAppsHook
 
+, gui ? true
 , nonfree-plugins ? false
 }:
 
@@ -73,20 +74,25 @@ stdenv.mkDerivation {
   '';
 
   nativeBuildInputs = [
-    autoPatchelfHook
     cmake
+  ] ++ lib.optionals gui [
     imagemagick # to make icons
     wrapQtAppsHook
+  ] ++ lib.optionals nonfree-plugins [
+    autoPatchelfHook
   ];
+
   buildInputs = [
     boost
-    copyDesktopItems
     libjpeg
     libpng
     libtiff
-    libtool.lib
     libusb
+  ] ++ lib.optionals gui [
+    copyDesktopItems
     qtbase
+  ] ++ lib.optionals nonfree-plugins [
+    libtool.lib
   ];
 
   cmakeFlags = [
@@ -94,6 +100,8 @@ stdenv.mkDerivation {
     # The non-free (Debian) packages uses this directory structure so do the same when compiling
     # from source so we can easily merge them.
     "-DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu"
+  ] ++ lib.optionals (!gui) [
+    "-DNO_GUI=ON"
   ];
 
   postInstall = ''
@@ -103,7 +111,7 @@ stdenv.mkDerivation {
     for file in $out/lib/x86_64-linux-gnu/sane/*.so.*; do
       ln -s $file $out/lib/sane/
     done
-
+  '' + lib.optionalString gui ''
     # The icon file extension is .ico but it's actually a png!
     mkdir -p $out/share/icons/hicolor/{48x48,128x128}/apps
     convert $src/Resources/Icons/escan2_app.ico -resize 48x48 $out/share/icons/hicolor/48x48/apps/epsonscan2.png
@@ -114,7 +122,7 @@ stdenv.mkDerivation {
     cp -r usr/* $out
   '';
 
-  desktopItems = [
+  desktopItems = lib.optionals gui [
     (makeDesktopItem {
       name = pname;
       exec = "epsonscan2";
@@ -134,4 +142,4 @@ stdenv.mkDerivation {
     license = with lib.licenses; if nonfree-plugins then unfree else lgpl21Plus;
   };
 }
-  
+
