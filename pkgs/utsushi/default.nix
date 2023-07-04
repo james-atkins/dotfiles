@@ -99,6 +99,9 @@ in stdenv.mkDerivation rec {
 
   postInstall = lib.optionalString withNetworkScan ''
     ln -s ${utsushi-networkscan}/libexec/utsushi/networkscan $out/libexec/utsushi
+  '' + ''
+    mkdir -p $out/etc/utsushi
+    ln -s /etc/utsushi/utsushi.conf $out/etc/utsushi/utsushi.conf
   '';
 
   meta = with lib; {
