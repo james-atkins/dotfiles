@@ -8,6 +8,7 @@
   imports = [
     ./private-services.nix
     ./cran.nix
+    ./miniflux.nix
     ./paperless.nix
   ];
 

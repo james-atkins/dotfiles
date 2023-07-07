@@ -12,5 +12,6 @@ in
   "fastmail.age".publicKeys = keys;
   "borg.age".publicKeys = keys;
   "cloudflare.age".publicKeys = [ zeus-ssh ];
+  "miniflux.age".publicKeys = [ zeus-ssh ];
   "paperless.age".publicKeys = [ zeus-ssh ];
 }
