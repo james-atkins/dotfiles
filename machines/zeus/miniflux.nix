@@ -10,6 +10,8 @@
     config.AUTH_PROXY_HEADER = "X-Webauth-User";
   };
 
+  ja.backups.databases.postgres = [ "miniflux" ];
+
   ja.private-services.feeds.caddy-config = ''
     reverse_proxy ${config.services.miniflux.config.LISTEN_ADDR} {
       header_up +X-Webauth-User "james"

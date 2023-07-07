@@ -28,6 +28,11 @@ with lib; {
       default = [ ];
       description = "paths to NOT backup to rsync.net";
     };
+    databases.postgres = mkOption {
+      type = with types; listOf str;
+      default = [];
+      description = "backup postgres database";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -81,6 +86,8 @@ with lib; {
         { name = "repository"; frequency = "1 week"; }
         { name = "archives"; frequency = "1 month"; }
       ];
+
+      hooks.postgresql_databases = map (db: { name = db; username = "postgres"; }) cfg.databases.postgres;
     };
 
     environment.etc."borgmatic/zfs-snapshots".text = lib.concatLines cfg.zfs_snapshots;
@@ -90,7 +97,7 @@ with lib; {
       inherit description;
       wants = [ "network-online.target" ];
       after = [ "network-online.target" ];
-      path = [ pkgs.zfs ];
+      path = [ pkgs.zfs ] ++ lib.optionals (cfg.databases.postgres != []) [ pkgs.postgresql ];
 
       persist.state = config.ja.persistence.enable;
       persist.cache = config.ja.persistence.enable;
