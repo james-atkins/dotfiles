@@ -97,7 +97,7 @@ with lib; {
       inherit description;
       wants = [ "network-online.target" ];
       after = [ "network-online.target" ];
-      path = [ pkgs.zfs ] ++ lib.optionals (cfg.databases.postgres != []) [ pkgs.postgresql ];
+      path = [ pkgs.zfs ] ++ lib.optionals (cfg.databases.postgres != []) [ config.services.postgresql.package ];
 
       persist.state = config.ja.persistence.enable;
       persist.cache = config.ja.persistence.enable;
