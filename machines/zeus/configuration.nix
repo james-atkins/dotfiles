@@ -10,6 +10,7 @@
     ./cran.nix
     ./miniflux.nix
     ./paperless.nix
+    ./photoprism.nix
   ];
 
   boot.loader.systemd-boot.enable = true;
@@ -184,6 +185,8 @@
       { device = "/dev/nvme0"; options = "-H -f -t -l selftest -s (S/../.././01|L/../../1/02) -W 0,60,70"; }
     ];
   };
+
+  services.mysql.package = pkgs.mariadb_1011;
 
   services.jellyfin = {
     enable = true;
