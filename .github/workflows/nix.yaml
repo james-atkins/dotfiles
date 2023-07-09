@@ -32,7 +32,7 @@ jobs:
       if: ${{ github.event_name == 'schedule' || github.event_name == 'pull_request' }}
     
     - name: Build all machines
-      run: nix flake show --json | jq --raw-output '.nixosConfigurations | keys[]' | xargs -L1 -I'{}' nix build --verbose --print-build-logs .#nixosConfigurations.{}.config.system.build.toplevel
+      run: nix flake show --json | jq --raw-output '.nixosConfigurations | keys[]' | xargs -L1 -I'{}' nix build --print-build-logs .#nixosConfigurations.{}.config.system.build.toplevel
     
     - name: Commit and push
       run: |-
