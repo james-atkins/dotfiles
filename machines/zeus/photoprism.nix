@@ -37,4 +37,6 @@
   ja.private-services.photos.caddy-config = ''
     reverse_proxy localhost:${toString config.services.photoprism.port}
   '';
+
+  ja.backups.databases.mysql = [ "photoprism" ];
 }

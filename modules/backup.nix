@@ -28,6 +28,11 @@ with lib; {
       default = [ ];
       description = "paths to NOT backup to rsync.net";
     };
+    databases.mysql = mkOption {
+      type = with types; listOf str;
+      default = [];
+      description = "backup mysql database";
+    };
     databases.postgres = mkOption {
       type = with types; listOf str;
       default = [];
@@ -87,6 +92,7 @@ with lib; {
         { name = "archives"; frequency = "1 month"; }
       ];
 
+      hooks.mysql_databases = map (db: { name = db; }) cfg.databases.mysql;
       hooks.postgresql_databases = map (db: { name = db; username = "postgres"; }) cfg.databases.postgres;
     };
 
@@ -97,7 +103,9 @@ with lib; {
       inherit description;
       wants = [ "network-online.target" ];
       after = [ "network-online.target" ];
-      path = [ pkgs.zfs ] ++ lib.optionals (cfg.databases.postgres != []) [ config.services.postgresql.package ];
+      path = [ pkgs.zfs ] ++
+        lib.optionals (cfg.databases.mysql != []) [ config.services.mysql.package ] ++
+        lib.optionals (cfg.databases.postgres != []) [ config.services.postgresql.package ];
 
       persist.state = config.ja.persistence.enable;
       persist.cache = config.ja.persistence.enable;
