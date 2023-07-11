@@ -120,6 +120,7 @@ in
     enable = true;
     settings = {
       logLevel = "warn";
+      logDestinations = [ "stdout" ];
       readTimeout = "5s";
       writeTimeout = "5s";
       readBufferCount = 64 * 1024;
