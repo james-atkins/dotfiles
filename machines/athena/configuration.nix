@@ -1,5 +1,8 @@
 { config, lib, pkgs, ... }:
 let
+  inherit (lib) concatLines;
+  inherit (pkgs) fetchFromGitHub runCommand writeShellApplication;
+
   lan = "enp1s0";
   cctv = "enp2s0";
 
@@ -8,6 +11,55 @@ let
     { ethernetAddress = "10:12:FB:FD:94:06"; hostName = "front-gate"; ipAddress = "192.168.200.11"; }
   ];
 
+  simplecss = fetchFromGitHub {
+    owner = "kevquirk";
+    repo = "simple.css";
+    rev = "v2.2.1";
+    hash = "sha256-TbPL9ixlbQFYzXNO7DKZ31yyA5olQIV2vnH1bPA8I5E=";
+  };
+
+  mkCamHtml = cam: ''
+    <figure>
+      <img src="/image/${cam.hostName}.jpeg" alt="${cam.hostName}">
+    </figure>
+  '';
+
+  index = ''
+    <!doctype html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <title>CCTV</title>
+      <link rel="stylesheet" href="/simple.css">
+    </head>
+    <body>
+      <header>
+        <h1>CCTV</h1>
+      </header>
+      <main>
+        <h2>Live View</h2>
+        ${concatLines (map mkCamHtml cameras)}
+
+        <h2>Settings</h2>
+        <ul>
+          <li><b>Protocol: </b>RTSP</li>
+          <li><b>Host/IP address: {{ .Host }}</b></li>
+        </ul>
+      </main>
+    </body>
+    </html>
+  '';
+
+  caddy-files = runCommand "cctv-caddy-files" { } ''
+    mkdir $out
+
+    cp ${simplecss}/simple.css $out/simple.css
+    cat << EOF > $out/index.html
+    ${index}
+    EOF
+
+    ${pkgs.gzip}/bin/gzip --keep $out/simple.css
+  '';
 in
 {
   # Erase on boot
@@ -116,9 +168,16 @@ in
     '';
   };
 
+  age.secrets.cctv = {
+    file = ../../secrets/cctv.age;
+    owner = config.services.caddy.user;
+    group = config.services.caddy.group;
+  };
+
   services.mediamtx = {
     enable = true;
     settings = {
+      api = true;
       logLevel = "warn";
       logDestinations = [ "stdout" ];
       readTimeout = "5s";
@@ -130,7 +189,7 @@ in
             {
               name = cam.hostName;
               value = {
-                source = "rtsp://cctv:we%20can%20see%20you!@${cam.ipAddress}/Streaming/Channels/101";
+                source = "rtsp://\${CCTV_USERNAME}:\${CCTV_PASSWORD}@${cam.ipAddress}/Streaming/Channels/101";
                 sourceOnDemand = true;
                 sourceProtocol = "tcp";
               };
@@ -139,7 +198,7 @@ in
             {
               name = "${cam.hostName}/substream";
               value = {
-                source = "rtsp://cctv:we%20can%20see%20you!@${cam.ipAddress}/Streaming/Channels/102";
+                source = "rtsp://\${CCTV_USERNAME}:\${CCTV_PASSWORD}@${cam.ipAddress}/Streaming/Channels/102";
                 sourceOnDemand = true;
                 sourceProtocol = "tcp";
               };
@@ -148,7 +207,70 @@ in
         builtins.listToAttrs ((map mkMain cameras) ++ (map mkSub cameras));
     };
   };
-  systemd.services.rtsp-simple-server.path = lib.mkForce [ ]; # Remove ffmpeg
+
+  systemd.services.mediamtx = {
+    path = lib.mkForce [ ]; # Remove ffmpeg
+
+    serviceConfig = {
+      LoadCredential = "cctv:${config.age.secrets.cctv.path}";
+      ExecStartPre =
+        let
+          mediamtx-auth = writeShellApplication {
+            name = "mediamtx-auth";
+            runtimeInputs = with pkgs; [ gettext jq ];
+            text = ''
+              # Read credentials from environment file
+              set -o allexport
+              # shellcheck disable=SC1091
+              source "''${CREDENTIALS_DIRECTORY}/cctv"
+              set +o allexport
+
+              # URL encode the username and password
+              CCTV_USERNAME=$(echo "''${CCTV_USERNAME}" | jq -R -r @uri)
+              CCTV_PASSWORD=$(echo "''${CCTV_PASSWORD}" | jq -R -r @uri)
+              export CCTV_USERNAME
+              export CCTV_PASSWORD
+
+              # Substitute the config file with environment variables
+              envsubst < /etc/mediamtx.yaml > "''${RUNTIME_DIRECTORY}/mediamtx.yaml"
+            '';
+          };
+        in
+        "${mediamtx-auth}/bin/mediamtx-auth";
+      ExecStart = lib.mkForce ''${pkgs.mediamtx}/bin/mediamtx ''${RUNTIME_DIRECTORY}/mediamtx.yaml'';
+      RuntimeDirectory = "mediamtx";
+      RuntimeDirectoryMode = "0700";
+    };
+  };
+
+  services.caddy = {
+    enable = true;
+    virtualHosts."athena.crocodile-major.ts.net".extraConfig =
+      let
+        mkHandle = cam: ''
+          handle /image/${cam.hostName}.jpeg {
+            rewrite * /ISAPI/Streaming/channels/101/picture
+            reverse_proxy http://${cam.ipAddress} {
+              header_up Host {http.reverse_proxy.upstream.host}
+              header_up Authorization "Basic {$CCTV_BASIC_AUTH}"
+            }
+          }
+        '';
+
+      in
+      ''
+        root * ${caddy-files}
+        templates
+      
+        ${concatLines (map mkHandle cameras)}
+
+        file_server {
+          precompressed gzip
+        }
+      '';
+  };
+  systemd.services.caddy.serviceConfig.EnvironmentFile = config.age.secrets.cctv.path;
+  services.tailscale.permitCertUid = config.services.caddy.user;
 
   home-manager.users.james.home.stateVersion = "22.11";
   system.stateVersion = "22.11";

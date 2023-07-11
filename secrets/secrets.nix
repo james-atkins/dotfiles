@@ -11,6 +11,7 @@ in
   "stata16_licence.age".publicKeys = keys;
   "fastmail.age".publicKeys = keys;
   "borg.age".publicKeys = keys;
+  "cctv.age".publicKeys = keys;
   "cloudflare.age".publicKeys = [ zeus-ssh ];
   "miniflux.age".publicKeys = [ zeus-ssh ];
   "paperless.age".publicKeys = [ zeus-ssh ];
