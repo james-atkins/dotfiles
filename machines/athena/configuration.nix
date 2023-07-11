@@ -88,14 +88,12 @@ in
     interfaces.${lan} = {
       allowedTCPPorts = [
         53 # DNS
-        631 # cups
         8554 # RTSP
       ];
 
       allowedUDPPorts = [
         53 # DNS
         123 # NTP
-        631 # cups
         config.services.tailscale.port
         8000
         8001
@@ -150,24 +148,6 @@ in
     };
   };
   systemd.services.rtsp-simple-server.path = lib.mkForce [ ]; # Remove ffmpeg
-
-
-  services.printing = {
-    enable = true;
-    startWhenNeeded = false;
-    drivers = [ pkgs.hplipWithPlugin ];
-    browsing = true;
-    allowFrom = [ "localhost" "192.168.1.*" ];
-    listenAddresses = [ "*:631" ];
-    defaultShared = true;
-  };
-
-  services.avahi = {
-    enable = true;
-    interfaces = [ lan ];
-    publish.enable = true;
-    publish.userServices = true;
-  };
 
   home-manager.users.james.home.stateVersion = "22.11";
   system.stateVersion = "22.11";
