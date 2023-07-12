@@ -24,7 +24,7 @@
   networking.networkmanager.enable = true;
   services.resolved.enable = true;
 
-  time.timeZone = "America/Chicago";
+  services.automatic-timezoned.enable = true;
 
   # Enable TLP for power management
   services.tlp = {
