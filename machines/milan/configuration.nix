@@ -60,7 +60,10 @@
   # ES-60W scanner
   hardware.sane = {
     enable = true;
-    extraBackends = [ (pkgs-local.epsonscan2.override { withNonFreePlugins = true; }) ];
+    extraBackends = [
+      pkgs.hplipWithPlugin
+      (pkgs-local.epsonscan2.override { withNonFreePlugins = true; })
+    ];
     disabledDefaultBackends = [ "epsonds" ];
   };
   home-manager.users.james.home.packages = [ pkgs.simple-scan ];
