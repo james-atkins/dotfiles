@@ -88,6 +88,10 @@
 
                   nix = {
                     extraOptions = "experimental-features = nix-command flakes";
+
+                    # Don't talk to the internet every time I use the registry
+                    settings.flake-registry = pkgs-local.${system}.flake-registry;
+
                     registry.nixpkgs.flake = nixpkgs;
                     nixPath = [ "nixpkgs=${nixpkgs.outPath}" ];
                   };
