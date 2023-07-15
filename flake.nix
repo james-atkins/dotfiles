@@ -13,8 +13,12 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, nixos-hardware, home-manager, agenix }:
+  outputs = { self, nixpkgs, nixpkgs-unstable, nixos-hardware, home-manager, agenix }@inputs:
     let
+      inherit (nixpkgs.lib) filterAttrs mapAttrs mapAttrs' mapAttrsToList mkIf nameValuePair;
+
+      inputs' = filterAttrs (name: value: name != "self") inputs;
+
       forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
 
       pkgs = forAllSystems (system:
@@ -63,7 +67,7 @@
             machines = builtins.listToAttrs
               (map
                 (sys:
-                  nixpkgs.lib.nameValuePair sys.name { syncthing = sys.syncthing or null; }
+                  nameValuePair sys.name { syncthing = sys.syncthing or null; }
                 )
                 systems);
           };
@@ -86,17 +90,19 @@
                 {
                   networking.hostName = name;
 
-                  nix = {
-                    extraOptions = "experimental-features = nix-command flakes";
+                  nix.extraOptions = "experimental-features = nix-command flakes";
 
-                    # Don't talk to the internet every time I use the registry
-                    settings.flake-registry = pkgs-local.${system}.flake-registry;
+                  # Don't talk to the internet every time I use the registry
+                  nix.settings.flake-registry = pkgs-local.${system}.flake-registry;
 
-                    registry.nixpkgs.flake = nixpkgs;
-                    nixPath = [ "nixpkgs=${nixpkgs.outPath}" ];
-                  };
+                  # Pin flakes in the system registry to the versions used to build this system
+                  nix.registry = mapAttrs (name: value: { flake = value; }) inputs';
 
-                  system.configurationRevision = nixpkgs.lib.mkIf (self ? rev) self.rev;
+                  # Indirect NIX_PATH so it always points to the most recent version without needing to login again
+                  nix.nixPath = mapAttrsToList (name: _: "${name}=/etc/nix/path/${name}") inputs';
+                  environment.etc = mapAttrs' (name: value: nameValuePair "nix/path/${name}" { source = value; }) inputs';
+
+                  system.configurationRevision = mkIf (self ? rev) self.rev;
 
                   home-manager = {
                     useGlobalPkgs = true;
@@ -113,7 +119,7 @@
               ] ++ (if hardware != null then [ nixos-hardware.nixosModules.${hardware} ] else [ ]);
             };
         in
-        builtins.listToAttrs (map (sys: nixpkgs.lib.nameValuePair sys.name (mkSystem sys)) systems);
+        builtins.listToAttrs (map (sys: nameValuePair sys.name (mkSystem sys)) systems);
 
     in
     {
