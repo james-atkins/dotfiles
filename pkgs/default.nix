@@ -13,5 +13,4 @@ rec {
   tailscale-auth = pkgs-unstable.callPackage ./tailscale-auth { };
   pyblp = pythonPackages: pythonPackages.callPackage ./pyblp.nix { };
   stata16 = pkgs.callPackage ./stata16/default.nix { };
-  utsushi = pkgs.callPackage ./utsushi { };
 }
