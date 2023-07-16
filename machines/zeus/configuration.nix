@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, lib, pkgs, pkgs-unstable, pkgs-local, global, ... }:
+{ config, lib, pkgs, pkgs-local, global, ... }:
 
 {
   imports = [
@@ -44,8 +44,8 @@
         copy_bin_and_libs $BIN
       done
 
-      copy_bin_and_libs ${pkgs-unstable.tailscale}/bin/.tailscale-wrapped
-      copy_bin_and_libs ${pkgs-unstable.tailscale}/bin/.tailscaled-wrapped
+      copy_bin_and_libs ${config.services.tailscale.package}/bin/.tailscale-wrapped
+      copy_bin_and_libs ${config.services.tailscale.package}/bin/.tailscaled-wrapped
 
       mkdir -p $out/secrets/etc/ssl/certs
       cp ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt $out/secrets/etc/ssl/certs/ca-bundle.crt
