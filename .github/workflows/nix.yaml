@@ -26,7 +26,11 @@ jobs:
         name: james-atkins
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
         pushFilter: "(-source$|-wrapper$|\\.deb$|\\.tar\\.xz$|\\.tar\\.gz$|\\.zip$|\\.patch$)"
-    
+
+    - name: Flake registry update
+      run: wget https://github.com/NixOS/flake-registry/raw/master/flake-registry.json -O flake-registry.json
+      if: ${{ github.event_name == 'schedule' || github.event_name == 'pull_request' }}
+
     - name: Flake update
       run: nix flake update
       if: ${{ github.event_name == 'schedule' || github.event_name == 'pull_request' }}

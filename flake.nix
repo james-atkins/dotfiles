@@ -93,7 +93,7 @@
                   nix.extraOptions = "experimental-features = nix-command flakes";
 
                   # Don't talk to the internet every time I use the registry
-                  nix.settings.flake-registry = pkgs-local.${system}.flake-registry;
+                  nix.settings.flake-registry = ./flake-registry.json;
 
                   # Pin flakes in the system registry to the versions used to build this system
                   nix.registry = mapAttrs (name: value: { flake = value; }) inputs';
