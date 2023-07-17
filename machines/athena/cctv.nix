@@ -7,8 +7,8 @@ let
   cctv = "enp2s0";
 
   cameras = [
-    { ethernetAddress = "10:12:FB:79:29:5A"; hostName = "yard"; ipAddress = "192.168.200.10"; }
-    { ethernetAddress = "10:12:FB:FD:94:06"; hostName = "front-gate"; ipAddress = "192.168.200.11"; }
+    { name = "yard"; mac = "10:12:FB:79:29:5A"; ip = "192.168.200.10"; }
+    { name = "front-gate"; mac = "10:12:FB:FD:94:06"; ip = "192.168.200.11"; }
   ];
 in
 {
@@ -27,7 +27,7 @@ in
       NTP = [ "_server_address" ];
     };
 
-    dhcpServerStaticLeases = map (cam: { dhcpServerStaticLeaseConfig = { Address = cam.ipAddress; MACAddress = cam.ethernetAddress; }; }) cameras;
+    dhcpServerStaticLeases = map (cam: { dhcpServerStaticLeaseConfig = { Address = cam.ip; MACAddress = cam.mac; }; }) cameras;
   };
 
   # Chrony provides an NTP server so the cameras know the time
@@ -75,18 +75,18 @@ in
         let
           mkMain = cam:
             {
-              name = cam.hostName;
+              name = cam.name;
               value = {
-                source = "rtsp://\${CCTV_USERNAME}:\${CCTV_PASSWORD}@${cam.ipAddress}/Streaming/Channels/101";
+                source = "rtsp://\${CCTV_USERNAME}:\${CCTV_PASSWORD}@${cam.ip}/Streaming/Channels/101";
                 sourceOnDemand = true;
                 sourceProtocol = "tcp";
               };
             };
           mkSub = cam:
             {
-              name = "${cam.hostName}/substream";
+              name = "${cam.name}/substream";
               value = {
-                source = "rtsp://\${CCTV_USERNAME}:\${CCTV_PASSWORD}@${cam.ipAddress}/Streaming/Channels/102";
+                source = "rtsp://\${CCTV_USERNAME}:\${CCTV_PASSWORD}@${cam.ip}/Streaming/Channels/102";
                 sourceOnDemand = true;
                 sourceProtocol = "tcp";
               };
@@ -136,9 +136,9 @@ in
     virtualHosts."athena.crocodile-major.ts.net".extraConfig =
       let
         mkHandle = cam: ''
-          handle /image/${cam.hostName}.jpeg {
+          handle /image/${cam.name}.jpeg {
             rewrite * /ISAPI/Streaming/channels/101/picture
-            reverse_proxy http://${cam.ipAddress} {
+            reverse_proxy http://${cam.ip} {
               header_up Host {http.reverse_proxy.upstream.host}
               header_up Authorization "Basic {$CCTV_BASIC_AUTH}"
             }
@@ -154,7 +154,7 @@ in
 
         mkCamHtml = cam: ''
           <figure>
-            <img src="/image/${cam.hostName}.jpeg" alt="${cam.hostName}">
+            <img src="/image/${cam.name}.jpeg" alt="${cam.name}">
           </figure>
         '';
 
