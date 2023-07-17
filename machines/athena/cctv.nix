@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, global, ... }:
 
 let
   inherit (lib) concatLines;
@@ -133,7 +133,7 @@ in
 
   services.caddy = {
     enable = true;
-    virtualHosts."athena.crocodile-major.ts.net".extraConfig =
+    virtualHosts."${config.networking.hostName}.${global.tailscaleDomain}".extraConfig =
       let
         mkHandle = cam: ''
           handle /image/${cam.name}.jpeg {
