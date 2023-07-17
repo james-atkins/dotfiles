@@ -2,7 +2,7 @@
 
 let
   inherit (lib) concatLines;
-  inherit (pkgs) fetchFromGitHub runCommand writeShellApplication;
+  inherit (pkgs) fetchFromGitHub runCommand writeShellApplication writeText;
 
   cctv = "enp2s0";
 
@@ -158,7 +158,7 @@ in
           </figure>
         '';
 
-        index = ''
+        index = writeText "index.html" ''
           <!doctype html>
           <html lang="en">
           <head>
@@ -185,15 +185,13 @@ in
         '';
 
         caddy-files = runCommand "cctv-caddy-files" { } ''
-          mkdir $out
+              mkdir $out
 
-          cp ${simplecss}/simple.css $out/simple.css
-          cat <<EOF > $out/index.html
-          ${index}
-          EOF
+              cp ${simplecss}/simple.css $out/simple.css
+              cp ${index} $out/index.html
 
-          ${pkgs.gzip}/bin/gzip --keep $out/simple.css
-      	'';
+              ${pkgs.gzip}/bin/gzip --keep $out/simple.css
+          	'';
       in
       ''
         root * ${caddy-files}
