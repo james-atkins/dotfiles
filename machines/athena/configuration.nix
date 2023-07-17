@@ -37,27 +37,6 @@ in
     tailscaleReverseProxy = true;
   };
 
-  # TODO: tailscale DNS
-  # DNS over HTTP / DNS over SSL
-  services.unbound = {
-    enable = true;
-    settings = {
-      server = {
-        interface = [ "0.0.0.0" ];
-        access-control = [ "127.0.0.0/8 allow" "::1/128 allow" "192.168.1.0/24 allow" ];
-        private-address = [
-          "10.0.0.0/8"
-          "172.16.0.0/12"
-          "192.168.0.0/16"
-          "169.254.0.0/16"
-          "fd00::/8"
-          "fe80::/10"
-        ];
-      };
-    };
-  };
-  systemd.services.unbound.persist.state = true;
-
   services.tailscale.useRoutingFeatures = "server";
   services.tailscale.permitCertUid = config.services.caddy.user;
 
@@ -67,7 +46,6 @@ in
 
     interfaces.${lan} = {
       allowedTCPPorts = [
-        53 # DNS
         8554 # RTSP
       ];
 
