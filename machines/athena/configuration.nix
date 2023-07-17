@@ -46,14 +46,14 @@ in
 
     interfaces.${lan} = {
       allowedTCPPorts = [
-        8554 # RTSP
+        8554 # mediamtx: TCP/RTSP
       ];
 
       allowedUDPPorts = [
         53 # DNS
         config.services.tailscale.port
-        8000
-        8001
+        8000 # mediamtx: UDP/RTP
+        8001 # mediamtx: UDP/RTCP
       ];
     };
   };
