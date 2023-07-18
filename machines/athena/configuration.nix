@@ -50,7 +50,6 @@ in
       ];
 
       allowedUDPPorts = [
-        53 # DNS
         config.services.tailscale.port
         8000 # mediamtx: UDP/RTP
         8001 # mediamtx: UDP/RTCP
