@@ -17,7 +17,7 @@ in
   time.timeZone = "Europe/London";
 
   networking.useDHCP = false;
-  systemd.network.enable = true;
+  networking.useNetworkd = true;
 
   systemd.network.networks."10-lan" = {
     matchConfig.Name = lan;
