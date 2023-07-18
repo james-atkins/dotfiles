@@ -7,10 +7,6 @@
   };
 
   networking.networkmanager.unmanaged = lib.mkIf config.networking.networkmanager.enable [ config.services.tailscale.interfaceName ];
-  systemd.network.networks."10-tailscale" = lib.mkIf (config.systemd.network.enable && config.services.tailscale.interfaceName != "userspace-networking") {
-    matchConfig.Name = config.services.tailscale.interfaceName;
-    linkConfig.Unmanaged = true;
-  };
 
   networking.firewall = {
     enable = true;
