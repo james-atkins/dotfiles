@@ -205,4 +205,56 @@ in
       '';
   };
   systemd.services.caddy.serviceConfig.EnvironmentFile = config.age.secrets.cctv.path;
+
+  systemd.services.cctv-snapshot = {
+    unitConfig.RequiresMountsFor = [ "/sdcard" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart =
+        let
+          mkNetrc = cam: ''
+            {
+              echo "machine ${cam.ip}"
+              echo "login ''${CCTV_USERNAME}"
+              echo "password \"''${CCTV_PASSWORD}\""
+              echo ""
+            } >> "''${RUNTIME_DIRECTORY}/netrc"
+          '';
+
+          mkDownload = cam: ''
+            curl --silent --show-error --fail-with-body --netrc-file "''${RUNTIME_DIRECTORY}/netrc" -o "''${output_dir}/${cam.name}_$(date +'%H%M%S').jpeg" "http://${cam.ip}/ISAPI/Streaming/channels/101/picture" &
+          '';
+
+          script = writeShellApplication {
+            name = "cctv-snapshot";
+            runtimeInputs = with pkgs; [ coreutils curl ];
+            text = ''
+              # Read credentials from environment file
+              set -o allexport
+              # shellcheck disable=SC1091
+              source "''${CREDENTIALS_DIRECTORY}/cctv"
+              set +o allexport
+
+              # Make netrc file
+              ${concatLines (map mkNetrc cameras)}
+
+              output_dir="/sdcard/cctv/$(date +'%Y/%m/%d')"
+              mkdir -p "''${output_dir}"
+
+              ${concatLines (map mkDownload cameras)}
+
+              wait
+            '';
+          };
+        in
+          "${script}/bin/cctv-snapshot";
+      LoadCredential = "cctv:${config.age.secrets.cctv.path}";
+      RuntimeDirectory = "cctv-snapshot";
+    };
+  };
+
+  systemd.timers.cctv-snapshot = {
+    timerConfig.OnCalendar = "minutely";
+    wantedBy = [ "timers.target" ];
+  };
 }
