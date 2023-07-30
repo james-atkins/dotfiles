@@ -27,6 +27,47 @@ in
 
   services.openssh.enable = true;
 
+  services.samba = {
+    enable = true;
+    enableWinbindd = false;
+    openFirewall = false;  # enable the firewall manually only on the lan interface
+    extraConfig = ''
+      workgroup = WORKGROUP
+      map to guest = bad user
+      private dir = /persist/var/lib/samba/private
+
+      # Only listen on localhost (required for smbpasswd) and lan
+      # For some reason, Samba does not work on the tailscale interface
+      # https://github.com/tailscale/tailscale/issues/6856#issuecomment-1485385748
+      # Need to run tailscale serve tcp:445 tcp://localhost:445
+      bind interfaces only = yes
+      interfaces = lo ${lan}
+    '';
+  };
+  services.samba-wsdd = {
+    enable = true;
+    interface = lan;
+  };
+
+  services.samba.shares = {
+    "backups" = {
+      path = "/tank/shares/backups";
+      browseable = "yes";
+      "read only" = "no";
+    };
+    "shared" = {
+      path = "/tank/shares/shared";
+      browseable = "yes";
+      "read only" = "no";
+      "create mask" = "0775";
+      "directory mask" = "0775";
+    };
+  };
+
+  users.users.richard = {
+    isNormalUser = true;
+  };
+
   users.groups.photos.members = [
     config.users.users.james.name
     config.users.users.syncthing.name
@@ -46,11 +87,15 @@ in
 
     interfaces.${lan} = {
       allowedTCPPorts = [
+        139 445 # samba
+        5357 # samba-wsdd
         8554 # mediamtx: TCP/RTSP
       ];
 
       allowedUDPPorts = [
         config.services.tailscale.port
+        137 138 # samba
+        3702 # samba-wsdd
         8000 # mediamtx: UDP/RTP
         8001 # mediamtx: UDP/RTCP
       ];

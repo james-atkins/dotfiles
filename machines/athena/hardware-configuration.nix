@@ -9,7 +9,7 @@
       (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "ehci_pci" "sd_mod" "sdhci_pci" ];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "ehci_pci" "uas" "sd_mod" "sdhci_pci" ];
   boot.initrd.kernelModules = [ ];
   boot.loader.grub.device = "/dev/sda";
   boot.kernelModules = [ "kvm-amd" ];
@@ -25,6 +25,16 @@
     { device = "/dev/disk/by-uuid/9d2209cf-746f-421b-9dab-ac36cdb48fc7";
       fsType = "ext4";
     };
+
+  fileSystems."/tank" = rec {
+    device = "/dev/mapper/${encrypted.label}";
+    encrypted = {
+      enable = true;
+      blkDev = "/dev/disk/by-uuid/5d07c6a7-8f89-4acf-9ee0-4410ee0da242";
+      label = "tank";
+      keyFile = "/mnt-root/persist/etc/hdd.key";
+    };
+  };
 
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
