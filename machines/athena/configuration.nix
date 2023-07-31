@@ -73,6 +73,15 @@ in
     config.users.users.syncthing.name
   ];
 
+  age.secrets.borg_athena.file = ../../secrets/borg_athena.age;
+  ja.backups = {
+    enable = true;
+    paths = [
+      "/tank/shares"
+    ];
+    password-file = config.age.secrets.borg_athena.path;
+  };
+
   ja.services.syncthing = {
     enable = true;
     tailscaleReverseProxy = true;
