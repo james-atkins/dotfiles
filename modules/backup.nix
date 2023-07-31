@@ -1,6 +1,9 @@
 { config, lib, pkgs, pkgs-local, ... }:
 
 let
+  inherit (builtins) any length;
+  inherit (lib) mapAttrsToList mkEnableOption mkIf mkOption optionals types;
+
   cfg = config.ja.backups;
   description = "borgmatic backup";
   settingsFormat = pkgs.formats.yaml { };
@@ -8,12 +11,19 @@ let
   fingerprints = pkgs.writeText "known_hosts" ''
     de2429.rsync.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIObQN4P/deJ/k4P4kXh6a9K4Q89qdyywYetp9h3nwfPo
   '';
+
+  zfsEnabled = (length config.boot.zfs.extraPools) > 0
+    || any (fsType: fsType == "zfs") (mapAttrsToList (name: value: value.fsType) config.fileSystems);
+
+  package = if zfsEnabled then pkgs-local.borgmatic-zfs-snapshot else pkgs.borgmatic;
+  command = if zfsEnabled then "${package}/bin/borgmatic-zfs-snapshot" else "${package}/bin/borgmatic";
 in
-with lib; {
+{
   options.ja.backups = {
     enable = mkEnableOption "Enables backups to rsync.net";
     zfs_snapshots = mkOption {
       type = with types; listOf str;
+      default = [ ];
       description = "ZFS datasets to snapshot before backing up";
     };
     paths = mkOption {
@@ -28,14 +38,19 @@ with lib; {
       default = [ ];
       description = "paths to NOT backup to rsync.net";
     };
+    password-file = mkOption {
+      type = types.str;
+      default = config.age.secrets.borg.path;
+      description = "path to file containing password of Borg repository";
+    };
     databases.mysql = mkOption {
       type = with types; listOf str;
-      default = [];
+      default = [ ];
       description = "backup mysql database";
     };
     databases.postgres = mkOption {
       type = with types; listOf str;
-      default = [];
+      default = [ ];
       description = "backup postgres database";
     };
   };
@@ -81,7 +96,7 @@ with lib; {
 
       storage = {
         compression = "auto,zstd,3";
-        encryption_passcommand = "${pkgs.coreutils}/bin/cat ${config.age.secrets.borg.path}";
+        encryption_passcommand = "${pkgs.coreutils}/bin/cat ${cfg.password-file}";
         ssh_command = "ssh -o ServerAliveInterval=120 -o PubkeyAuthentication=yes -o StrictHostKeyChecking=yes -o GlobalKnownHostsFile=${fingerprints} -i /persist/etc/secrets/id_borg_ed25519";
         borg_config_directory = (lib.optionalString config.ja.persistence.enable "/persist") + "/var/lib/backups/borg";
         borg_cache_directory = (lib.optionalString config.ja.persistence.enable "/persist") + "/var/cache/backups/borg";
@@ -97,23 +112,22 @@ with lib; {
     };
 
     environment.etc."borgmatic/zfs-snapshots".text = lib.concatLines cfg.zfs_snapshots;
-    environment.systemPackages = [ pkgs-local.borgmatic-zfs-snapshot ];
+    environment.systemPackages = [ package ];
 
     systemd.services.borgmatic = {
       inherit description;
       wants = [ "network-online.target" ];
       after = [ "network-online.target" ];
-      path = [ pkgs.zfs ] ++
-        lib.optionals (cfg.databases.mysql != []) [ config.services.mysql.package ] ++
-        lib.optionals (cfg.databases.postgres != []) [ config.services.postgresql.package ];
+      path = lib.optionals zfsEnabled [ pkgs.zfs ] ++
+        lib.optionals (cfg.databases.mysql != [ ]) [ config.services.mysql.package ] ++
+        lib.optionals (cfg.databases.postgres != [ ]) [ config.services.postgresql.package ];
 
       persist.state = config.ja.persistence.enable;
       persist.cache = config.ja.persistence.enable;
 
       serviceConfig = {
         Type = "oneshot";
-        ExecStart = "${pkgs-local.borgmatic-zfs-snapshot}/bin/borgmatic-zfs-snapshot -v 2";
-
+        ExecStart = "${command} -v 2";
         StateDirectory = "backups";
         StateDirectoryMode = "0700";
         CacheDirectory = "backups";
@@ -137,7 +151,7 @@ with lib; {
         RestrictRealtime = true;
         RestrictSUIDSGID = true;
 
-        SystemCallFilter = [ "@system-service" "@mount" "unshare" ];
+        SystemCallFilter = [ "@system-service" ] ++ optionals zfsEnabled [ "@mount" "unshare" ];
         SystemCallErrorNumber = "EPERM";
         SystemCallArchitectures = "native";
 
