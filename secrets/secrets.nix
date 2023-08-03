@@ -16,4 +16,5 @@ in
   "cloudflare.age".publicKeys = [ zeus-ssh ];
   "miniflux.age".publicKeys = [ zeus-ssh ];
   "paperless.age".publicKeys = [ zeus-ssh ];
+  "james_smb.age".publicKeys = [ milan-ssh ];
 }

@@ -1,4 +1,4 @@
-{ config, lib, pkgs, pkgs-unstable, ... }:
+{ config, lib, pkgs, pkgs-unstable, global, ... }:
 
 {
   boot.loader.systemd-boot.enable = true;
@@ -83,6 +83,18 @@
   ja.services.syncthing = {
     enable = true;
     user = config.users.users.james.name;
+  };
+
+  # For mount.cifs, required for domain name resolution.
+  environment.systemPackages = [ pkgs.cifs-utils ];
+  age.secrets.smb.file = ../../secrets/james_smb.age;
+  fileSystems."/mnt/athena/shared" = {
+    device = "//athena.${global.tailscaleDomain}/shared";
+    options =
+      let
+        automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
+      in
+        ["${automount_opts},credentials=${config.age.secrets.smb.path},uid=${toString config.users.users.james.uid},gid=${toString config.users.groups.users.gid}"];
   };
 
   home-manager.users.james.home.stateVersion = "22.11";

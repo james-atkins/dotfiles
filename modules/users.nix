@@ -15,6 +15,7 @@ with lib; {
     age.secrets.jamesPassword.file = ../secrets/password_james.age;
     users.users."james" = {
       isNormalUser = true;
+      uid = 1000;
       description = "James Atkins";
       passwordFile = config.age.secrets.jamesPassword.path;
       extraGroups = with lib; [ "wheel" ]
