@@ -123,6 +123,15 @@ in
 
   ja.programs.msmtp.enable = true;
 
+  services.zfs.zed.settings = {
+    ZED_EMAIL_ADDR = [ "root" ];
+    ZED_EMAIL_PROG = "${pkgs.msmtp}/bin/msmtp";
+    ZED_EMAIL_OPTS = "@ADDRESS@";
+    ZED_NOTIFY_INTERVAL_SECS = 3600;
+    ZED_NOTIFY_VERBOSE = true;
+  };
+  services.zfs.autoScrub.enable = true;
+
   home-manager.users.james.home.stateVersion = "22.11";
   system.stateVersion = "22.11";
 }
