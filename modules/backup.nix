@@ -1,4 +1,4 @@
-{ config, lib, pkgs, pkgs-local, ... }:
+{ config, lib, pkgs, pkgs-local, global, ... }:
 
 let
   inherit (builtins) any length;
@@ -10,6 +10,7 @@ let
 
   fingerprints = pkgs.writeText "known_hosts" ''
     de2429.rsync.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIObQN4P/deJ/k4P4kXh6a9K4Q89qdyywYetp9h3nwfPo
+    athena.${global.tailscaleDomain} ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDRNxVS63eSd0mLphv+/zax+1cxnOXW7RoNLgCiV4Uf8
   '';
 
   zfsEnabled = (length config.boot.zfs.extraPools) > 0
@@ -21,6 +22,11 @@ in
 {
   options.ja.backups = {
     enable = mkEnableOption "Enables backups to rsync.net";
+    extra_repositories = mkOption {
+      type = with types; listOf str;
+      default = [ ];
+      description = "Extra Borg repositories to backup to";
+    };
     zfs_snapshots = mkOption {
       type = with types; listOf str;
       default = [ ];
@@ -67,7 +73,7 @@ in
     environment.etc."borgmatic/config.yaml".source = settingsFormat.generate "config.yaml" {
       location = {
         source_directories = cfg.paths;
-        repositories = [ "ssh://de2429@de2429.rsync.net/./borg/${config.networking.hostName}" ];
+        repositories = [ "ssh://de2429@de2429.rsync.net/./borg/${config.networking.hostName}" ] ++ cfg.extra_repositories;
         exclude_patterns = [
           "/var/lib/containers"
           "/var/lib/docker"

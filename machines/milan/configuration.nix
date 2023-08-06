@@ -44,6 +44,7 @@
 
   ja.backups = {
     enable = true;
+    extra_repositories = [ "ssh://borg@athena.${global.tailscaleDomain}/./" ];
     zfs_snapshots = [ "rpool/home" ];
   };
   ja.desktop.enable = true;
