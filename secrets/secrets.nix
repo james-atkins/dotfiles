@@ -10,6 +10,7 @@ in
   "password_james.age".publicKeys = keys;
   "stata16_licence.age".publicKeys = keys;
   "fastmail.age".publicKeys = keys;
+  "fastmail_athena.age".publicKeys = [ athena-ssh ];
   "borg.age".publicKeys = keys;
   "borg_athena.age".publicKeys = keys;
   "cctv.age".publicKeys = keys;

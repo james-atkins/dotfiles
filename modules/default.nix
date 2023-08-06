@@ -8,6 +8,7 @@
     ./tailscale.nix
     ./backup.nix
     ./databases.nix
+    ./programs
     ./services
     ./desktop
     ./development
