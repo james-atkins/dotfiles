@@ -132,6 +132,18 @@ in
   };
   services.zfs.autoScrub.enable = true;
 
+  services.smartd = {
+    enable = true;
+    notifications.mail = {
+      enable = true;
+      mailer = "${pkgs.msmtp}/bin/msmtp";
+    };
+    # Short self-test every day between 1-2am, and an extended self test weekly on Mondays between 2-3am:
+    # Ignore tracking of normalised temperature attributes - instead log temperatures of 40 degrees
+    # or higher, and warn on temperatures of 45 degrees or higher.
+    defaults.autodetected = "-a  -s (S/../.././01|L/../../1/02) -I 194 -W 0,40,45";
+  };
+
   home-manager.users.james.home.stateVersion = "22.11";
   system.stateVersion = "22.11";
 }
