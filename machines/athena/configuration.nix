@@ -74,6 +74,15 @@ in
     config.users.users.syncthing.name
   ];
 
+  services.borgbackup.repos = {
+    milan = {
+      path = "/tank/borg/milan";
+      authorizedKeys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJEDBSisFxn2nC794UIPHOQDbNUlBDau9FVAJ8gM4VcL"
+      ];
+    };
+  };
+
   age.secrets.borg_athena.file = ../../secrets/borg_athena.age;
   ja.backups = {
     enable = true;
