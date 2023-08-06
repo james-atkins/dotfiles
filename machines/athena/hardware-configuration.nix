@@ -20,6 +20,12 @@
     requestEncryptionCredentials = false;
   };
 
+  # Override the default NO_ATA_1X flag for the Seagate drive so smartctl works
+  # https://www.smartmontools.org/wiki/SAT-with-UAS-Linux
+  boot.extraModprobeConfig = ''
+    options usb-storage quirks=0bc2:2343:
+  '';
+
   fileSystems."/" =
     {
       device = "/dev/disk/by-uuid/d3e51dc7-f64c-4707-aa3e-d8367eb3dc2b";
