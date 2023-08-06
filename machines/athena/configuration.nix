@@ -16,6 +16,7 @@ in
 
   time.timeZone = "Europe/London";
 
+  networking.hostId = "b4bbbb9e";
   networking.useDHCP = false;
   networking.useNetworkd = true;
 
