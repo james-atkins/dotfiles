@@ -103,7 +103,7 @@ in
       storage = {
         compression = "auto,zstd,3";
         encryption_passcommand = "${pkgs.coreutils}/bin/cat ${cfg.password-file}";
-        ssh_command = "ssh -o ServerAliveInterval=120 -o PubkeyAuthentication=yes -o StrictHostKeyChecking=yes -o GlobalKnownHostsFile=${fingerprints} -i /persist/etc/secrets/id_borg_ed25519";
+        ssh_command = "ssh -o ServerAliveInterval=10 -o ServerAliveCountMax=6 -o PubkeyAuthentication=yes -o StrictHostKeyChecking=yes -o GlobalKnownHostsFile=${fingerprints} -i /persist/etc/secrets/id_borg_ed25519";
         borg_config_directory = (lib.optionalString config.ja.persistence.enable "/persist") + "/var/lib/backups/borg";
         borg_cache_directory = (lib.optionalString config.ja.persistence.enable "/persist") + "/var/cache/backups/borg";
       };
