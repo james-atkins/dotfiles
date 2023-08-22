@@ -16,6 +16,13 @@ in
     find /mnt-root/var/lib -mindepth 1 -maxdepth 1 -not \( -name nixos \) -exec rm -rf {} +
   '';
 
+  home-manager.users.james.programs.bash.initExtra = ''
+    zfs mount | grep tank/enc > /dev/null || {
+      echo "Unlocking encrypted volumes..."
+      sudo zfs mount -la && sudo systemctl restart syncthing.service
+    }
+  '';
+
   time.timeZone = "Europe/London";
 
   networking.hostId = "b4bbbb9e";
