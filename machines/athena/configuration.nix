@@ -9,7 +9,7 @@ in
   ];
 
   # Erase on boot
-  boot.initrd.postMountCommands = ''
+  boot.initrd.postMountCommands = lib.mkBefore ''
     echo "Erasing your darlings"
     find /mnt-root -mindepth 1 -maxdepth 1 -not \( -name boot -o -name home -o -name persist -o -name nix -o -name var \) -exec rm -rf {} +
     find /mnt-root/var -mindepth 1 -maxdepth 1 -not \( -name empty -o -name log -o -name lib \) -exec rm -rf {} +
