@@ -101,7 +101,7 @@ in
       ExecStart =
         let
           script = pkgs.writeShellScript "nextdns" ''
-            ${pkgs.curl}/bin/curl $(cat $CREDENTIALS_DIRECTORY/url)
+            ${pkgs.curl}/bin/curl --silent --show-error --fail-with-body $(cat $CREDENTIALS_DIRECTORY/url)
           '';
         in
         "${script}";
