@@ -92,6 +92,31 @@ in
     };
   };
 
+  age.secrets.nextdns.file = ../../secrets/bg_nextdns.age;
+  systemd.services.nextdns-ip-update = {
+    after = [ "network.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      LoadCredential = "url:${config.age.secrets.nextdns.path}";
+      ExecStart =
+        let
+          script = pkgs.writeShellScript "nextdns" ''
+            ${pkgs.curl}/bin/curl $(cat $CREDENTIALS_DIRECTORY/url)
+          '';
+        in
+        "${script}";
+      DynamicUser = true;
+    };
+  };
+  systemd.timers.nextdns-ip-update = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      Persistent = true;
+      OnCalendar = "hourly";
+      RandomizedDelaySec = 60;
+    };
+  };
+
   age.secrets.borg_athena.file = ../../secrets/borg_athena.age;
   ja.backups = {
     enable = true;
