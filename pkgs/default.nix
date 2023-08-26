@@ -2,6 +2,7 @@
 
 rec {
   borgmatic-zfs-snapshot = pkgs.callPackage ./borgmatic-zfs-snapshot/default.nix { };
+  bthomehub-hosts  = pkgs.callPackage ./bthomehub-hosts/default.nix { };
   cran = pkgs.callPackage ./cran/default.nix { };
   duckdb = pkgs.callPackage ./duckdb/default.nix { inherit cran; };
   foot-themes = pkgs.callPackage ./foot-themes/default.nix { };

@@ -18,5 +18,5 @@ in
   "miniflux.age".publicKeys = [ zeus-ssh ];
   "paperless.age".publicKeys = [ zeus-ssh ];
   "james_smb.age".publicKeys = [ milan-ssh ];
-  "bg_nextdns.age".publicKeys = [ athena-ssh ];
+  "nextdns_bg.age".publicKeys = [ athena-ssh ];
 }

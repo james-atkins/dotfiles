@@ -6,6 +6,7 @@ in
 {
   imports = [
     ./cctv.nix
+    ./dns.nix
   ];
 
   # Erase on boot
@@ -31,7 +32,10 @@ in
 
   systemd.network.networks."10-lan" = {
     matchConfig.Name = lan;
-    networkConfig.DHCP = "ipv4";
+    networkConfig = {
+      DHCP = "ipv4";
+      DNS = [ "1.1.1.1" "1.0.0.1" ];
+    };
     linkConfig.RequiredForOnline = "routable";
   };
 
@@ -89,31 +93,6 @@ in
       authorizedKeys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJEDBSisFxn2nC794UIPHOQDbNUlBDau9FVAJ8gM4VcL"
       ];
-    };
-  };
-
-  age.secrets.nextdns.file = ../../secrets/bg_nextdns.age;
-  systemd.services.nextdns-ip-update = {
-    after = [ "network.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      LoadCredential = "url:${config.age.secrets.nextdns.path}";
-      ExecStart =
-        let
-          script = pkgs.writeShellScript "nextdns" ''
-            ${pkgs.curl}/bin/curl --silent --show-error --fail-with-body $(cat $CREDENTIALS_DIRECTORY/url)
-          '';
-        in
-        "${script}";
-      DynamicUser = true;
-    };
-  };
-  systemd.timers.nextdns-ip-update = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      Persistent = true;
-      OnCalendar = "hourly";
-      RandomizedDelaySec = 60;
     };
   };
 
