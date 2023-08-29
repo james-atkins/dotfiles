@@ -69,6 +69,13 @@ in
       browseable = "yes";
       "read only" = "no";
     };
+    "scans" = {
+      path = "/tank/shares/scans";
+      browseable = "yes";
+      "read only" = "no";
+      "create mask" = "0664";
+      "directory mask" = "0775";
+    };
     "shared" = {
       path = "/tank/shares/shared";
       browseable = "yes";
@@ -80,6 +87,11 @@ in
 
   users.users.richard = {
     isNormalUser = true;
+  };
+
+  users.users.scanner = {
+    isSystemUser = true;
+    group = config.users.groups.users.name;
   };
 
   users.groups.photos.members = [
