@@ -1,4 +1,4 @@
-{ pkgs, pkgs-local, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
 {
   programs.bash.enable = true;
@@ -25,7 +25,7 @@
 
   programs.helix = {
     enable = true;
-    package = pkgs-local.helix;
+    package = pkgs-unstable.helix;
     settings = {
       theme = "tokyonight_storm";
     };
