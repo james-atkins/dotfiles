@@ -85,11 +85,14 @@ in
     };
   };
 
-  users.users.richard = {
-    isNormalUser = true;
+  users.users.scanner = {
+    uid = 2000;
+    isSystemUser = true;
+    group = config.users.groups.users.name;
   };
 
-  users.users.scanner = {
+  users.users.richard = {
+    uid = 2001;
     isSystemUser = true;
     group = config.users.groups.users.name;
   };
