@@ -26,7 +26,7 @@
     isSystemUser = true;
     group = config.users.groups.photoprism.name;
   };
-  users.groups.photoprism = {};
+  users.groups.photoprism = { };
 
   systemd.services.photoprism = {
     # Doesn't currently working with persistence

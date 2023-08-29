@@ -33,7 +33,8 @@
     };
 
   fileSystems."/sdcard" =
-    { device = "/dev/disk/by-uuid/9d2209cf-746f-421b-9dab-ac36cdb48fc7";
+    {
+      device = "/dev/disk/by-uuid/9d2209cf-746f-421b-9dab-ac36cdb48fc7";
       fsType = "ext4";
     };
 

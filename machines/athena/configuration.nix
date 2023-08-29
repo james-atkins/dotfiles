@@ -44,7 +44,7 @@ in
   services.samba = {
     enable = true;
     enableWinbindd = false;
-    openFirewall = false;  # enable the firewall manually only on the lan interface
+    openFirewall = false; # enable the firewall manually only on the lan interface
     extraConfig = ''
       workgroup = WORKGROUP
       map to guest = bad user
@@ -119,14 +119,16 @@ in
 
     interfaces.${lan} = {
       allowedTCPPorts = [
-        139 445 # samba
+        139
+        445 # samba
         5357 # samba-wsdd
         8554 # mediamtx: TCP/RTSP
       ];
 
       allowedUDPPorts = [
         config.services.tailscale.port
-        137 138 # samba
+        137
+        138 # samba
         3702 # samba-wsdd
         8000 # mediamtx: UDP/RTP
         8001 # mediamtx: UDP/RTCP

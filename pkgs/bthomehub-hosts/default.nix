@@ -7,7 +7,7 @@ stdenv.mkDerivation {
   name = "bthomehub-hosts";
   src = ./.;
   dontUnpack = true;
-  propagatedBuildInputs = [ (python3.withPackages(ps: with ps; [ requests ])) ];
+  propagatedBuildInputs = [ (python3.withPackages (ps: with ps; [ requests ])) ];
   installPhase = ''
     mkdir $out
     cp $src/*.py $out

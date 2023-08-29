@@ -247,7 +247,7 @@ in
             '';
           };
         in
-          "${script}/bin/cctv-snapshot";
+        "${script}/bin/cctv-snapshot";
       LoadCredential = "cctv:${config.age.secrets.cctv.path}";
       RuntimeDirectory = "cctv-snapshot";
     };

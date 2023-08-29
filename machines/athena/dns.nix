@@ -30,7 +30,7 @@ in
           ${pkgs.gettext}/bin/envsubst < "${nextdns-config}" > "''${RUNTIME_DIRECTORY}/config"
         '';
       in
-        "${script}";
+      "${script}";
     DynamicUser = true;
     RuntimeDirectory = "nextdns";
     RuntimeDirectoryMode = "0750";
@@ -53,10 +53,10 @@ in
             ${pkgs-local.bthomehub-hosts}/bin/generate_hosts > $RUNTIME_DIRECTORY/hosts.dnsmasq
           '';
         in
-          [
-            "${script}"
-            "+${pkgs.coreutils}/bin/cp \${RUNTIME_DIRECTORY}/hosts.dnsmasq /etc"
-          ];
+        [
+          "${script}"
+          "+${pkgs.coreutils}/bin/cp \${RUNTIME_DIRECTORY}/hosts.dnsmasq /etc"
+        ];
 
       DynamicUser = true;
       RuntimeDirectory = "bthomehub-hosts";
