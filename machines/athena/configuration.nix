@@ -141,7 +141,8 @@ in
   ja.backups = {
     enable = true;
     paths = [
-      "/tank/shares"
+      "/tank/shares/backups"
+      "/tank/shares/shared"
     ];
     password-file = config.age.secrets.borg_athena.path;
   };
