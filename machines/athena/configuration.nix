@@ -97,6 +97,24 @@ in
     group = config.users.groups.users.name;
   };
 
+  users.users.gilly = {
+    uid = 2002;
+    isSystemUser = true;
+    group = config.users.groups.users.name;
+  };
+
+  users.users.annabel = {
+    uid = 2003;
+    isSystemUser = true;
+    group = config.users.groups.users.name;
+  };
+
+  users.users.ipad = {
+    uid = 2004;
+    isSystemUser = true;
+    group = config.users.groups.users.name;
+  };
+
   systemd.tmpfiles.rules = [
     "e /tank/shares/scans 0775 ${config.users.users.scanner.name} ${config.users.users.scanner.group} 30d"
   ];
