@@ -94,6 +94,10 @@ in
     group = config.users.groups.users.name;
   };
 
+  systemd.tmpfiles.rules = [
+    "e /tank/shares/scans - ${config.users.users.scanner.name} ${config.users.users.scanner.group} 30d"
+  ];
+
   users.groups.photos.members = [
     config.users.users.james.name
     config.users.users.syncthing.name
