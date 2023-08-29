@@ -87,7 +87,21 @@ in
       "directory mask" = "0775";
       "force directory mode" = "0755";
     };
+    "temp" = {
+      path = "/tank/shares/temp";
+      browseable = "yes";
+      "read only" = "no";
+      "create mask" = "0664";
+      "force create mode" = "0664";
+      "directory mask" = "0775";
+      "force directory mode" = "0755";
+    };
   };
+
+  systemd.tmpfiles.rules = [
+    "e /tank/shares/scans 0775 ${config.users.users.scanner.name} ${config.users.users.scanner.group} 28d"
+    "e /tank/shares/temp 0775 root users 28d"
+  ];
 
   users.users.scanner = {
     uid = 2000;
@@ -118,10 +132,6 @@ in
     isSystemUser = true;
     group = config.users.groups.users.name;
   };
-
-  systemd.tmpfiles.rules = [
-    "e /tank/shares/scans 0775 ${config.users.users.scanner.name} ${config.users.users.scanner.group} 30d"
-  ];
 
   users.groups.photos.members = [
     config.users.users.james.name
