@@ -31,7 +31,10 @@ in
 
   systemd.network.networks."10-lan" = {
     matchConfig.Name = lan;
-    networkConfig.DHCP = "ipv4";
+    networkConfig = {
+      DHCP = "ipv4";
+      DNS = [ "1.1.1.1" "1.0.0.1" ];
+    };
     linkConfig.RequiredForOnline = "routable";
   };
 
