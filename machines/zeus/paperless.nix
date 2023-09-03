@@ -1,18 +1,32 @@
 { config, pkgs, ... }:
 
 let
+  dataDir = "/persist/var/lib/paperless";
   mediaDir = "/tank/paperless";
 in
 {
   age.secrets.paperless.file = ../../secrets/paperless.age;
 
+  services.postgresql = {
+    ensureDatabases = [ "paperless" ];
+    ensureUsers = [
+      {
+        name = "paperless";
+        ensurePermissions = {
+          "DATABASE paperless" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+  };
+
   services.paperless = {
-    inherit mediaDir;
+    inherit dataDir mediaDir;
     enable = true;
-    dataDir = "/persist/var/lib/paperless";
     address = "localhost";
     passwordFile = config.age.secrets.paperless.path;
     extraConfig = {
+      PAPERLESS_DBENGINE = "postgresql";
+      PAPERLESS_DBHOST = "/run/postgresql";
       PAPERLESS_AUTO_LOGIN_USERNAME = "admin";
     };
   };
@@ -26,4 +40,9 @@ in
   ja.private-services.paperless.caddy-config = ''
     reverse_proxy http://127.0.0.1:${toString config.services.paperless.port}
   '';
+
+  ja.backups = {
+    paths = [ dataDir mediaDir ];
+    databases.postgres = [ "paperless" ];
+  };
 }
