@@ -7,6 +7,7 @@
     ./sway
     ./applications.nix
     ./theme.nix
+    ./thunar.nix
     ./firefox.nix
   ];
 }
