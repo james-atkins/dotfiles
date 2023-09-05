@@ -23,7 +23,7 @@
             "car": "",
             "default": [ "", "" ]
         },
-        "on-click": "pavucontrol"
+        "on-click": "sway-exec-app pavucontrol"
     },
     "idle_inhibitor": {
         "tooltip-format-activated": "Presentation Mode On",
