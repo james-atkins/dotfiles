@@ -8,6 +8,7 @@ rec {
   fossil-tailscale = pkgs.callPackage ./fossil-tailscale/default.nix { };
   nbqa = pythonPackages: pythonPackages.callPackage ./nbqa { };
   rstudio = pkgs.libsForQt5.callPackage ./rstudio/default.nix { };
+  sway-exec-app = pkgs.callPackage ./sway-exec-app { };
   tailscale-auth = pkgs-unstable.callPackage ./tailscale-auth {
     buildGoModule = pkgs-unstable.buildGo121Module;
   };

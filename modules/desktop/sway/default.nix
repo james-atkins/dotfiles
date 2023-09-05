@@ -1,22 +1,6 @@
 { config, lib, pkgs, pkgs-local, ... }:
 
 let
-  sway-exec-app = pkgs.writeShellScriptBin "sway-exec-app" ''
-    # Launch apps in the app.slice using swaymsg and systemd.
-    # See https://systemd.io/DESKTOP_ENVIRONMENTS/
-    if [ $# -eq 0 ]; then
-      echo "Usage: $0 <command_to_execute>"
-      exit 1
-    fi
-
-    filename=$(basename "$1")
-    app=''${filename//-/_}  # unit name must not contain '-' characters
-    rand=$(tr -dc 'a-z0-9' < /dev/urandom | head -c 32)
-    unit="app-''${app}-''${rand}"
-
-    swaymsg exec "systemd-run --user --scope --slice=app.slice --unit=$unit $*"
-  '';
-
   start-sway = pkgs.writeShellScriptBin "start-sway" ''
     # reset failed state of all user units
     systemctl --user reset-failed
@@ -99,7 +83,7 @@ lib.mkIf config.ja.desktop.enable {
     };
 
     home.packages = with pkgs; [
-      sway-exec-app
+      pkgs-local.sway-exec-app
 
       brightnessctl
 
