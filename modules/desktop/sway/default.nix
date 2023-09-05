@@ -1,5 +1,33 @@
 { config, lib, pkgs, pkgs-local, ... }:
 
+let
+  sway-exec-app = pkgs.writeShellScriptBin "sway-exec-app" ''
+    # Launch apps in the app.slice using swaymsg and systemd.
+    # See https://systemd.io/DESKTOP_ENVIRONMENTS/
+    if [ $# -eq 0 ]; then
+      echo "Usage: $0 <command_to_execute>"
+      exit 1
+    fi
+
+    filename=$(basename "$1")
+    app=''${filename//-/_}  # unit name must not contain '-' characters
+    rand=$(tr -dc 'a-z0-9' < /dev/urandom | head -c 32)
+    unit="app-''${app}-''${rand}"
+
+    swaymsg exec "systemd-run --user --scope --slice=app.slice --unit=$unit $*"
+  '';
+
+  start-sway = pkgs.writeShellScriptBin "start-sway" ''
+    # reset failed state of all user units
+    systemctl --user reset-failed
+
+    systemd-run --user --scope --slice=session.slice --collect --quiet --unit=sway ${pkgs.sway}/bin/sway
+
+    # stop the session target and unset the variables
+    systemctl --user start --job-mode=replace-irreversibly sway-session.target
+    systemctl --user unset-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE NIXOS_OZONE_WL
+  '';
+in
 lib.mkIf config.ja.desktop.enable {
   fonts.fonts = with pkgs; [ fira-code font-awesome_5 noto-fonts ];
 
@@ -60,7 +88,7 @@ lib.mkIf config.ja.desktop.enable {
 
       # If running from tty1 start sway
       if [[ "$(tty)" == "/dev/tty1" ]]; then
-          exec systemd-cat -t sway sway
+        exec ${start-sway}/bin/start-sway
       fi
     '';
 
@@ -71,6 +99,8 @@ lib.mkIf config.ja.desktop.enable {
     };
 
     home.packages = with pkgs; [
+      sway-exec-app
+
       brightnessctl
 
       swaylock
@@ -99,6 +129,7 @@ lib.mkIf config.ja.desktop.enable {
         base = true;
         gtk = true;
       };
+      systemdIntegration = true;
       xwayland = true;
       config = null;
       extraConfig = ''
