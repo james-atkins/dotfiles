@@ -57,6 +57,9 @@ lib.mkIf config.ja.desktop.enable {
       };
     };
 
+    # Clipboard manager
+    services.copyq.enable = true;
+
     # Jumping between prompts for fish
     # https://codeberg.org/dnkl/foot/wiki#user-content-jumping-between-prompts
     programs.fish.interactiveShellInit = ''
