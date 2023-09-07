@@ -5,7 +5,7 @@ let
     # reset failed state of all user units
     systemctl --user reset-failed
 
-    systemd-run --user --scope --slice=session.slice --collect --quiet --unit=sway ${pkgs.sway}/bin/sway
+    systemd-run --user --scope --slice=session.slice --collect --quiet --unit=sway sway
 
     # stop the session target and unset the variables
     systemctl --user start --job-mode=replace-irreversibly sway-session.target
