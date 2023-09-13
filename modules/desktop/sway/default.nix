@@ -1,4 +1,4 @@
-{ config, lib, pkgs, pkgs-local, ... }:
+{ config, lib, pkgs, pkgs-unstable, pkgs-local, ... }:
 
 let
   start-sway = pkgs.writeShellScriptBin "start-sway" ''
@@ -11,6 +11,10 @@ let
     systemctl --user start --job-mode=replace-irreversibly sway-session.target
     systemctl --user unset-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE NIXOS_OZONE_WL
   '';
+
+  kanshi14 = pkgs-unstable.kanshi.override {
+    inherit (pkgs) wayland wayland-scanner;
+  };
 in
 lib.mkIf config.ja.desktop.enable {
   fonts.fonts = with pkgs; [ fira-code font-awesome_5 noto-fonts ];
@@ -85,6 +89,32 @@ lib.mkIf config.ja.desktop.enable {
       temperature.night = 2700;
     };
 
+    services.kanshi = {
+      enable = true;
+      package = kanshi14;
+      profiles = {
+        undocked.outputs = [{
+          criteria = "eDP-1";
+          mode = "1920x1080";
+          scale = 1.25;
+          # position = "0,0";
+        }];
+        docked.outputs = [
+          {
+            criteria = "eDP-1";
+            status = "enable";
+            mode = "1920x1080";
+            scale = 1.25;
+            # position = "0,0";
+          }
+          {
+            criteria = "Dell Inc. DELL D2721H 8GTFQ23";
+            mode = "1920x1080";
+          }
+        ];
+      };
+    };
+
     home.packages = with pkgs; [
       pkgs-local.sway-exec-app
 
@@ -92,6 +122,7 @@ lib.mkIf config.ja.desktop.enable {
 
       swaylock
       swayidle
+      kanshi14
 
       (pkgs.writeShellScriptBin "xterm" "exec -a $0 ${foot}/bin/foot $@")
 
