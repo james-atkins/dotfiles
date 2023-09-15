@@ -24,8 +24,11 @@ lib.mkIf config.ja.desktop.enable {
     home.packages = with pkgs; [
       keepassxc
       libreoffice
+      lyx
       slack
       vlc
+      zoom-us
+      zulip
     ];
   };
 }
