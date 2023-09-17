@@ -223,6 +223,41 @@ in
   };
   services.zfs.autoScrub.enable = true;
 
+  services.zrepl = {
+    enable = true;
+    settings = {
+      jobs = [{
+        name = config.networking.hostName;
+        type = "push";
+        connect = {
+          type = "tcp";
+          address = "zeus.${global.tailscaleDomain}:8090";
+        };
+        filesystems = {
+          "tank<" = true;
+          "tank/borg" = false;
+          "tank/enc/tmp" = false;
+        };
+        snapshotting = {
+          type = "periodic";
+          prefix = "zrepl_";
+          interval = "1h";
+        };
+        pruning = {
+          keep_sender = [
+            { type = "not_replicated"; }
+            { type = "regex"; negate = true; regex = "^(zrepl|zfs-auto-snap)_.*"; } # keep all snapshots that were not created by zrepl
+            { type = "grid"; grid = "3x1h(keep=all) | 48x1h | 14x1d"; regex = "^(zrepl|zfs-auto-snap)_.*"; }
+          ];
+          keep_receiver = [
+            { type = "regex"; negate = true; regex = "^(zrepl|zfs-auto-snap)_.*"; } # keep all snapshots that were not created by zrepl
+            { type = "grid"; grid = "3x1h(keep=all) | 48x1h | 28x1d | 6x28d"; regex = "^(zrepl|zfs-auto-snap)_.*"; }
+          ];
+        };
+      }];
+    };
+  };
+
   services.smartd = {
     enable = true;
     notifications.mail = {

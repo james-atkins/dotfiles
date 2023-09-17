@@ -11,6 +11,7 @@
     ./miniflux.nix
     ./paperless.nix
     ./photoprism.nix
+    ./zrepl.nix
   ];
 
   boot.loader.systemd-boot.enable = true;

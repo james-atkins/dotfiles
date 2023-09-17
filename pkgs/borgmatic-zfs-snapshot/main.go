@@ -327,7 +327,7 @@ func run(verbose bool) (err error) {
 		return err
 	}
 
-	snapshot := fmt.Sprintf("borgmatic-%s", uuid.NewString())
+	snapshot := fmt.Sprintf("borgmatic_%s", uuid.NewString())
 
 	// Read the ZFS datasets to take recursive snapshots of before running borgmatic.
 	// In future, this won't be necessary as we will work out which datasets to take snapshots of by

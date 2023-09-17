@@ -12,13 +12,39 @@
   boot.supportedFilesystems = [ "zfs" ];
   networking.hostId = "013802bf";
 
-  services.zfs.autoSnapshot = {
+  services.zrepl = {
     enable = true;
-    frequent = 12;
-    hourly = 48;
-    daily = 14;
-    weekly = 4;
-    monthly = 6;
+    settings = {
+      jobs = [{
+        name = config.networking.hostName;
+        type = "push";
+        connect = {
+          type = "tcp";
+          address = "zeus.${global.tailscaleDomain}:8090";
+        };
+        filesystems = {
+          "rpool<" = true;
+          "rpool/root" = false;
+          "rpool/nix" = false;
+        };
+        snapshotting = {
+          type = "periodic";
+          prefix = "zrepl_";
+          interval = "10m";
+        };
+        pruning = {
+          keep_sender = [
+            { type = "not_replicated"; }
+            { type = "regex"; negate = true; regex = "^(zrepl|zfs-auto-snap)_.*"; } # keep all snapshots that were not created by zrepl
+            { type = "grid"; grid = "3x1h(keep=all) | 48x1h | 14x1d"; regex = "^(zrepl|zfs-auto-snap)_.*"; }
+          ];
+          keep_receiver = [
+            { type = "regex"; negate = true; regex = "^(zrepl|zfs-auto-snap)_.*"; } # keep all snapshots that were not created by zrepl
+            { type = "grid"; grid = "3x1h(keep=all) | 48x1h | 28x1d | 6x28d"; regex = "^(zrepl|zfs-auto-snap)_.*"; }
+          ];
+        };
+      }];
+    };
   };
 
   networking.networkmanager.enable = true;
