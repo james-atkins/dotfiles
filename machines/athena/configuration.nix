@@ -236,6 +236,7 @@ in
         filesystems = {
           "tank<" = true;
           "tank/borg" = false;
+          "tank/enc/syncthing" = false;
           "tank/enc/tmp" = false;
         };
         snapshotting = {
