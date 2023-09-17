@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, global, ... }:
 
 let
   lan = "enp1s0";
