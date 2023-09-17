@@ -8,6 +8,16 @@ let
         --add-flags "--enable-features=UseOzonePlatform --ozone-platform=wayland"
     '';
   });
+
+  zulipWayland = with pkgs; symlinkJoin {
+    name = zulip.name;
+    paths = [ zulip ];
+    buildInputs = [ makeWrapper ];
+    postBuild = ''
+      wrapProgram $out/bin/zulip \
+        --add-flags "--ozone-platform-hint=auto"
+    '';
+  };
 in
 lib.mkIf config.ja.desktop.enable {
   home-manager.users.james = { pkgs, ... }: {
@@ -28,7 +38,7 @@ lib.mkIf config.ja.desktop.enable {
       slack
       vlc
       zoom-us
-      zulip
+      zulipWayland
     ];
   };
 }
