@@ -96,11 +96,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1695059344,
-        "narHash": "sha256-jErwUGKFsNPb+PQ1HhroN+QFN9pe4pb78OT5SOeSFEk=",
+        "lastModified": 1695060512,
+        "narHash": "sha256-emSUFq7ayE6xqCDrKWu4XR3K43QPWXqh6IFySOP7H0w=",
         "owner": "james-atkins",
         "repo": "zulip-nu-econ",
-        "rev": "bade1c0dc936c5bace32a0ec8eefe8221debbd39",
+        "rev": "b345f6e760b47370068a7ea26a4db141667968d5",
         "type": "github"
       },
       "original": {
