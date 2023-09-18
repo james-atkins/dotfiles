@@ -89,13 +89,34 @@
         "type": "github"
       }
     },
+    "nuzulip": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1695059344,
+        "narHash": "sha256-jErwUGKFsNPb+PQ1HhroN+QFN9pe4pb78OT5SOeSFEk=",
+        "owner": "james-atkins",
+        "repo": "zulip-nu-econ",
+        "rev": "bade1c0dc936c5bace32a0ec8eefe8221debbd39",
+        "type": "github"
+      },
+      "original": {
+        "owner": "james-atkins",
+        "repo": "zulip-nu-econ",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "agenix": "agenix",
         "home-manager": "home-manager",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
-        "nixpkgs-unstable": "nixpkgs-unstable"
+        "nixpkgs-unstable": "nixpkgs-unstable",
+        "nuzulip": "nuzulip"
       }
     }
   },

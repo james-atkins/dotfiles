@@ -19,4 +19,7 @@ in
   "paperless.age".publicKeys = [ zeus-ssh ];
   "james_smb.age".publicKeys = [ milan-ssh ];
   "bg_nextdns.age".publicKeys = [ athena-ssh ];
+
+  "nuzulip_econ_bot.age".publicKeys = [ zeus-ssh ];
+  "nuzulip_calendar_bot.age".publicKeys = [ zeus-ssh ];
 }

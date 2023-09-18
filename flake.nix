@@ -11,9 +11,13 @@
       url = "github:ryantm/agenix/0.12.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nuzulip = {
+      url = "github:james-atkins/zulip-nu-econ";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, nixos-hardware, home-manager, agenix }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, nixos-hardware, home-manager, agenix, nuzulip }@inputs:
     let
       inherit (nixpkgs.lib) filterAttrs mapAttrs mapAttrs' mapAttrsToList mkIf nameValuePair;
 
@@ -86,6 +90,7 @@
               modules = [
                 agenix.nixosModule
                 home-manager.nixosModule
+                nuzulip.nixosModules.default
 
                 {
                   networking.hostName = name;
