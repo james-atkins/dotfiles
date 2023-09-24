@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, pkgs-unstable, ... }:
 
 let
   vscodeWayland = pkgs.vscode.overrideAttrs (oldAttrs: {
@@ -35,6 +35,7 @@ lib.mkIf config.ja.desktop.enable {
       keepassxc
       libreoffice
       lyx
+      pkgs-unstable.obsidian
       slack
       vlc
       zoom-us
