@@ -11,6 +11,7 @@
     ./miniflux.nix
     ./paperless.nix
     ./photoprism.nix
+    ./vikunja.nix
     ./zrepl.nix
   ];
 
