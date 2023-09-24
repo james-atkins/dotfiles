@@ -47,9 +47,15 @@
       neededForBoot = true;
     };
 
+  fileSystems."/nix" =
+    {
+      device = "rpool/enc/nix";
+      fsType = "zfs";
+    };
+
   fileSystems."/nix/store" =
     {
-      device = "rpool/nix";
+      device = "rpool/nixstore";
       fsType = "zfs";
     };
 
