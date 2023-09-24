@@ -23,7 +23,6 @@
   '';
   boot.zfs.extraPools = [ "tank" ];
 
-  networking.hostId = "508fcc6d";
   boot.supportedFilesystems = [ "zfs" ];
 
   # Remote unlock over tailscale
@@ -67,6 +66,13 @@
   };
 
   time.timeZone = "America/Chicago";
+
+  networking = {
+    hostId = "508fcc6d";
+    useNetworkd = true;
+    useDHCP = false;
+    interfaces.eno1.useDHCP = true;
+  };
 
   users.groups.photos.members = [
     config.users.users.james.name
