@@ -19,7 +19,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/efi";
   boot.initrd.postDeviceCommands = lib.mkAfter ''
-    # zfs rollback -r rpool/enc/root@blank
+    zfs rollback -r rpool/enc/root@blank
   '';
   boot.zfs.extraPools = [ "tank" ];
 
