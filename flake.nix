@@ -133,6 +133,7 @@
       nixosConfigurations = mkSystems [
         { name = "athena"; system = "x86_64-linux"; hardware = "pcengines-apu"; syncthing = "UCXAY5Y-4CGWWRL-VZVHBS4-LGLSAWZ-N6OGXZW-ZNYNH5T-XONQFTJ-FHPIGQX"; }
         { name = "milan"; system = "x86_64-linux"; hardware = "lenovo-thinkpad-t480"; syncthing = "J4QUY74-OB5QNT5-XG5M3EX-AXJWEN2-FLY6LBP-BUYJYFO-FCGZ5GR-RJ5MFQX"; }
+        { name = "rome"; system = "x86_64-linux"; }
         { name = "zeus"; system = "x86_64-linux"; syncthing = "TDZKBCW-U2DSEPN-XF2K5NP-RK3NRWB-MHMPFXB-LEKHBS6-6OT3I43-SF7JLAY"; }
       ];
 
