@@ -35,7 +35,7 @@ lib.mkIf config.ja.desktop.enable {
       keepassxc
       libreoffice
       lyx
-      texlive.combined.scheme-medium
+      texlive.combined.scheme-full
       pkgs-unstable.obsidian
       slack
       vlc
