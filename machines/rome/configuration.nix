@@ -4,9 +4,6 @@
   boot = {
     kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
     supportedFilesystems = [ "zfs" ];
-    initrd.postDeviceCommands = lib.mkAfter ''
-      zfs rollback -r rpool/enc/root@blank
-    '';
     loader = {
       efi.canTouchEfiVariables = true;
       efi.efiSysMountPoint = "/efi";

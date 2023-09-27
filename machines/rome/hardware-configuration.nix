@@ -24,8 +24,9 @@
 
   fileSystems."/" =
     {
-      device = "rpool/enc/root";
-      fsType = "zfs";
+      device = "none";
+      fsType = "tmpfs";
+      options = [ "defaults" "size=1G" "mode=755" ];
     };
 
   fileSystems."/nix" =
