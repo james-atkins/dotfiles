@@ -37,7 +37,7 @@
         };
         filesystems = {
           "rpool<" = true;
-          "rpool/enc/root" = false;
+          "rpool/enc/log" = false;
           "rpool/nix" = false;
         };
         snapshotting = {
