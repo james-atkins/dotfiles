@@ -40,6 +40,7 @@ lib.mkIf config.ja.desktop.enable {
       slack
       vlc
       zoom-us
+      pkgs-unstable.zotero
       zulipWayland
     ];
   };
