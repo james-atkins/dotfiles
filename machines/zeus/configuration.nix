@@ -97,6 +97,7 @@
     enable = true;
     paths = [ "/tank" ];
     zfs_snapshots = [ "rpool/enc/home" "tank" ];
+    extra_repositories = [ "ssh://borg@athena.${global.tailscaleDomain}/./" ];
   };
 
   environment.etc."aliases".text = ''
