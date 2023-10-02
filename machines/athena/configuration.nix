@@ -144,6 +144,12 @@ in
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJEDBSisFxn2nC794UIPHOQDbNUlBDau9FVAJ8gM4VcL"
       ];
     };
+    zeus = {
+      path = "/tank/borg/zeus";
+      authorizedKeys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMqQihIY2pr2qLLDUXXFCjqh54IU60wOfMlOgsijXtsQ"
+      ];
+    };
   };
 
   age.secrets.nextdns.file = ../../secrets/bg_nextdns.age;
