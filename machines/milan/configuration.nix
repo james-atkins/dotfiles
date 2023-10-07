@@ -75,6 +75,7 @@
   };
   ja.desktop.enable = true;
   ja.development.data_analysis = true;
+  ja.virtualisation.enable = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;

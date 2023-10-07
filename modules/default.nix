@@ -13,6 +13,7 @@
     ./services
     ./desktop
     ./development
+    ./virt_manager.nix
   ];
 }
 
