@@ -24,6 +24,15 @@
 
   ja.desktop.enable = true;
   ja.development.data_analysis = true;
+  ja.desktop.kanshi-profiles = {
+    desk.outputs = [
+      {
+        criteria = "Sceptre Tech Inc Sceptre F24 0000000000001";
+        mode = "1920x1080";
+        position = "0,0";
+      }
+    ];
+  };
 
   services.zrepl = {
     enable = true;
