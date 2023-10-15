@@ -46,7 +46,7 @@ riverctl map normal Super D spawn "wofi --show drun --insensitive --prompt Appli
 riverctl map normal Super+Shift Q close
 
 # Super+Shift+E to exit river
-riverctl map normal Super+Shift E exit
+riverctl map normal Super+Shift E spawn wofi-power
 
 # Super+J and Super+K to focus the next/previous view in the layout stack
 riverctl map normal Super J focus-view next

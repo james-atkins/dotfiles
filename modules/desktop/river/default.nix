@@ -18,6 +18,33 @@ let
     systemctl --user unset-environment DISPLAY WAYLAND_DISPLAY XDG_SESSION_TYPE XDG_CURRENT_DESKTOP
   '';
 
+  wofi-power = pkgs.writeShellApplication {
+    name = "wofi-power";
+    text = ''
+      entries="⮾ Lock\n⇠ Logout\n⏾ Suspend\n⭮ Reboot\n⏻ Power Off"
+
+      selected=$(echo -e "$entries" | wofi --dmenu --insensitive --prompt Power --lines 6 --cache-file /dev/null | cut -f 2- -d ' ')
+
+      case $selected in
+        "Lock")
+          ${pkgs.swaylock}/bin/swaylock -f
+          ;;
+        "Logout")
+          riverctl exit
+          ;;
+        "Suspend")
+          systemctl suspend
+          ;;
+        "Reboot")
+          systemctl reboot
+          ;;
+        "Power Off")
+          systemctl poweroff -i
+          ;;
+      esac
+    '';
+  };
+
   kanshi14 = pkgs-unstable.kanshi.override {
     inherit (pkgs) wayland wayland-scanner;
   };
@@ -84,6 +111,8 @@ in
         river
         kanshi14
         wofi
+
+        wofi-power
 
         brightnessctl
         pamixer
