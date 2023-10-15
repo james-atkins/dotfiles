@@ -77,6 +77,27 @@
   ja.development.data_analysis = true;
   ja.virtualisation.enable = true;
 
+  ja.desktop.kanshi-profiles = {
+    undocked.outputs = [{
+      criteria = "eDP-1";
+      mode = "1920x1080";
+      scale = 1.25;
+      # position = "0,0";
+    }];
+    docked.outputs = [
+      {
+        criteria = "eDP-1";
+        status = "enable";
+        mode = "1920x1080";
+        scale = 1.25;
+        # position = "0,0";
+      }
+      {
+        criteria = "Dell Inc. DELL D2721H 8GTFQ23";
+        mode = "1920x1080";
+      }
+    ];
+  };
   # Enable CUPS to print documents.
   services.printing.enable = true;
   services.printing.drivers = with pkgs; [

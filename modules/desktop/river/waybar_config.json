@@ -2,8 +2,8 @@
     "layer": "top",
     "position": "top",
     "height": 30,
-    "modules-left": ["sway/workspaces", "sway/mode"],
-    "modules-center": ["sway/window"],
+    "modules-left": ["river/tags"],
+    "modules-center": ["river/window"],
     "modules-right": [ "tray", "network", "pulseaudio", "battery", "idle_inhibitor", "clock"],
     "sway/window": {
         "tooltip": false,
@@ -23,7 +23,7 @@
             "car": "",
             "default": [ "", "" ]
         },
-        "on-click": "sway-exec-app pavucontrol"
+        "on-click": "exec-app pavucontrol"
     },
     "idle_inhibitor": {
         "tooltip-format-activated": "Presentation Mode On",
