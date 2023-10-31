@@ -25,11 +25,16 @@
 
       forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
 
+      permittedInsecurePackages = [
+        "zotero-6.0.27"
+      ];
+
       pkgs = forAllSystems (system:
         import nixpkgs {
           inherit system;
           hostPlatform = system;
           config.allowUnfree = true;
+          config.permittedInsecurePackages = permittedInsecurePackages;
           overlays = [
             (final: prev: {
               mediamtx = pkgs-unstable.${system}.mediamtx;
@@ -43,6 +48,7 @@
           inherit system;
           hostPlatform = system;
           config.allowUnfree = true;
+          config.permittedInsecurePackages = permittedInsecurePackages;
         }
       );
 
