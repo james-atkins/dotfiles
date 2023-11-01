@@ -10,6 +10,7 @@ let
 
   ff = pkgs.firefox.override {
     extraPolicies = {
+      DontCheckDefaultBrowser = true;
       DisableFirefoxStudies = true;
       DisablePocket = true;
       FirefoxHome = {
@@ -49,5 +50,26 @@ lib.mkIf config.ja.desktop.enable {
         '';
       };
     };
+
+    xdg.mimeApps =
+      let
+        mimes = [
+          "x-scheme-handler/http"
+          "x-scheme-handler/https"
+          "x-scheme-handler/chrome"
+          "text/html"
+          "application/x-extension-htm"
+          "application/x-extension-html"
+          "application/x-extension-shtml"
+          "application/xhtml+xml"
+          "application/x-extension-xhtml"
+          "application/x-extension-xht"
+        ];
+      in
+      {
+        associations.added = builtins.listToAttrs (map (m: lib.attrsets.nameValuePair m [ "firefox.desktop" ]) mimes);
+        defaultApplications = builtins.listToAttrs (map (m: lib.attrsets.nameValuePair m [ "firefox.desktop" ]) mimes);
+      };
+
   };
 }

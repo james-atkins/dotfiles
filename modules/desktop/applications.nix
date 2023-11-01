@@ -21,6 +21,10 @@ let
 in
 lib.mkIf config.ja.desktop.enable {
   home-manager.users.james = { pkgs, ... }: {
+    xdg.mimeApps = {
+      enable = true;
+    };
+
     programs.zathura = {
       enable = true;
     };
