@@ -100,6 +100,7 @@ let
         --setenv=XDG_SESSION_ID \
         --setenv=XDG_VTNR \
         --setenv=XDG_ACTIVATION_TOKEN \
+        --setenv=__HM_SESS_VARS_SOURCED \
         ${lib.strings.concatStringsSep "\n  " (map (k: "--setenv=${k} \\") env-vars)}
         "''${full_path}" "$@"
     '';
@@ -109,7 +110,7 @@ let
 
   # Patch desktop files so they run using exec-app
   desktop-files = pkgs.runCommand "desktop-files" { } ''
-    mkdir -p $out/share/applications
+    mkdir $out
 
     ${lib.toShellVar "packages" packages}
 
@@ -118,7 +119,7 @@ let
         for file in "$package/share/applications/"*.desktop; do
           if [ -f "$file" ]; then
             app_id=$(basename "$file" .desktop)
-            new_file="$out/share/applications/''${app_id}.desktop"
+            new_file="$out/''${app_id}.desktop"
             cp "$file" "$new_file"
 
             name=$(grep '^Name=' "$file" | cut -d '=' -f 2- | tr -d '\n')
@@ -137,22 +138,18 @@ let
         done
       fi
     done
-  '';
 
-  desktop-files-and-icons = pkgs.symlinkJoin {
-    name = "icons";
-    paths = [ desktop-files ] ++ packages;
-    postBuild = ''
-      find $out/share -mindepth 1 -maxdepth 1 -not \( -name applications -o -name icons \) -exec rm -rf {} +
-    '';
-  };
+    ${pkgs.desktop-file-utils}/bin/update-desktop-database $out
+
+    ln -s ${config.home-manager.users.james.xdg.configFile."mimeapps.list".source} $out/mimeapps.list
+  '';
 in
 lib.mkIf config.ja.desktop.enable {
-  environment.etc."xdg-data".source = "${desktop-files}/share";
-  # environment.etc."xdg-data".source = "${desktop-files-and-icons}/share";
   home-manager.users.james = {
-    # Indirect via filesystem so apps continue to work when environment variables change
-    xdg.systemDirs.data = [ "/etc/xdg-data" ];
+    xdg.dataFile."applications".source = desktop-files;
+    # The whole local applications directory is managed by us now so tell home-manager not to
+    # create this file. It is symlinked in desktop-files already.
+    xdg.dataFile."applications/mimeapps.list".enable = false;
 
     home.packages = [ exec-app ];
   };
