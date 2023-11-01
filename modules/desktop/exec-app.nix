@@ -76,6 +76,7 @@ let
       done
 
       full_path=$(which "$1")
+      full_path=$(readlink -f "$full_path")
 
       if [ -n "$app_id" ]; then
         app_id=$(systemd-escape "''${app_id}")
