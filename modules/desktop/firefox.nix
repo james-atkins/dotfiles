@@ -4,8 +4,8 @@ let
   firefox-csshacks = pkgs.fetchFromGitHub {
     owner = "MrOtherGuy";
     repo = "firefox-csshacks";
-    rev = "97b9f5c3d8080c4e8417377ca16103a22a3b50d1";
-    sha256 = "sha256-ZbBeWE0YDyU6nJxJQejrCI/Vho1s68rFLpor8BzNEiM=";
+    rev = "0f1571231e73eba84ea9949584e517acbc55c1c8";
+    sha256 = "sha256-v85UwA0dpkonh7PF6FNF2Q8DqZKNmGEEbVzND3JueTY=";
   };
 in
 lib.mkIf config.ja.desktop.enable {
@@ -15,14 +15,24 @@ lib.mkIf config.ja.desktop.enable {
       profiles.default = {
         settings = {
           "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+
+          "browser.newtabpage.pinned" = [{
+            title = "Google";
+            url = "https://www.google.co.uk";
+          }];
+
+          "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
+          "browser.newtabpage.activity-stream.showSponsored" = false;
+          "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+
+          # Do not show titlebar
+          "browser.tabs.inTitlebar" = 1;
+          "extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
         };
         userChrome = ''
+          @import url("${firefox-csshacks}/chrome/linux_gtk_window_control_patch.css");
           @import url("${firefox-csshacks}/chrome/hide_tabs_with_one_tab.css");
           @import url("${firefox-csshacks}/chrome/privatemode_indicator_as_menu_button.css");
-
-
-          /* Remove close button */
-          .titlebar-buttonbox-container { display:none; }
         '';
       };
     };
