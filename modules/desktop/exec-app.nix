@@ -97,6 +97,8 @@ let
         --working-directory="''${working_dir/#\~/$HOME}" \
         --property=ExitType=cgroup \
         --setenv=PATH \
+        --setenv=XDG_SESSION_ID \
+        --setenv=XDG_VTNR \
         --setenv=XDG_ACTIVATION_TOKEN \
         ${lib.strings.concatStringsSep "\n  " (map (k: "--setenv=${k} \\") env-vars)}
         "''${full_path}" "$@"

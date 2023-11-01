@@ -1,21 +1,32 @@
 { config, lib, pkgs, pkgs-unstable, ... }:
 
 let
-  inherit (lib) mkOption;
+  inherit (lib) mkOption mapAttrsToList;
+  inherit (lib.strings) concatLines concatStringsSep toShellVar;
 
   cfg = config.ja.desktop;
+
+  # systemd environment variables to set when running a wayland session
+  exported-env-vars = [ "DISPLAY" "WAYLAND_DISPLAY" "XDG_SESSION_TYPE" ];
 
   start-river = pkgs.writeShellScriptBin "start-river" ''
     # reset failed state of all user units
     systemctl --user reset-failed
 
-    ${lib.strings.concatLines (lib.mapAttrsToList (k: v: "export ${lib.strings.toShellVar k v}") cfg.wayland-environment)}
+    ${concatLines (lib.mapAttrsToList (k: v: "export ${lib.strings.toShellVar k v}") cfg.wayland-environment)}
 
     systemd-run --user --scope --slice=session.slice --collect --quiet --unit=river ${pkgs.river}/bin/river
 
     # stop the session target and unset the variables
     systemctl --user start --job-mode=replace-irreversibly river-session-shutdown.target
-    systemctl --user unset-environment DISPLAY WAYLAND_DISPLAY XDG_SESSION_TYPE XDG_CURRENT_DESKTOP
+    systemctl --user unset-environment ${concatStringsSep " " exported-env-vars}
+  '';
+
+  init-river = pkgs.writeShellScriptBin "init-river" ''
+    dbus-update-activation-environment --systemd ${concatStringsSep " " exported-env-vars}
+    systemctl --user start river-session.target
+
+    . "$HOME/.config/river/init.sh"
   '';
 
   wofi-power = pkgs.writeShellApplication {
@@ -92,6 +103,8 @@ in
     services.geoclue2.enable = true;
 
     ja.desktop.wayland-environment = {
+      XDG_CURRENT_DESKTOP = "river";
+
       SDL_VIDEODRIVER = "wayland";
       GDK_BACKEND = "wayland";
       CLUTTER_BACKEND = "wayland";
@@ -133,7 +146,8 @@ in
           exec ${start-river}/bin/start-river
         fi
       '';
-      xdg.configFile."river/init".source = config.home-manager.users.james.lib.file.mkOutOfStoreSymlink "${config.home-manager.users.james.home.homeDirectory}/dotfiles/modules/desktop/river/init";
+      xdg.configFile."river/init".source = config.home-manager.users.james.lib.file.mkOutOfStoreSymlink "${init-river}/bin/init-river";
+      xdg.configFile."river/init.sh".source = config.home-manager.users.james.lib.file.mkOutOfStoreSymlink "${config.home-manager.users.james.home.homeDirectory}/dotfiles/modules/desktop/river/init.sh";
 
       # SYSTEMD TARGETS
       # Define a river-session.target and a river-session-shutdown.target.

@@ -1,8 +1,5 @@
 #!/bin/sh
 
-dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY XDG_SESSION_TYPE XDG_CURRENT_DESKTOP=river
-systemctl --user start river-session.target
-
 ##############
 # Appearance #
 ##############
