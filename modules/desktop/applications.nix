@@ -25,10 +25,6 @@ lib.mkIf config.ja.desktop.enable {
       enable = true;
     };
 
-    programs.zathura = {
-      enable = true;
-    };
-
     programs.vscode = {
       enable = true;
       package = vscodeWayland;
@@ -36,6 +32,7 @@ lib.mkIf config.ja.desktop.enable {
     };
 
     home.packages = with pkgs; [
+      evince
       keepassxc
       libreoffice
       lyx
