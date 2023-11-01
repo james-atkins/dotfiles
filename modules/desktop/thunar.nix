@@ -25,6 +25,24 @@ lib.mkIf config.ja.desktop.enable {
         "misc-single-click" = false;
       };
     };
+
+    xdg.configFile."Thunar/uca.xml".text = ''
+      <?xml version="1.0" encoding="UTF-8"?>
+      <actions>
+        <action>
+          <icon>utilities-terminal</icon>
+          <name>Open Terminal Here</name>
+          <submenu></submenu>
+          <unique-id>1693772796825314-1</unique-id>
+          <command>exec-app --working-directory %f foot</command>
+          <description>Open foot</description>
+          <range></range>
+          <patterns>*</patterns>
+          <startup-notify/>
+          <directories/>
+        </action>
+      </actions>
+    '';
   };
 }
  
