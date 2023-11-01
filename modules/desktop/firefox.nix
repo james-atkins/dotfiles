@@ -7,11 +7,28 @@ let
     rev = "0f1571231e73eba84ea9949584e517acbc55c1c8";
     sha256 = "sha256-v85UwA0dpkonh7PF6FNF2Q8DqZKNmGEEbVzND3JueTY=";
   };
+
+  ff = pkgs.firefox.override {
+    extraPolicies = {
+      DisableFirefoxStudies = true;
+      DisablePocket = true;
+      FirefoxHome = {
+        SponsoredTopSites = false;
+        Highlights = false;
+        Pocket = false;
+        SponsoredPocket = false;
+        Snippets = false;
+      };
+      OfferToSaveLogins = false;
+      UserMessaging = { SkipOnboarding = true; ExtensionRecommendations = false; };
+    };
+  };
 in
 lib.mkIf config.ja.desktop.enable {
   home-manager.users.james = { pkgs, ... }: {
     programs.firefox = {
       enable = true;
+      package = ff;
       profiles.default = {
         settings = {
           "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
@@ -20,10 +37,6 @@ lib.mkIf config.ja.desktop.enable {
             title = "Google";
             url = "https://www.google.co.uk";
           }];
-
-          "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
-          "browser.newtabpage.activity-stream.showSponsored" = false;
-          "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
 
           # Do not show titlebar
           "browser.tabs.inTitlebar" = 1;
