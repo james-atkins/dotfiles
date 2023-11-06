@@ -35,8 +35,6 @@ lib.mkIf config.ja.desktop.enable {
       evince
       keepassxc
       libreoffice
-      lyx
-      texlive.combined.scheme-medium
       pkgs-unstable.obsidian
       slack
       vlc

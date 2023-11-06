@@ -11,6 +11,7 @@
     ./theme.nix
     ./thunar.nix
     ./firefox.nix
+    ./latex.nix
   ];
 }
 
