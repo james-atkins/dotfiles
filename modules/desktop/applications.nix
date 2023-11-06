@@ -42,6 +42,11 @@ lib.mkIf config.ja.desktop.enable {
       pkgs-unstable.zotero
       zulipWayland
     ];
+
+    xdg.mimeApps.defaultApplications."application/pdf" = [ "org.gnome.Evince.desktop" ];
+    xdg.mimeApps.defaultApplications."application/x-pdf" = [ "org.gnome.Evince.desktop" ];
+    xdg.mimeApps.defaultApplications."application/x-bzpdf" = [ "org.gnome.Evince.desktop" ];
+    xdg.mimeApps.defaultApplications."application-gzpdf" = [ "org.gnome.Evince.desktop" ];
   };
 }
  
