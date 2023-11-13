@@ -6,6 +6,8 @@ rec {
   duckdb = pkgs.callPackage ./duckdb/default.nix { inherit cran; };
   foot-themes = pkgs.callPackage ./foot-themes/default.nix { };
   fossil-tailscale = pkgs.callPackage ./fossil-tailscale/default.nix { };
+  knitro = pkgs.callPackage ./knitro/default.nix { };
+  knitroR = pkgs.callPackage ./knitro/R.nix { inherit knitro; };
   nbqa = pythonPackages: pythonPackages.callPackage ./nbqa { };
   rstudio = pkgs.libsForQt5.callPackage ./rstudio/default.nix { };
   tailscale-auth = pkgs-unstable.callPackage ./tailscale-auth {
