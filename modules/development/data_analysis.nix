@@ -45,6 +45,11 @@ in
     environment.etc."stata16.lic".source = config.age.secrets.stata16Licence.path;
 
     home-manager.users.james = { pkgs, ... }: {
+      home.sessionVariables = {
+        KNITRODIR = pkgs-local.knitro;
+        LD_LIBRARY_PATH = "${pkgs-local.knitro}/lib:$LD_LIBRARY_PATH";
+      };
+
       home.packages = with pkgs; [
         pythonWithPackages
         pkgs-unstable.ruff
