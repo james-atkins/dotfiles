@@ -47,7 +47,8 @@ in
     home-manager.users.james = { pkgs, ... }: {
       home.sessionVariables = {
         KNITRODIR = pkgs-local.knitro;
-        LD_LIBRARY_PATH = "${pkgs-local.knitro}/lib:$LD_LIBRARY_PATH";
+        ARTELYS_LICENSE_NETWORK_ADDR = "localhost:8349";
+        LD_LIBRARY_PATH = "\${LD_LIBRARY_PATH:+\${LD_LIBRARY_PATH}:}${pkgs-local.knitro}/lib";
       };
 
       home.packages = with pkgs; [
@@ -61,6 +62,8 @@ in
         pandoc
         julia
         (sqlite.override { interactive = true; })
+
+        (pkgs.writeShellScriptBin "quest_knitro_licence" "${pkgs.openssh}/bin/ssh -NT -L 8349:129.105.119.173:8349 jda3869@quest.northwestern.edu")
       ];
 
       home.file.".sqliterc".text = ''
