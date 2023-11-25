@@ -45,4 +45,9 @@
       trusted-public-keys = [ "james-atkins.cachix.org-1:Ljm14bKUUSXidZleVQejHDjDp1lrI7Rh/2WsY5ax280=" ];
     };
   };
+
+  # Fix ZFS data corruption bug
+  boot.extraModprobeConfig = ''
+    options zfs zfs_dmu_offset_next_sync=0
+  '';
 }
