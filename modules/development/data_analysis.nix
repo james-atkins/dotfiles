@@ -77,7 +77,7 @@ in
         julia
         (sqlite.override { interactive = true; })
 
-        (pkgs.writeShellScriptBin "quest_knitro_licence" "${pkgs.openssh}/bin/ssh -NT -L 8349:129.105.119.173:8349 jda3869@quest.northwestern.edu")
+        (pkgs.writeShellScriptBin "quest_knitro_licence" ''${pkgs.openssh}/bin/ssh -NT -L 8349:129.105.119.173:8349 -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" jda3869@quest.northwestern.edu'')
       ];
 
       home.file.".sqliterc".text = ''
