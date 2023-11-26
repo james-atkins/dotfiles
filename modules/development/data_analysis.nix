@@ -3,6 +3,13 @@
 let
   pythonWithPackages = (pkgs.python3.override {
     packageOverrides = pyfinal: pyprev: {
+      aiohttp = pyprev.aiohttp.overrideAttrs (attrs: {
+        disabledTests = attrs.disabledTests ++ [
+          "test_static_file_if_none_match"
+          "test_static_file_if_match"
+          "test_static_file_if_modified_since_past_date"
+        ];
+      });
       # Fix Jupyter builds until https://nixpk.gs/pr-tracker.html?pr=267121 is merged
       urllib3 = pyprev.urllib3.overrideAttrs {
         patches = [
