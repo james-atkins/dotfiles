@@ -1,4 +1,4 @@
-{ config, lib, pkgs, pkgs-unstable, global, ... }:
+{ config, lib, pkgs, pkgs-local, global, ... }:
 
 {
   boot.loader.systemd-boot.enable = true;
@@ -111,7 +111,7 @@
     enable = true;
     extraBackends = [
       pkgs.hplipWithPlugin
-      (pkgs-unstable.epsonscan2.override { withNonFreePlugins = true; })
+      (pkgs-local.epsonscan2.override { withNonFreePlugins = true; })
     ];
     disabledDefaultBackends = [ "epsonds" ];
   };
