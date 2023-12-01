@@ -2,7 +2,7 @@
 
 let
   tex = pkgs.texlive.combine {
-    inherit (pkgs.texlive) scheme-medium enumitem;
+    inherit (pkgs.texlive) scheme-medium chngcntr enumitem xpatch;
   };
 in
 lib.mkIf config.ja.desktop.enable {
