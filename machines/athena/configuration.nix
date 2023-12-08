@@ -152,29 +152,10 @@ in
     };
   };
 
-  age.secrets.nextdns.file = ../../secrets/bg_nextdns.age;
-  systemd.services.nextdns-ip-update = {
-    after = [ "network.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      LoadCredential = "url:${config.age.secrets.nextdns.path}";
-      ExecStart =
-        let
-          script = pkgs.writeShellScript "nextdns" ''
-            ${pkgs.curl}/bin/curl --silent --show-error --fail-with-body $(cat $CREDENTIALS_DIRECTORY/url)
-          '';
-        in
-        "${script}";
-      DynamicUser = true;
-    };
-  };
-  systemd.timers.nextdns-ip-update = {
-    wantedBy = [ "timers.target" ];
-    timerConfig = {
-      Persistent = true;
-      OnCalendar = "hourly";
-      RandomizedDelaySec = 60;
-    };
+  age.secrets.nextdns-linked-ip-url.file = ../../secrets/nextdns_bg.age;
+  ja.services.nextdns-linked-ip-update = {
+    enable = true;
+    url-file = config.age.secrets.nextdns-linked-ip-url.path;
   };
 
   age.secrets.borg_athena.file = ../../secrets/borg_athena.age;

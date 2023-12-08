@@ -270,6 +270,12 @@
     reverse_proxy http://127.0.0.1:${toString config.ja.services.fossil.port}
   '';
 
+  age.secrets.nextdns-linked-ip-url.file = ../../secrets/nextdns_evanston.age;
+  ja.services.nextdns-linked-ip-update = {
+    enable = true;
+    url-file = config.age.secrets.nextdns-linked-ip-url.path;
+  };
+
   nuzulip.enable = true;
 
   age.secrets.nuzulip-calendar-bot.file = ../../secrets/nuzulip_calendar_bot.age;
