@@ -21,6 +21,7 @@ in
   "james_smb.age".publicKeys = [ milan-ssh ];
   "nextdns_bg.age".publicKeys = [ athena-ssh ];
   "nextdns_evanston.age".publicKeys = [ zeus-ssh ];
+  "vikunja_jwt.age".publicKeys = [ zeus-ssh ];
 
   "nuzulip_econ_bot.age".publicKeys = [ zeus-ssh ];
   "nuzulip_calendar_bot.age".publicKeys = [ zeus-ssh ];

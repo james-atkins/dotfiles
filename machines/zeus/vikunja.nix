@@ -15,10 +15,12 @@
 
   ja.backups.databases.postgres = [ config.services.vikunja.database.database ];
 
+  age.secrets.vikunja_jwt.file = ../../secrets/vikunja_jwt.age;
   services.vikunja = {
     enable = true;
     frontendScheme = "https";
     frontendHostname = "todo.jamesatkins.io";
+    environmentFiles = [ config.age.secrets.vikunja_jwt.path ];
     database = {
       type = "postgres";
       host = "/run/postgresql";
