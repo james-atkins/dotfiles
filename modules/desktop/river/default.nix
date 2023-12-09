@@ -97,6 +97,7 @@ in
     # Screen sharing
     xdg.portal = {
       enable = true;
+      config.river.default = [ "wlr" "gtk" ];
       extraPortals = with pkgs; [ xdg-desktop-portal-gtk xdg-desktop-portal-wlr ];
     };
 
