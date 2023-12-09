@@ -77,7 +77,7 @@ in
   };
 
   config = lib.mkIf config.ja.desktop.enable {
-    fonts.fonts = with pkgs; [ fira-code font-awesome_5 noto-fonts ];
+    fonts.packages = with pkgs; [ fira-code font-awesome_5 noto-fonts ];
 
     # Use Pipewire rather for sound rather than PulseAudio
     security.rtkit.enable = true;
@@ -91,7 +91,7 @@ in
     security.polkit.enable = true;
     security.pam.services.swaylock = { };
     hardware.opengl.enable = true;
-    fonts.enableDefaultFonts = true;
+    fonts.enableDefaultPackages = true;
     programs.dconf.enable = true;
 
     # Screen sharing
