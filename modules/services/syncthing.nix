@@ -52,6 +52,8 @@ in
       BindPaths = mkIf (cfg.user == "syncthing" && config.ja.persistence.enable) [
         "/persist/var/lib/syncthing:/var/lib/syncthing"
       ];
+      # Grant extra capabilities https://docs.syncthing.net/v1.23.4/advanced/folder-sync-ownership#elevated-permissions
+      AmbientCapabilities = [ "CAP_CHOWN" "CAP_FOWNER" ];
     };
 
     systemd.services.syncthing-init.serviceConfig = {
