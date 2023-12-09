@@ -56,8 +56,6 @@
         import ./pkgs/default.nix {
           pkgs = pkgs.${system};
           pkgs-unstable = pkgs-unstable.${system};
-        } // {
-          epsonscan2 = pkgs.${system}.libsForQt5.callPackage "${nixpkgs-unstable}/pkgs/misc/drivers/epsonscan2" { };
         }
       );
 
