@@ -6,9 +6,7 @@
     ensureUsers = [
       {
         name = config.services.vikunja.database.user;
-        ensurePermissions = {
-          "DATABASE ${config.services.vikunja.database.database}" = "ALL PRIVILEGES";
-        };
+        ensureDBOwnership = true;
       }
     ];
   };
