@@ -46,8 +46,6 @@
     };
   };
 
-  # Fix ZFS data corruption bug
-  boot.extraModprobeConfig = ''
-    options zfs zfs_dmu_offset_next_sync=0
-  '';
+  # Keep ZFS 2.1.* series until 2.2 is more stable
+  boot.zfs.package = pkgs.zfs_2_1;
 }
