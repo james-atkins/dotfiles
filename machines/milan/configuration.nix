@@ -121,7 +121,7 @@
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     noto-fonts
     fira-code
     fira-code-symbols
