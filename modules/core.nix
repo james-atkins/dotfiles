@@ -4,7 +4,7 @@
   age.secrets.rootPassword.file = ../secrets/password_root.age;
   users = {
     mutableUsers = false;
-    users."root".passwordFile = config.age.secrets.rootPassword.path;
+    users."root".hashedPasswordFile = config.age.secrets.rootPassword.path;
   };
 
   i18n.defaultLocale = "en_GB.UTF-8";
