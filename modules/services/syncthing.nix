@@ -29,17 +29,18 @@ in
       configDir = if cfg.user == "syncthing" then config.users.users.syncthing.home else strings.normalizePath (config.users.users.${cfg.user}.home + "/.config/syncthing");
       openDefaultPorts = true;
       guiAddress = if cfg.tailscaleReverseProxy then "127.0.0.1:${toString privatePort}" else "127.0.0.1:${toString cfg.port}";
-      devices = builtins.listToAttrs (lib.mapAttrsToList
-        (name: machine:
-          lib.nameValuePair name {
-            id = machine.syncthing;
-            addresses = [ "dynamic" "tcp://${name}.${global.tailscaleDomain}" ];
-          }
-        )
-        (lib.filterAttrs (name: system: name != config.networking.hostName && system.syncthing != null) global.machines));
       overrideFolders = false;
       overrideDevices = true;
-      extraOptions.options = {
+      settings = {
+        devices = builtins.listToAttrs (lib.mapAttrsToList
+          (name: machine:
+            lib.nameValuePair name {
+              id = machine.syncthing;
+              addresses = [ "dynamic" "tcp://${name}.${global.tailscaleDomain}" ];
+            }
+          )
+          (lib.filterAttrs (name: system: name != config.networking.hostName && system.syncthing != null) global.machines));
+
         globalAnnounceEnabled = false;
         relaysEnabled = false;
         natEnabled = false;
