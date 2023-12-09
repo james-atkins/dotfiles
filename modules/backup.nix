@@ -141,7 +141,7 @@ in
       inherit description;
       wants = [ "network-online.target" ];
       after = [ "network-online.target" ];
-      path = lib.optionals zfsEnabled [ pkgs.zfs ] ++
+      path = lib.optionals zfsEnabled [ config.boot.zfs.package ] ++
         lib.optionals (cfg.databases.mysql != [ ]) [ config.services.mysql.package ] ++
         lib.optionals (cfg.databases.postgres != [ ]) [ config.services.postgresql.package ];
 
