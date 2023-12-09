@@ -35,11 +35,6 @@
           hostPlatform = system;
           config.allowUnfree = true;
           config.permittedInsecurePackages = permittedInsecurePackages;
-          overlays = [
-            (final: prev: {
-              mediamtx = pkgs-unstable.${system}.mediamtx;
-            })
-          ];
         }
       );
 
