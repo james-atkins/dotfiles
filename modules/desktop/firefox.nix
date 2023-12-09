@@ -7,29 +7,25 @@ let
     rev = "0f1571231e73eba84ea9949584e517acbc55c1c8";
     sha256 = "sha256-v85UwA0dpkonh7PF6FNF2Q8DqZKNmGEEbVzND3JueTY=";
   };
-
-  ff = pkgs.firefox.override {
-    extraPolicies = {
-      DontCheckDefaultBrowser = true;
-      DisableFirefoxStudies = true;
-      DisablePocket = true;
-      FirefoxHome = {
-        SponsoredTopSites = false;
-        Highlights = false;
-        Pocket = false;
-        SponsoredPocket = false;
-        Snippets = false;
-      };
-      OfferToSaveLogins = false;
-      UserMessaging = { SkipOnboarding = true; ExtensionRecommendations = false; };
-    };
-  };
 in
 lib.mkIf config.ja.desktop.enable {
   home-manager.users.james = { pkgs, ... }: {
     programs.firefox = {
       enable = true;
-      package = ff;
+      policies = {
+        DontCheckDefaultBrowser = true;
+        DisableFirefoxStudies = true;
+        DisablePocket = true;
+        FirefoxHome = {
+          SponsoredTopSites = false;
+          Highlights = false;
+          Pocket = false;
+          SponsoredPocket = false;
+          Snippets = false;
+        };
+        OfferToSaveLogins = false;
+        UserMessaging = { SkipOnboarding = true; ExtensionRecommendations = false; };
+      };
       profiles.default = {
         settings = {
           "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
