@@ -5,7 +5,7 @@ let
     beautifulsoup4
     cython
     cytoolz
-    (pkgs-local.duckdb.python pp)
+    duckdb
     flake8
     ipython
     jupyter
@@ -55,9 +55,9 @@ in
         pythonWithPackages
         pkgs-unstable.ruff
 
-        pkgs-local.duckdb
         pkgs-local.stata16
 
+        duckdb
         jq
         pandoc
         julia

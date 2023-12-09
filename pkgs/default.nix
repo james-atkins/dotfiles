@@ -3,7 +3,6 @@
 rec {
   borgmatic-zfs-snapshot = pkgs.callPackage ./borgmatic-zfs-snapshot/default.nix { };
   cran = pkgs.callPackage ./cran/default.nix { };
-  duckdb = pkgs.callPackage ./duckdb/default.nix { inherit cran; };
   foot-themes = pkgs.callPackage ./foot-themes/default.nix { };
   fossil-tailscale = pkgs.callPackage ./fossil-tailscale/default.nix { };
   knitro = pkgs.callPackage ./knitro/default.nix { };
