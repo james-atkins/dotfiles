@@ -5,7 +5,7 @@ with lib;
 let
   cfg = config.ja.services.syncthing;
   privatePort = 61925; # for reverse proxy. 6 as high port, then s=19 and y=25
-  homeDir = if cfg.user == "syncthing" then config.users.users.syncthing.home else strings.normalizePath (config.users.users.${cfg.user}.home + "/.config/syncthing");
+  homeDir = if cfg.user == "syncthing" then "/var/lib/syncthing" else strings.normalizePath (config.users.users.${cfg.user}.home + "/.config/syncthing");
 in
 {
   options.ja.services.syncthing = {
