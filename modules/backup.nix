@@ -18,6 +18,8 @@ let
 
   package = if zfsEnabled then pkgs-local.borgmatic-zfs-snapshot else pkgs.borgmatic;
   command = if zfsEnabled then "${package}/bin/borgmatic-zfs-snapshot" else "${package}/bin/borgmatic";
+
+  repositories = [ "ssh://de2429@de2429.rsync.net/./borg/${config.networking.hostName}" ] ++ cfg.extra_repositories;
 in
 {
   options.ja.backups = {
@@ -72,7 +74,7 @@ in
 
     environment.etc."borgmatic.d/data.yaml".source = settingsFormat.generate "data.yaml" {
       source_directories = cfg.paths;
-      repositories = [ "ssh://de2429@de2429.rsync.net/./borg/${config.networking.hostName}" ] ++ cfg.extra_repositories;
+      repositories = map (repo: { path = repo; }) repositories;
       exclude_patterns = [
         "/var/lib/containers"
         "/var/lib/docker"
