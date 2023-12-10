@@ -5,11 +5,16 @@ with lib;
 let
   cfg = config.ja.services.syncthing;
   privatePort = 61925; # for reverse proxy. 6 as high port, then s=19 and y=25
+  homeDir = if cfg.user == "syncthing" then config.users.users.syncthing.home else strings.normalizePath (config.users.users.${cfg.user}.home + "/.config/syncthing");
 in
 {
   options.ja.services.syncthing = {
     enable = mkEnableOption "syncthing";
     user = mkOption {
+      default = "syncthing";
+      type = types.str;
+    };
+    group = mkOption {
       default = "syncthing";
       type = types.str;
     };
@@ -26,7 +31,10 @@ in
   config = mkIf cfg.enable {
     services.syncthing = {
       enable = true;
-      configDir = if cfg.user == "syncthing" then config.users.users.syncthing.home else strings.normalizePath (config.users.users.${cfg.user}.home + "/.config/syncthing");
+      configDir = homeDir;
+      dataDir = homeDir;
+      user = cfg.user;
+      group = cfg.group;
       openDefaultPorts = true;
       guiAddress = if cfg.tailscaleReverseProxy then "127.0.0.1:${toString privatePort}" else "127.0.0.1:${toString cfg.port}";
       overrideFolders = false;
@@ -48,8 +56,6 @@ in
     };
 
     systemd.services.syncthing.serviceConfig = {
-      User = mkForce cfg.user;
-      Group = mkForce config.users.users.${cfg.user}.group;
       BindPaths = mkIf (cfg.user == "syncthing" && config.ja.persistence.enable) [
         "/persist/var/lib/syncthing:/var/lib/syncthing"
       ];
@@ -58,8 +64,6 @@ in
     };
 
     systemd.services.syncthing-init.serviceConfig = {
-      User = mkForce cfg.user;
-      Group = mkForce config.users.users.${cfg.user}.group;
       BindPaths = mkIf (cfg.user == "syncthing" && config.ja.persistence.enable) [
         "/persist/var/lib/syncthing:/var/lib/syncthing"
       ];
@@ -77,7 +81,5 @@ in
       };
     };
   };
-
-
 }
 

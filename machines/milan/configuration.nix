@@ -131,7 +131,8 @@
 
   ja.services.syncthing = {
     enable = true;
-    user = config.users.users.james.name;
+    user = "james";
+    group = "users";
   };
 
   # For mount.cifs, required for domain name resolution.

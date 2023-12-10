@@ -91,7 +91,8 @@
 
   ja.services.syncthing = {
     enable = true;
-    user = config.users.users.james.name;
+    user = "james";
+    group = "users";
   };
 
   home-manager.users.james.home.stateVersion = "22.11";
