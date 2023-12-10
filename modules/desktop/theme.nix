@@ -47,10 +47,8 @@ lib.mkIf config.ja.desktop.enable {
       };
 
       gtk3.extraCss = remove-decorations;
+      gtk4.extraCss = remove-decorations;
     };
-
-    # TODO: change to gtk4.extraCss when upgrading from 23.05
-    xdg.configFile."gtk-4.0/gtk.css" = { text = remove-decorations; };
 
     qt = {
       enable = true;

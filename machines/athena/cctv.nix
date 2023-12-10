@@ -1,4 +1,4 @@
-{ config, lib, pkgs, global, ... }:
+{ config, lib, pkgs, pkgs-unstable, global, ... }:
 
 let
   inherit (lib) concatLines;
@@ -64,6 +64,7 @@ in
 
   services.mediamtx = {
     enable = true;
+    package = pkgs-unstable.mediamtx;
     settings = {
       api = true;
       logLevel = "warn";

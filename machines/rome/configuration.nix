@@ -81,7 +81,7 @@
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     noto-fonts
     fira-code
     fira-code-symbols
@@ -91,7 +91,8 @@
 
   ja.services.syncthing = {
     enable = true;
-    user = config.users.users.james.name;
+    user = "james";
+    group = "users";
   };
 
   home-manager.users.james.home.stateVersion = "22.11";

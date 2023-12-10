@@ -1,4 +1,4 @@
-{ config, lib, pkgs, pkgs-local, global, ... }:
+{ config, lib, pkgs, global, ... }:
 
 {
   boot.loader.systemd-boot.enable = true;
@@ -111,7 +111,7 @@
     enable = true;
     extraBackends = [
       pkgs.hplipWithPlugin
-      (pkgs-local.epsonscan2.override { withNonFreePlugins = true; })
+      (pkgs.epsonscan2.override { withNonFreePlugins = true; })
     ];
     disabledDefaultBackends = [ "epsonds" ];
   };
@@ -121,7 +121,7 @@
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     noto-fonts
     fira-code
     fira-code-symbols
@@ -131,7 +131,8 @@
 
   ja.services.syncthing = {
     enable = true;
-    user = config.users.users.james.name;
+    user = "james";
+    group = "users";
   };
 
   # For mount.cifs, required for domain name resolution.

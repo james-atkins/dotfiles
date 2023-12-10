@@ -1,7 +1,7 @@
 { config, lib, pkgs, pkgs-local, ... }:
 
 lib.mkIf config.ja.desktop.enable {
-  fonts.fonts = [ pkgs.fira-code ];
+  fonts.packages = [ pkgs.fira-code ];
 
   home-manager.users.james = { pkgs, ... }: {
     programs.foot = {

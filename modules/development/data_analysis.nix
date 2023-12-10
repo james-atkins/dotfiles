@@ -1,32 +1,11 @@
 { config, pkgs, pkgs-unstable, lib, pkgs-local, ... }:
 
 let
-  pythonWithPackages = (pkgs.python3.override {
-    packageOverrides = pyfinal: pyprev: {
-      aiohttp = pyprev.aiohttp.overrideAttrs (attrs: {
-        disabledTests = attrs.disabledTests ++ [
-          "test_static_file_if_none_match"
-          "test_static_file_if_match"
-          "test_static_file_if_modified_since_past_date"
-        ];
-      });
-      # Fix Jupyter builds until https://nixpk.gs/pr-tracker.html?pr=267121 is merged
-      urllib3 = pyprev.urllib3.overrideAttrs {
-        patches = [
-          (pkgs.fetchpatch {
-            name = "revert-threadsafe-poolmanager.patch";
-            url = "https://github.com/urllib3/urllib3/commit/710114d7810558fd7e224054a566b53bb8601494.patch";
-            revert = true;
-            hash = "sha256-2O0y0Tij1QF4Hx5r+WMxIHDpXTBHign61AXLzsScrGo=";
-          })
-        ];
-      };
-    };
-  }).withPackages(pp: with pp; [
+  pythonWithPackages = pkgs.python3.withPackages(pp: with pp; [
     beautifulsoup4
     cython
     cytoolz
-    (pkgs-local.duckdb.python pp)
+    duckdb
     flake8
     ipython
     jupyter
@@ -76,9 +55,9 @@ in
         pythonWithPackages
         pkgs-unstable.ruff
 
-        pkgs-local.duckdb
         pkgs-local.stata16
 
+        duckdb
         jq
         pandoc
         julia

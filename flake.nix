@@ -1,10 +1,10 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware";
     home-manager = {
-      url = "github:nix-community/home-manager/release-23.05";
+      url = "github:nix-community/home-manager/release-23.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     agenix = {
@@ -25,9 +25,7 @@
 
       forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
 
-      permittedInsecurePackages = [
-        "zotero-6.0.27"
-      ];
+      permittedInsecurePackages = [ ];
 
       pkgs = forAllSystems (system:
         import nixpkgs {
@@ -35,11 +33,6 @@
           hostPlatform = system;
           config.allowUnfree = true;
           config.permittedInsecurePackages = permittedInsecurePackages;
-          overlays = [
-            (final: prev: {
-              mediamtx = pkgs-unstable.${system}.mediamtx;
-            })
-          ];
         }
       );
 
@@ -56,8 +49,6 @@
         import ./pkgs/default.nix {
           pkgs = pkgs.${system};
           pkgs-unstable = pkgs-unstable.${system};
-        } // {
-          epsonscan2 = pkgs.${system}.libsForQt5.callPackage "${nixpkgs-unstable}/pkgs/misc/drivers/epsonscan2" { };
         }
       );
 
