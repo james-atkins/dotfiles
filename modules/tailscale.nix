@@ -79,7 +79,11 @@ in
         nohup /bin/.tailscaled-wrapped -verbose=1 -state=/var/lib/tailscale/tailscaled.state -no-logs-no-support -socket ./tailscaled.socket &
         /bin/.tailscale-wrapped --socket=./tailscaled.socket up --hostname=${config.networking.hostName}-boot --auth-key=file:/etc/tailscale.secret
 
-        echo "zpool import -a; zfs load-key -a; nohup /bin/.tailscale-wrapped --socket=./tailscaled.socket logout > /dev/null 2> /dev/null < /dev/null &; killall zfs; exit" >> /root/.profile
+        echo "#!/bin/sh" >> ./logout.sh
+        echo "/bin/.tailscale-wrapped --socket=./tailscaled.socket logout; killall zfs" >> ./logout.sh
+        chmod +x ./logout.sh
+
+        echo "zpool import -a; zfs load-key -a; (( ./logout.sh > /dev/null 2> /dev/null < /dev/null & ) & ); exit" >> /root/.profile
       '';
     };
   };
