@@ -77,12 +77,9 @@ in
       network.postCommands = lib.mkBefore ''
         mkdir -p /var/lib/tailscale
         nohup /bin/.tailscaled-wrapped -verbose=1 -state=/var/lib/tailscale/tailscaled.state -no-logs-no-support -socket ./tailscaled.socket &
-        /bin/.tailscale-wrapped --socket=./tailscaled.socket up --hostname=zeus-boot --auth-key=file:/etc/tailscale.secret
+        /bin/.tailscale-wrapped --socket=./tailscaled.socket up --hostname=${config.networking.hostName}-boot --auth-key=file:/etc/tailscale.secret
 
-        echo "zpool import -a; zfs load-key -a; killall zfs; /bin/.tailscale-wrapped logout; exit" >> /root/.profile
-      '';
-      postMountCommands = ''
-        /bin/.tailscale-wrapped logout
+        echo "zpool import -a; zfs load-key -a; killall zfs; /bin/.tailscale-wrapped --socket=./tailscaled.socket logout; exit" >> /root/.profile
       '';
     };
   };
