@@ -25,7 +25,9 @@
 
       forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
 
-      permittedInsecurePackages = [ ];
+      permittedInsecurePackages = [
+        "electron-25.9.0"
+      ];
 
       pkgs = forAllSystems (system:
         import nixpkgs {
