@@ -20,7 +20,10 @@
   services.resolved.enable = true;
 
   time.timeZone = "America/Chicago";
+
   services.tailscale.useRoutingFeatures = "server";
+  ja.tailscale.unlock-on-boot = true;
+  boot.initrd.kernelModules = [ "e1000e" ];
 
   ja.desktop.enable = true;
   ja.development.data_analysis = true;

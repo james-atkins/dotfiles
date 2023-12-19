@@ -25,45 +25,8 @@
 
   boot.supportedFilesystems = [ "zfs" ];
 
-  # Remote unlock over tailscale
-  boot.initrd = {
-    kernelModules = [ "e1000e" "igb" "tun" ];
-    extraUtilsCommands = ''
-      for BIN in ${pkgs.iproute2}/{s,}bin/*; do
-        copy_bin_and_libs $BIN
-      done
-
-      for BIN in ${pkgs.iptables-legacy}/{s,}bin/*; do
-        copy_bin_and_libs $BIN
-      done
-
-      copy_bin_and_libs ${config.services.tailscale.package}/bin/.tailscale-wrapped
-      copy_bin_and_libs ${config.services.tailscale.package}/bin/.tailscaled-wrapped
-
-      mkdir -p $out/secrets/etc/ssl/certs
-      cp ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt $out/secrets/etc/ssl/certs/ca-bundle.crt
-    '';
-    secrets = {
-      "/etc/tailscale.secret" = "/persist/etc/tailscale.secret";
-    };
-    network.enable = true;
-    network.ssh.enable = true;
-    network.ssh.hostKeys = [
-      "/persist/etc/secrets/initrd/ssh_host_rsa_key"
-      "/persist/etc/secrets/initrd/ssh_host_ed25519_key"
-    ];
-    network.ssh.authorizedKeys = config.users.users.james.openssh.authorizedKeys.keys;
-    network.postCommands = lib.mkBefore ''
-      mkdir -p /var/lib/tailscale
-      nohup /bin/.tailscaled-wrapped -verbose=1 -state=/var/lib/tailscale/tailscaled.state -no-logs-no-support -socket ./tailscaled.socket &
-      /bin/.tailscale-wrapped --socket=./tailscaled.socket up --hostname=zeus-boot --auth-key=file:/etc/tailscale.secret
-
-      echo "zpool import tank; zfs load-key -a; killall zfs; exit" >> /root/.profile
-    '';
-    postMountCommands = ''
-      /bin/.tailscale-wrapped logout
-    '';
-  };
+  ja.tailscale.unlock-on-boot = true;
+  boot.initrd.kernelModules = [ "e1000e" "igb" ];  # TODO: remove e1000e?
 
   time.timeZone = "America/Chicago";
 
