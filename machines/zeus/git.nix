@@ -1,5 +1,13 @@
 { config, pkgs, ... }:
 
+let
+  cgit-assets = pkgs.runCommand "cgit-assets" {} ''
+    mkdir $out
+    cp ${pkgs.cgit}/cgit/cgit.css $out
+    cp ${./bug.ico} $out/logo.ico
+    cp ${./bug.png} $out/logo.png
+  '';
+in
 {
   services.gitolite = {
     enable = true;
@@ -12,8 +20,10 @@
   # cgit
   environment.etc."cgitrc".text = ''
     css=/assets/cgit.css
-    favicon=/assets/favicon.ico
-    logo=/assets/cgit.png
+    favicon=/assets/logo.ico
+    logo=/assets/logo.png
+
+    clone-url=git@git.jamesatkins.io:$CGIT_REPO_URL
 
     mimetype.gif=image/gif
     mimetype.html=text/html
@@ -35,14 +45,16 @@
     readme=:README.html
     readme=:README
 
+    root-title=James Atkins Git Repositories
+    root-desc=Source code of various projects
+
     scan-path /tank/code/git
   '';
 
   ja.private-services.git.caddy-config = ''
     handle_path /assets/* {
       file_server {
-        root ${pkgs.cgit}/cgit
-        hide cgit.cgi
+        root ${cgit-assets}
       }
     }
 
