@@ -9,13 +9,15 @@ let
   '';
 in
 {
-  services.gitolite = {
-    enable = true;
-    user = "git";
-    group = "git";
-    dataDir = "/tank/code/git";
-    adminPubkey = builtins.head config.users.users.james.openssh.authorizedKeys.keys;
+  users.users.git = {
+    group = config.users.groups.git.name;
+    isSystemUser = true;
+    description = "git user";
+    home = "/tank/code/git";
+    shell = "${pkgs.git}/bin/git-shell";
+    openssh.authorizedKeys.keys = config.users.users.james.openssh.authorizedKeys.keys;
   };
+  users.groups.git = { };
 
   # cgit
   environment.etc."cgitrc".text = ''
