@@ -50,7 +50,6 @@
       reverse_proxy unix//run/cgit.socket {
         transport fastcgi {
           env SCRIPT_FILENAME ${pkgs.cgit}/cgit/cgit.cgi
-          env CGIT_CONFIG
         }
       }
     }
