@@ -50,7 +50,7 @@ in
     root-title=James Atkins Git Repositories
     root-desc=Source code of various projects
 
-    scan-path /tank/code/git
+    scan-path=/tank/code/git
   '';
 
   ja.private-services.git.caddy-config = ''
