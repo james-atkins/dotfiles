@@ -38,6 +38,7 @@ in
     enable-commit-graph=1
     enable-log-filecount=1
     enable-log-linecount=1
+    enable-index-owner=0
 
     source-filter=${pkgs.cgit}/lib/cgit/filters/syntax-highlighting.py
     about-filter=${pkgs.cgit}/lib/cgit/filters/about-formatting.sh
