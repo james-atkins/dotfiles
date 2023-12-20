@@ -6,6 +6,6 @@
     user = "git";
     group = "git";
     dataDir = "/tank/code/git";
-    adminPubkey = head config.users.users.james.openssh.authorizedKeys.keys;
+    adminPubkey = builtins.head config.users.users.james.openssh.authorizedKeys.keys;
   };
 }
