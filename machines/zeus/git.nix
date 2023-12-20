@@ -50,6 +50,7 @@ in
     root-title=James Atkins Git Repositories
     root-desc=Source code of various projects
 
+    section-from-path=1
     scan-path=/tank/code/git
   '';
 
