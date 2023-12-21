@@ -74,9 +74,9 @@ in
     handle @git_cgi {
       reverse_proxy unix//run/cgit.socket {
         transport fastcgi {
-          env SCRIPT_FILENAME "${pkgs.git}/libexec/git-core/git-http-backend"
-          env GIT_HTTP_EXPORT_ALL "1"
-          env GIT_PROJECT_ROOT "${git-root}"
+          env SCRIPT_FILENAME ${pkgs.git}/libexec/git-core/git-http-backend
+          env GIT_HTTP_EXPORT_ALL 1
+          env GIT_PROJECT_ROOT ${git-root}
         }
       }
     }
