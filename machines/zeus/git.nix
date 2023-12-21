@@ -45,6 +45,7 @@ in
     enable-log-linecount=1
     enable-index-owner=0
     enable-http-clone=0
+    max-stats=year
 
     source-filter=${pkgs.cgit}/lib/cgit/filters/syntax-highlighting.py
     about-filter=${pkgs.cgit}/lib/cgit/filters/about-formatting.sh
