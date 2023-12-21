@@ -48,7 +48,7 @@ in
     readme=:README.html
     readme=:README
 
-    root-title=James Atkins Git Repositories
+    root-title=Git Repositories
     root-desc=Source code of various projects
 
     section-from-path=1
