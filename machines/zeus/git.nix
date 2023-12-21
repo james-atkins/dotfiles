@@ -3,7 +3,7 @@
 let
   git-root = "/tank/code/git";
 
-  cgit-assets = pkgs.runCommand "cgit-assets" {} ''
+  cgit-assets = pkgs.runCommand "cgit-assets" { } ''
     mkdir $out
     cp ${pkgs.cgit}/cgit/cgit.css $out
     cp ${./bug.ico} $out/logo.ico
@@ -111,7 +111,7 @@ in
     wantedBy = [ "default.target" ];
     serviceConfig = {
       ExecStart = "${pkgs.fcgiwrap}/sbin/fcgiwrap -c 1";
-      StandardInput = "socket";  # pass socket on FD 0
+      StandardInput = "socket"; # pass socket on FD 0
       CacheDirectory = "cgit";
       DynamicUser = true;
       ProtectHome = true;
