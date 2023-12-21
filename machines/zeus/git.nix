@@ -28,7 +28,7 @@ in
     favicon=/assets/logo.ico
     logo=/assets/logo.png
 
-    clone-url=git@git.jamesatkins.io:$CGIT_REPO_URL
+    clone-url=https://git.jamesatkins.io/$CGIT_REPO_URL git@git.jamesatkins.io:$CGIT_REPO_URL
 
     mimetype.gif=image/gif
     mimetype.html=text/html
@@ -43,6 +43,7 @@ in
     enable-log-linecount=1
     enable-index-owner=0
     max-stats=year
+    enable-http-clone=0
 
     source-filter=${pkgs.cgit}/lib/cgit/filters/syntax-highlighting.py
     about-filter=${pkgs.cgit}/lib/cgit/filters/about-formatting.sh
@@ -63,6 +64,18 @@ in
     handle_path /assets/* {
       file_server {
         root ${cgit-assets}
+      }
+    }
+
+    @git path_regexp git "^.*/(HEAD|info/refs|objects/(info/[^/]+|[0-9a-f]{2}/[0-9a-f]{38}|pack/pack-[0-9a-f]{40}\.(pack|idx))|git-upload-pack)$"
+
+    handle @git {
+      reverse_proxy unix//run/cgit.socket {
+        transport fastcgi {
+          env SCRIPT_FILENAME "${pkgs.git}/libexec/git-core/git-http-backend"
+          env GIT_HTTP_EXPORT_ALL "1"
+          env GIT_PROJECT_ROOT "/tank/code/git"
+        }
       }
     }
 
