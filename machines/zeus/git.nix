@@ -28,7 +28,7 @@ in
     favicon=/assets/logo.ico
     logo=/assets/logo.png
 
-    clone-url=git@git.jamesatkins.io:$CGIT_REPO_URL
+    clone-url=https://git.jamesatkins.io/$CGIT_REPO_URL git@git.jamesatkins.io:$CGIT_REPO_URL
 
     mimetype.gif=image/gif
     mimetype.html=text/html
