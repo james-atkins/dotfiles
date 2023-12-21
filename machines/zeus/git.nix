@@ -10,6 +10,7 @@ let
 in
 {
   users.users.git = {
+    uid = config.ids.uids.git;
     group = config.users.groups.git.name;
     isSystemUser = true;
     description = "git user";
@@ -17,7 +18,9 @@ in
     shell = "${pkgs.git}/bin/git-shell";
     openssh.authorizedKeys.keys = config.users.users.james.openssh.authorizedKeys.keys;
   };
-  users.groups.git = { };
+  users.groups.git = {
+    gid = config.ids.gids.git;
+  };
 
   # cgit
   environment.etc."cgitrc".text = ''
