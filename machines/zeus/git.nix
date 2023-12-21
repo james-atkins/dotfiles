@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 
 let
+  git-root = "/tank/code/git";
+
   cgit-assets = pkgs.runCommand "cgit-assets" {} ''
     mkdir $out
     cp ${pkgs.cgit}/cgit/cgit.css $out
@@ -14,7 +16,7 @@ in
     group = config.users.groups.git.name;
     isSystemUser = true;
     description = "git user";
-    home = "/tank/code/git";
+    home = git-root;
     shell = "${pkgs.git}/bin/git-shell";
     openssh.authorizedKeys.keys = config.users.users.james.openssh.authorizedKeys.keys;
   };
@@ -56,7 +58,7 @@ in
     root-desc=Source code of various projects
 
     section-from-path=1
-    scan-path=/tank/code/git
+    scan-path=${git-root}
   '';
 
   ja.private-services.git.caddy-config = ''
@@ -74,14 +76,14 @@ in
         transport fastcgi {
           env SCRIPT_FILENAME "${pkgs.git}/libexec/git-core/git-http-backend"
           env GIT_HTTP_EXPORT_ALL "1"
-          env GIT_PROJECT_ROOT "/tank/code/git"
+          env GIT_PROJECT_ROOT "${git-root}"
         }
       }
     }
 
     handle @git_static {
       file_server {
-        root /tank/code/git
+        root ${git-root}
       }
     }
 
