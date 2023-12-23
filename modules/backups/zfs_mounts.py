@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#! @shell@
 
 import csv
 import ctypes.util
@@ -90,9 +90,8 @@ def make_mount_points() -> list[Union[BindMount, SnapshotMount]]:
     # a snapshot of the ZFS volume that they are on is mounted, and therefore is read-only.
     os.makedirs("/run/backups/state", exist_ok=True)
     os.makedirs("/run/backups/cache", exist_ok=True)
-    # TODO: /persist/ or not
-    mount_points = [BindMount("/persist/var/lib/backups", "/run/backups/state"),
-                    BindMount("/persist/var/cache/backups", "/run/backups/cache")]
+    mount_points = [BindMount("@stateDir@", "/run/backups/state"),
+                    BindMount("@cacheDir@", "/run/backups/cache")]
 
     zfs_mounts = get_zfs_mounts()
     for volume, mount_point in zfs_mounts.items():

@@ -16,9 +16,21 @@ let
   zfsEnabled = (length config.boot.zfs.extraPools) > 0
     || any (fsType: fsType == "zfs") (mapAttrsToList (name: value: value.fsType) config.fileSystems);
 
+  # Python script that sets up the mounts for the ZFS snapshots before running borgmatic
+  # This requires that the systemd unit has private mount namespaces so that they don't interfere
+  # with the mounts for the main system. This is why PrivateMounts=true.
+  zfsMounts = pkgs.substituteAll {
+    src = ./zfs_mounts.py;
+    shell = "${pkgs.python3}/bin/python3";
+    isExecutable = true;
+
+    stateDir = (lib.optionalString config.ja.persistence.enable "/persist") + "/var/lib/backups";
+    cacheDir = (lib.optionalString config.ja.persistence.enable "/persist") + "/var/cache/backups";
+  };
+
   command =
     if zfsEnabled then
-      ''${pkgs.bash}/bin/sh -c "${pkgs.python3}/bin/python3 ${./zfs_mounts.py} && ${pkgs.borgmatic}/bin/borgmatic -v 2"''
+      ''${pkgs.bash}/bin/sh -c "${zfsMounts} && ${pkgs.borgmatic}/bin/borgmatic -v 2"''
     else
       "${pkgs.borgmatic}/bin/borgmatic -v 2";
 
