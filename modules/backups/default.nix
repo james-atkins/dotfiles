@@ -16,8 +16,11 @@ let
   zfsEnabled = (length config.boot.zfs.extraPools) > 0
     || any (fsType: fsType == "zfs") (mapAttrsToList (name: value: value.fsType) config.fileSystems);
 
-  package = if zfsEnabled then pkgs-local.borgmatic-zfs-snapshot else pkgs.borgmatic;
-  command = if zfsEnabled then "${package}/bin/borgmatic-zfs-snapshot" else "${package}/bin/borgmatic";
+  command =
+    if zfsEnabled then
+      ''${pkgs.bash}/bin/sh -c "${pkgs.python3}/bin/python3 ${./zfs_mounts.py} && ${pkgs.borgmatic}/bin/borgmatic -v 2"''
+    else
+      "${pkgs.borgmatic}/bin/borgmatic -v 2";
 
   repositories = [ "ssh://de2429@de2429.rsync.net/./borg/${config.networking.hostName}" ] ++ cfg.extra_repositories;
 in
@@ -28,11 +31,6 @@ in
       type = with types; listOf str;
       default = [ ];
       description = "Extra Borg repositories to backup to";
-    };
-    zfs_snapshots = mkOption {
-      type = with types; listOf str;
-      default = [ ];
-      description = "ZFS datasets to snapshot before backing up";
     };
     paths = mkOption {
       type = with types; listOf str;
@@ -70,7 +68,7 @@ in
         message = "Cannot enable ja.backups and services.borgmatic simultaneously.";
       }];
 
-    age.secrets.borg.file = ../secrets/borg.age;
+    age.secrets.borg.file = ../../secrets/borg.age;
 
     environment.etc."borgmatic.d/data.yaml".source = settingsFormat.generate "data.yaml" {
       source_directories = cfg.paths;
@@ -90,7 +88,7 @@ in
       exclude_if_present = [
         ".nobackup"
       ];
-      borgmatic_source_directory = (lib.optionalString config.ja.persistence.enable "/persist") + "/var/lib/backups/borgmatic";
+      borgmatic_source_directory = "/run/backups/state/borgmatic";
       one_file_system = false;
 
       keep_hourly = 36;
@@ -102,8 +100,8 @@ in
       compression = "auto,zstd,3";
       encryption_passcommand = "${pkgs.coreutils}/bin/cat ${cfg.password-file}";
       ssh_command = "ssh -o ServerAliveInterval=10 -o ServerAliveCountMax=6 -o PubkeyAuthentication=yes -o StrictHostKeyChecking=yes -o GlobalKnownHostsFile=${fingerprints} -i /persist/etc/secrets/id_borg_ed25519";
-      borg_config_directory = (lib.optionalString config.ja.persistence.enable "/persist") + "/var/lib/backups/borg";
-      borg_cache_directory = (lib.optionalString config.ja.persistence.enable "/persist") + "/var/cache/backups/borg";
+      borg_config_directory = "/run/backups/state/borg";
+      borg_cache_directory = "/run/backups/cache/borg";
 
       checks = [
         { name = "repository"; frequency = "1 week"; }
@@ -113,7 +111,7 @@ in
 
     environment.etc."borgmatic.d/databases.yaml".source = settingsFormat.generate "databases.yaml" {
       repositories = [ "ssh://de2429@de2429.rsync.net/./borg/${config.networking.hostName}" ] ++ cfg.extra_repositories;
-      borgmatic_source_directory = (lib.optionalString config.ja.persistence.enable "/persist") + "/var/lib/backups/borgmatic";
+      borgmatic_source_directory = "/run/backups/state/borgmatic";
 
       keep_hourly = 36;
       keep_daily = 14;
@@ -124,8 +122,8 @@ in
       compression = "auto,zstd,3";
       encryption_passcommand = "${pkgs.coreutils}/bin/cat ${cfg.password-file}";
       ssh_command = "ssh -o ServerAliveInterval=10 -o ServerAliveCountMax=6 -o PubkeyAuthentication=yes -o StrictHostKeyChecking=yes -o GlobalKnownHostsFile=${fingerprints} -i /persist/etc/secrets/id_borg_ed25519";
-      borg_config_directory = (lib.optionalString config.ja.persistence.enable "/persist") + "/var/lib/backups/borg";
-      borg_cache_directory = (lib.optionalString config.ja.persistence.enable "/persist") + "/var/cache/backups/borg";
+      borg_config_directory = "/run/backups/state/borg";
+      borg_cache_directory = "/run/backups/cache/borg";
 
       checks = [
         { name = "repository"; frequency = "1 week"; }
@@ -136,8 +134,7 @@ in
       postgresql_databases = map (db: { name = db; username = "postgres"; }) cfg.databases.postgres;
     };
 
-    environment.etc."borgmatic/zfs-snapshots".text = lib.concatLines cfg.zfs_snapshots;
-    environment.systemPackages = [ package ];
+    environment.systemPackages = [ pkgs.borgmatic ];
 
     systemd.services.borgmatic = {
       inherit description;
@@ -152,11 +149,13 @@ in
 
       serviceConfig = {
         Type = "oneshot";
-        ExecStart = "${command} -v 2";
+        ExecStart = command;
         StateDirectory = "backups";
         StateDirectoryMode = "0700";
         CacheDirectory = "backups";
         CacheDirectoryMode = "0700";
+
+        PrivateMounts = true;
 
         ProtectSystem = "strict";
         ProtectHome = "read-only";
@@ -176,7 +175,7 @@ in
         RestrictRealtime = true;
         RestrictSUIDSGID = true;
 
-        SystemCallFilter = [ "@system-service" ] ++ optionals zfsEnabled [ "@mount" "unshare" ];
+        SystemCallFilter = [ "@system-service" ] ++ optionals zfsEnabled [ "@mount" ];
         SystemCallErrorNumber = "EPERM";
         SystemCallArchitectures = "native";
 

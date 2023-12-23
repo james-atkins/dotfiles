@@ -7,7 +7,7 @@
     ./persistence.nix
     ./users.nix
     ./tailscale.nix
-    ./backup.nix
+    ./backups
     ./databases.nix
     ./programs
     ./services
