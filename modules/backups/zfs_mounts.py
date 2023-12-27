@@ -165,6 +165,9 @@ if __name__ == "__main__":
                 # Nothing is directly stored on here anyway.
                 continue
 
+            if mount_point == "/nix" or mount_point == "/nix/store":
+                continue
+
             elif snapshot is None:
                 continue
 
