@@ -68,10 +68,6 @@
 
   services.tailscale.useRoutingFeatures = "client";
 
-  ja.backups = {
-    enable = true;
-    extra_repositories = [ "ssh://borg@athena.${global.tailscaleDomain}/./" ];
-  };
   ja.desktop.enable = true;
   ja.development.data_analysis = true;
   ja.virtualisation.enable = true;
