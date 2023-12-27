@@ -158,16 +158,6 @@ in
     url-file = config.age.secrets.nextdns-linked-ip-url.path;
   };
 
-  age.secrets.borg_athena.file = ../../secrets/borg_athena.age;
-  ja.backups = {
-    enable = true;
-    paths = [
-      "/tank/shares/backups"
-      "/tank/shares/shared"
-    ];
-    password-file = config.age.secrets.borg_athena.path;
-  };
-
   ja.services.syncthing = {
     enable = true;
     tailscaleReverseProxy = true;
