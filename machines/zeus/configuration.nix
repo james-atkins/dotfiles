@@ -59,7 +59,7 @@
 
   ja.backups = {
     enable = true;
-    paths = [ "/tank" "/persist" "/zrepl" ];
+    paths = [ "/tank" "/zrepl" ];
     extra_repositories = [ "ssh://borg@athena.${global.tailscaleDomain}/./" ];
   };
 
