@@ -28,6 +28,32 @@ let
     cacheDir = (lib.optionalString config.ja.persistence.enable "/persist") + "/var/cache/backups";
   };
 
+  commonConfig = {
+    source_directories = cfg.paths;
+    repositories = map (repo: { path = repo; }) repositories;
+
+    borgmatic_source_directory = "/run/backups/state/borgmatic";
+    borg_config_directory = "/run/backups/state/borg";
+    borg_cache_directory = "/run/backups/cache/borg";
+
+    keep_hourly = 36;
+    keep_daily = 14;
+    keep_weekly = 12;
+    keep_monthly = 24;
+    keep_yearly = 2;
+
+    compression = "auto,zstd,3";
+    encryption_passcommand = "${pkgs.coreutils}/bin/cat ${cfg.password-file}";
+    ssh_command = "ssh -o ServerAliveInterval=10 -o ServerAliveCountMax=6 -o PubkeyAuthentication=yes -o StrictHostKeyChecking=yes -o GlobalKnownHostsFile=${fingerprints} -i /persist/etc/secrets/id_borg_ed25519";
+
+    checks = [
+      { name = "repository"; frequency = "1 week"; }
+      { name = "archives"; frequency = "1 month"; }
+    ];
+  };
+
+  hasDatabases = length (cfg.databases.postgres ++ cfg.databases.mysql) > 0;
+
   command =
     if zfsEnabled then
       ''${pkgs.bash}/bin/sh -c "${zfsMounts} && ${pkgs.borgmatic}/bin/borgmatic -v 2"''
@@ -82,9 +108,8 @@ in
 
     age.secrets.borg.file = ../../secrets/borg.age;
 
-    environment.etc."borgmatic.d/data.yaml".source = settingsFormat.generate "data.yaml" {
+    environment.etc."borgmatic.d/data.yaml".source = settingsFormat.generate "data.yaml" (commonConfig // {
       source_directories = cfg.paths;
-      repositories = map (repo: { path = repo; }) repositories;
       exclude_patterns = [
         "/var/lib/containers"
         "/var/lib/docker"
@@ -100,51 +125,13 @@ in
       exclude_if_present = [
         ".nobackup"
       ];
-      borgmatic_source_directory = "/run/backups/state/borgmatic";
       one_file_system = false;
+    });
 
-      keep_hourly = 36;
-      keep_daily = 14;
-      keep_weekly = 12;
-      keep_monthly = 24;
-      keep_yearly = 2;
-
-      compression = "auto,zstd,3";
-      encryption_passcommand = "${pkgs.coreutils}/bin/cat ${cfg.password-file}";
-      ssh_command = "ssh -o ServerAliveInterval=10 -o ServerAliveCountMax=6 -o PubkeyAuthentication=yes -o StrictHostKeyChecking=yes -o GlobalKnownHostsFile=${fingerprints} -i /persist/etc/secrets/id_borg_ed25519";
-      borg_config_directory = "/run/backups/state/borg";
-      borg_cache_directory = "/run/backups/cache/borg";
-
-      checks = [
-        { name = "repository"; frequency = "1 week"; }
-        { name = "archives"; frequency = "1 month"; }
-      ];
-    };
-
-    environment.etc."borgmatic.d/databases.yaml".source = settingsFormat.generate "databases.yaml" {
-      repositories = [ "ssh://de2429@de2429.rsync.net/./borg/${config.networking.hostName}" ] ++ cfg.extra_repositories;
-      borgmatic_source_directory = "/run/backups/state/borgmatic";
-
-      keep_hourly = 36;
-      keep_daily = 14;
-      keep_weekly = 12;
-      keep_monthly = 24;
-      keep_yearly = 2;
-
-      compression = "auto,zstd,3";
-      encryption_passcommand = "${pkgs.coreutils}/bin/cat ${cfg.password-file}";
-      ssh_command = "ssh -o ServerAliveInterval=10 -o ServerAliveCountMax=6 -o PubkeyAuthentication=yes -o StrictHostKeyChecking=yes -o GlobalKnownHostsFile=${fingerprints} -i /persist/etc/secrets/id_borg_ed25519";
-      borg_config_directory = "/run/backups/state/borg";
-      borg_cache_directory = "/run/backups/cache/borg";
-
-      checks = [
-        { name = "repository"; frequency = "1 week"; }
-        { name = "archives"; frequency = "1 month"; }
-      ];
-
+    environment.etc."borgmatic.d/databases.yaml".source = mkIf hasDatabases (settingsFormat.generate "databases.yaml" (commonConfig // {
       mysql_databases = map (db: { name = db; }) cfg.databases.mysql;
       postgresql_databases = map (db: { name = db; username = "postgres"; }) cfg.databases.postgres;
-    };
+    }));
 
     environment.systemPackages = [ pkgs.borgmatic ];
 
