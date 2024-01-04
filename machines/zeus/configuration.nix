@@ -202,13 +202,8 @@
   };
 
   nuzulip.enable = true;
-
-  age.secrets.nuzulip-calendar-bot.file = ../../secrets/nuzulip_calendar_bot.age;
-  nuzulip.zuliprc.calendar-bot = config.age.secrets.nuzulip-calendar-bot.path;
-
   age.secrets.nuzulip-econ-bot.file = ../../secrets/nuzulip_econ_bot.age;
   nuzulip.zuliprc.welcome-bot = config.age.secrets.nuzulip-econ-bot.path;
-  nuzulip.zuliprc.working-papers-bot = config.age.secrets.nuzulip-econ-bot.path;
 
   home-manager.users.james.home.stateVersion = "22.11";
   system.stateVersion = "22.11"; # Did you read the comment?
