@@ -24,5 +24,4 @@ in
   "vikunja_jwt.age".publicKeys = [ zeus-ssh ];
 
   "nuzulip_econ_bot.age".publicKeys = [ zeus-ssh ];
-  "nuzulip_calendar_bot.age".publicKeys = [ zeus-ssh ];
 }
