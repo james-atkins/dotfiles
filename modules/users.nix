@@ -18,7 +18,7 @@ with lib; {
       uid = 1000;
       description = "James Atkins";
       hashedPasswordFile = config.age.secrets.jamesPassword.path;
-      extraGroups = with lib; [ "wheel" ]
+      extraGroups = with lib; [ "wheel" "dialout" ]
         ++ optionals config.networking.networkmanager.enable [ "networkmanager" ]
         ++ optionals config.services.printing.enable [ "lp" ]
         ++ optionals config.hardware.sane.enable [ "sane" ];
