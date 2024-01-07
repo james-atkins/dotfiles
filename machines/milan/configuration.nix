@@ -1,4 +1,4 @@
-{ config, lib, pkgs, global, ... }:
+{ config, lib, pkgs, pkgs-unstable, global, ... }:
 
 {
   boot.loader.systemd-boot.enable = true;
@@ -110,7 +110,7 @@
     ];
     disabledDefaultBackends = [ "epsonds" ];
   };
-  home-manager.users.james.home.packages = [ pkgs.simple-scan ];
+  home-manager.users.james.home.packages = [ pkgs.simple-scan pkgs-unstable.arduino-ide ];
 
   # Wireless headphones
   hardware.bluetooth.enable = true;
