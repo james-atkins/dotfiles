@@ -77,19 +77,27 @@
       criteria = "eDP-1";
       mode = "1920x1080";
       scale = 1.25;
-      # position = "0,0";
     }];
-    docked.outputs = [
+    docked_both.outputs = [
       {
         criteria = "eDP-1";
         status = "enable";
-        mode = "1920x1080";
         scale = 1.25;
-        # position = "0,0";
       }
       {
         criteria = "Dell Inc. DELL D2721H 8GTFQ23";
-        mode = "1920x1080";
+        status = "enable";
+      }
+    ];
+    docked_single.outputs = [
+      {
+        criteria = "eDP-1";
+        status = "disable";
+        scale = 1.25;
+      }
+      {
+        criteria = "Dell Inc. DELL D2721H 8GTFQ23";
+        status = "enable";
       }
     ];
   };
