@@ -6,6 +6,7 @@ in
 {
   imports = [
     ./cctv.nix
+    ./tinyproxy.nix
   ];
 
   # Erase on boot
