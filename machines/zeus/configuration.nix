@@ -12,6 +12,7 @@
     ./miniflux.nix
     ./paperless.nix
     ./photoprism.nix
+    ./tinyproxy.nix
     ./vikunja.nix
     ./wiki.nix
     ./zrepl.nix
