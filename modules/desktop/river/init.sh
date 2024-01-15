@@ -4,11 +4,11 @@
 # Appearance #
 ##############
 
-riverctl border-width           3
+riverctl border-width           2
 riverctl background-color       0x000000
-riverctl border-color-unfocused 0x888888
-riverctl border-color-focused   0x00509D
-# border-color-urgent
+riverctl border-color-unfocused 0x9ca0b0
+riverctl border-color-focused   0x1e66f5
+riverctl border-color-urgent    0xfe640b
 
 ##########
 # Inputs #
