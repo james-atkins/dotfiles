@@ -37,7 +37,7 @@ lib.mkIf config.ja.desktop.enable {
 
           # Do not show titlebar
           "browser.tabs.inTitlebar" = 1;
-          "extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
+          "extensions.activeThemeID" = "firefox-compact-light@mozilla.org";
         };
         userChrome = ''
           @import url("${firefox-csshacks}/chrome/linux_gtk_window_control_patch.css");

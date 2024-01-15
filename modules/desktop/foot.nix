@@ -1,5 +1,13 @@
-{ config, lib, pkgs, pkgs-local, ... }:
+{ config, lib, pkgs, ... }:
 
+let
+  catppuccin-foot = pkgs.fetchFromGitHub {
+    owner = "catppuccin";
+    repo = "foot";
+    rev = "009cd57bd3491c65bb718a269951719f94224eb7";
+    hash = "sha256-gO+ZfG2Btehp8uG+h4JE7MSFsic+Qvfzio8Um0lDGTg=";
+  };
+in
 lib.mkIf config.ja.desktop.enable {
   fonts.packages = [ pkgs.fira-code ];
 
@@ -8,7 +16,7 @@ lib.mkIf config.ja.desktop.enable {
       enable = true;
       settings = {
         main = {
-          include = "${pkgs-local.foot-themes}/tokyonight-storm";
+          include = "${catppuccin-foot}/catppuccin-latte.conf";
           font = "Fira Code:monospace:size=12";
           shell = "/usr/bin/env SHELL=fish ${pkgs.fish}/bin/fish";
         };

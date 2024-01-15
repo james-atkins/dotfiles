@@ -7,7 +7,7 @@ let
     headerbar.titlebar.default-decoration {
       background: transparent;
       padding: 0;
-      margin: 0 0 -17px 0;
+      margin: 0 0 -19px 0;
       border: 0;
       min-height: 0;
       font-size: 0;
@@ -22,42 +22,53 @@ let
   '';
 in
 lib.mkIf config.ja.desktop.enable {
+  ja.desktop.wayland-environment.GTK_THEME = "Catppuccin-Latte-Compact-Blue-Light";
   home-manager.users.james = { pkgs, ... }: {
     dconf.settings."org/gnome/desktop/wm/preferences" = {
       button-layout = "";
+    };
+
+    home.pointerCursor = {
+      name = "Catppuccin-Latte-Dark-Cursors";
+      package = pkgs.catppuccin-cursors.latteDark;
+      size = 32;
+      gtk.enable = true;
     };
 
     gtk = {
       enable = true;
 
       theme = {
-        name = "Pop";
-        package = pkgs.pop-gtk-theme;
-        # TODO: Set GTK_THEME too?
+        name = "Catppuccin-Latte-Compact-Blue-Light";
+        package = pkgs.catppuccin-gtk.override {
+          accents = [ "blue" ];
+          variant = "latte";
+          size = "compact";
+          tweaks = [ "rimless" ];
+        };
       };
 
       iconTheme = {
-        name = "Pop";
-        package = pkgs.pop-icon-theme;
+        name = "Papirus";
+        package = pkgs.catppuccin-papirus-folders.override {
+          accent = "sky";
+          flavor = "latte";
+        };
       };
 
-      cursorTheme = {
-        name = "Pop";
-        package = pkgs.pop-icon-theme;
+      gtk3 = {
+        extraConfig = { "gtk-application-prefer-dark-theme" = 0; };
+        extraCss = remove-decorations;
       };
-
-      gtk3.extraCss = remove-decorations;
-      gtk4.extraCss = remove-decorations;
+      gtk4 = {
+        extraConfig = { "gtk-application-prefer-dark-theme" = 0; };
+        extraCss = remove-decorations;
+      };
     };
 
     qt = {
       enable = true;
       platformTheme = "gtk";
-    };
-
-    home.pointerCursor = {
-      name = "Pop";
-      package = pkgs.pop-icon-theme;
     };
   };
 }

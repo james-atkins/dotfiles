@@ -1,8 +1,20 @@
 { pkgs, pkgs-unstable, ... }:
 
+let
+  inherit (pkgs) fetchFromGitHub;
+  catppuccin-fish = fetchFromGitHub {
+    owner = "catppuccin";
+    repo = "fish";
+    rev = "0ce27b518e8ead555dec34dd8be3df5bd75cff8e";
+    hash = "sha256-Dc/zdxfzAUM5NX8PxzfljRbYvO9f9syuLO8yBr+R3qg=";
+  };
+in
 {
   programs.bash.enable = true;
 
+  programs.dircolors.enable = true;
+
+  xdg.configFile."fish/themes/Catppuccin Latte.theme".source = "${catppuccin-fish}/themes/Catppuccin Latte.theme";
   programs.fish = {
     enable = true;
   };
@@ -27,7 +39,17 @@
     enable = true;
     package = pkgs-unstable.helix;
     settings = {
-      theme = "tokyonight_storm";
+      theme = "catppuccin_latte";
+      editor = {
+        color-modes = true;
+        cursorline = true;
+        cursor-shape = {
+          insert = "bar";
+          normal = "block";
+          select = "underline";
+        };
+        indent-guides.render = true;
+      };
     };
   };
 

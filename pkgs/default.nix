@@ -2,7 +2,6 @@
 
 rec {
   cran = pkgs.callPackage ./cran/default.nix { };
-  foot-themes = pkgs.callPackage ./foot-themes/default.nix { };
   fossil-tailscale = pkgs.callPackage ./fossil-tailscale/default.nix { };
   knitro = pkgs.callPackage ./knitro/default.nix { };
   knitroR = pkgs.callPackage ./knitro/R.nix { inherit knitro; };
