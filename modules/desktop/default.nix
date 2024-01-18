@@ -9,7 +9,7 @@
     ./foot.nix
     ./applications.nix
     ./theme.nix
-    ./thunar.nix
+    ./nemo.nix
     ./firefox.nix
     ./latex.nix
   ];
