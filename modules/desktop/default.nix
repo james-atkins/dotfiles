@@ -9,6 +9,7 @@
     ./foot.nix
     ./applications.nix
     ./theme.nix
+    ./spelling.nix
     ./nemo.nix
     ./firefox.nix
     ./latex.nix
