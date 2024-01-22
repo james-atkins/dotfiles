@@ -8,7 +8,7 @@ lib.mkIf config.ja.desktop.enable {
       cinnamon.nemo-with-extensions
 
       gnome.file-roller
-      gnome.eog
+      loupe
     ];
 
     dconf.settings = {
