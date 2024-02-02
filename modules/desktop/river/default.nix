@@ -41,7 +41,7 @@ let
     text = ''
       entries="⮾ Lock\n⇠ Logout\n⏾ Suspend\n⭮ Reboot\n⏻ Power Off"
 
-      selected=$(echo -e "$entries" | wofi --dmenu --insensitive --prompt Power --lines 6 --cache-file /dev/null | cut -f 2- -d ' ')
+      selected=$(echo -e "$entries" | wofi --dmenu --insensitive --prompt Power --cache-file /dev/null | cut -f 2- -d ' ')
 
       case $selected in
         "Lock")
