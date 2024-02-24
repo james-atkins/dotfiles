@@ -128,7 +128,7 @@
         builtins.listToAttrs (map (sys: nameValuePair sys.name (mkSystem sys)) systems);
 
     in
-    {
+    rec {
       formatter = forAllSystems (system: pkgs.${system}.nixpkgs-fmt);
 
       nixosConfigurations = mkSystems [
@@ -154,6 +154,13 @@
         # legacyPackages for now.
         # We can still run nix build .#cran.PKGNAME if we want to build a specific package.
         filterAttrs (n: v: !isDerivation v) pkgs-local.${system}
+      );
+
+      checks = forAllSystems (system:
+        let
+          inherit (nixpkgs.lib) filterAttrs mapAttrs' nameValuePair;
+        in
+        mapAttrs' (name: config: nameValuePair "nixos-${name}" config.config.system.build.toplevel) ((filterAttrs (_: config: config.pkgs.system == system)) nixosConfigurations)
       );
     };
 }
