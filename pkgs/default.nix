@@ -8,7 +8,7 @@ rec {
   nbqa = pythonPackages: pythonPackages.callPackage ./nbqa { };
   rstudio = pkgs.libsForQt5.callPackage ./rstudio/default.nix { };
   tailscale-auth = pkgs-unstable.callPackage ./tailscale-auth {
-    buildGoModule = pkgs-unstable.buildGo121Module;
+    buildGoModule = pkgs-unstable.buildGo122Module;
   };
   pyblp = pythonPackages: pythonPackages.callPackage ./pyblp.nix { };
   stata16 = pkgs.callPackage ./stata16/default.nix { };
