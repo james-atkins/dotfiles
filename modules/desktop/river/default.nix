@@ -30,10 +30,10 @@ let
   '';
 
   wofi-catppuccin = pkgs.fetchFromGitHub {
-    owner = "xlce";
+    owner = "quantumfate";
     repo = "wofi";
-    rev = "cdaa582a1d8e9e8fcbd6e159ee337a72b0059a61";
-    hash = "sha256-qG7gie09S4wXKFCRayDJnXQyOXsawkTx1xOAX2c8zJ8=";
+    rev = "6c37e0f65b9af45ebe680e3e0f5131f452747c6f";
+    hash = "sha256-zQGiF/8WZ15ZlQVVgxuQq4qatinxMx2Y6Xl5Zcuhp7Y=";
   };
 
   wofi-power = pkgs.writeShellApplication {
@@ -267,7 +267,7 @@ in
         width=750
         height=400
       '';
-      xdg.configFile."wofi/style.css".source = "${wofi-catppuccin}/src/latte/blue/style.css";
+      xdg.configFile."wofi/style.css".source = "${wofi-catppuccin}/src/latte/style.css";
     };
   };
 }
