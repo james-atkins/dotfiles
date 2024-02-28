@@ -1,4 +1,4 @@
-{ config, lib, pkgs, pkgs-unstable, global, ... }:
+{ config, lib, pkgs, pkgs-unstable, pkgs-local, global, ... }:
 
 {
   boot.loader.systemd-boot.enable = true;
@@ -11,6 +11,8 @@
   boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
   boot.supportedFilesystems = [ "zfs" ];
   networking.hostId = "013802bf";
+
+  services.udev.packages = [ pkgs-local.probe-rs-udev ];
 
   services.zrepl = {
     enable = true;
