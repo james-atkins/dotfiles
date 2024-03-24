@@ -114,7 +114,7 @@ in
       XDG_CURRENT_DESKTOP = "river";
 
       SDL_VIDEODRIVER = "wayland";
-      GDK_BACKEND = "wayland";
+      GDK_BACKEND = "wayland,x11";
       CLUTTER_BACKEND = "wayland";
 
       # Needs qt5.qtwayland
