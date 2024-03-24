@@ -2,6 +2,7 @@
 
 let
   pythonWithPackages = pkgs.python3.withPackages(pp: with pp; [
+    autograd
     beautifulsoup4
     cython
     cytoolz
