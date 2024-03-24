@@ -34,7 +34,7 @@
     persist.state = true;
   };
 
-  ja.private-services.photos.caddy-config = ''
+  ja.private-services.photoprism.caddy-config = ''
     reverse_proxy localhost:${toString config.services.photoprism.port}
   '';
 
