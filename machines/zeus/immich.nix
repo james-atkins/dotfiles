@@ -11,8 +11,6 @@ let
   external-dir = "/tank/photos";
 
   environment = {
-    PUID = toString config.users.users.immich.uid;
-    PGID = toString config.users.groups.immich.gid;
     DB_URL = "socket://immich:@/run/postgresql?db=immich";
     REDIS_SOCKET = config.services.redis.servers.immich.unixSocket;
     REVERSE_GEOCODING_DUMP_DIRECTORY = "/usr/src/app/geocoding";
@@ -35,6 +33,7 @@ in
   };
 
   services.postgresql = {
+    enable = true;
     ensureDatabases = [ "immich" ];
     ensureUsers = [
       {
@@ -70,11 +69,6 @@ in
     description = "Create the network bridge for immich.";
     after = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
-    requiredBy =
-      let
-        mkContainerService = name: "${config.virtualisation.oci-containers.backend}-immich-${name}.service";
-      in
-      map mkContainerService [ "server" "microservices" "machine-learning" ];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
@@ -89,7 +83,6 @@ in
       volumes = [
         "/run/postgresql:/run/postgresql"
         "${config.services.redis.servers.immich.unixSocket}:${config.services.redis.servers.immich.unixSocket}"
-      ] ++ [
         "${data-dir}:/usr/src/app/upload"
         "${photos-dir}/library:/usr/src/app/upload/library"
         "${photos-dir}/upload:/usr/src/app/upload/upload"
@@ -101,8 +94,8 @@ in
         image = "ghcr.io/immich-app/immich-server:v${version}";
         cmd = [ "./start-server.sh" ];
 
-        user = "${environment.PUID}:${environment.PGID}";
         inherit environment volumes;
+        user = "${toString config.users.users.immich.uid}:${toString config.users.groups.immich.gid}";
         extraOptions = [ "--network=immich" ];
         ports = [ "127.0.0.1:2283:3001" ];
       };
@@ -111,8 +104,8 @@ in
         image = "ghcr.io/immich-app/immich-server:v${version}";
         cmd = [ "./start-microservices.sh" ];
 
-        user = "${environment.PUID}:${environment.PGID}";
         inherit environment volumes;
+        user = "${toString config.users.users.immich.uid}:${toString config.users.groups.immich.gid}";
         dependsOn = [ "immich-server" ];
         extraOptions = [ "--network=immich" "--device=/dev/dri:/dev/dri" ];
       };
@@ -120,23 +113,29 @@ in
       immich-machine-learning = {
         image = "ghcr.io/immich-app/immich-machine-learning:v${version}";
 
-        volumes = [
-          "immich-machine-learning:/cache"
-        ];
-
-        extraOptions = [
-          "--network=immich"
-        ];
+        volumes = [ "immich-machine-learning:/cache" ];
+        extraOptions = [ "--network=immich" ];
       };
     };
 
   systemd.services."${config.virtualisation.oci-containers.backend}-immich-server".serviceConfig = {
-    After = [ "postgresql.service" "redis-immich.service" ];
+    After = [ "postgresql.service" "redis-immich.service" "immich-network.service" ];
+    Requires = [ "postgresql.service" "redis-immich.service" "immich-network.service" ];
+  };
+
+  systemd.services."${config.virtualisation.oci-containers.backend}-immich-microservices".serviceConfig = {
+    After = [ "postgresql.service" "redis-immich.service" "immich-network.service" ];
+    Requires = [ "postgresql.service" "redis-immich.service" "immich-network.service" ];
+  };
+
+  systemd.services."${config.virtualisation.oci-containers.backend}-immich-machine-learning".serviceConfig = {
+    After = [ "immich-network.service" ];
+    Requires = [ "immich-network.service" ];
   };
 
   systemd.tmpfiles.rules = [
-    "d ${photos-dir}/library 0750 immich immich"
-    "d ${photos-dir}/upload 0750 immich immich"
+    "d ${photos-dir}/library 0755 ${config.users.users.immich.name} ${config.users.groups.immich.name}"
+    "d ${photos-dir}/upload 0755 ${config.users.users.immich.name} ${config.users.groups.immich.name}"
   ];
 
   ja.private-services.photos.caddy-config = ''
