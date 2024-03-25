@@ -9,9 +9,9 @@
     ./private-services.nix
     ./cran.nix
     ./git.nix
+    ./immich.nix
     ./miniflux.nix
     ./paperless.nix
-    ./photoprism.nix
     ./tinyproxy.nix
     ./vikunja.nix
     ./wiki.nix
