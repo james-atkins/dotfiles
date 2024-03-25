@@ -142,4 +142,7 @@ in
   ja.private-services.photos.caddy-config = ''
     reverse_proxy http://127.0.0.1:2283
   '';
+
+  ja.backups.databases.postgres = [ "immich" ];
+  ja.backups.paths = [ "${data-dir}/profile" photos-dir external-dir ];
 }
