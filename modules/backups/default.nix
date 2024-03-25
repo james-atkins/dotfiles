@@ -159,6 +159,8 @@ in
         ProtectSystem = "strict";
         ProtectHome = "read-only";
         ReadWritePaths = mkIf config.ja.persistence.enable [ "/persist/var/lib/backups" "/persist/var/cache/backups" ];
+        TemporaryFileSystem = [ "/zrepl" ];
+
         LockPersonality = true;
         MemoryDenyWriteExecute = true;
         NoNewPrivileges = true;
