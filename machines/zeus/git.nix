@@ -1,10 +1,13 @@
 { config, pkgs, ... }:
 
+let
+  stateDir = "/persist/var/lib/gitea";
+  repositoryRoot = "/tank/code/gitea";
+in
 {
   services.gitea = {
     enable = true;
-    stateDir = "/persist/var/lib/gitea";
-    repositoryRoot = "/tank/code/gitea";
+    inherit stateDir repositoryRoot;
     database.type = "postgres";
     settings = {
       repository = {
@@ -33,4 +36,7 @@
   ja.private-services.git.caddy-config = ''
     reverse_proxy http://127.0.0.1:${toString config.services.gitea.settings.server.HTTP_PORT}
   '';
+
+  ja.backups.paths = [ stateDir repositoryRoot ];
+  ja.backups.databases.postgres = [ config.services.gitea.database.name ];
 }
