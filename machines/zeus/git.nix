@@ -13,6 +13,11 @@
       server = {
         DOMAIN = "git.jamesatkins.io";
       };
+      service = {
+        DISABLE_REGISTRATION = true;
+        ENABLE_REVERSE_PROXY_AUTHENTICATION = true;
+        REVERSE_PROXY_AUTHENTICATION_EMAIL = "Tailscale-User";
+      };
     };
   };
 
