@@ -9,6 +9,7 @@
     settings = {
       repository = {
         ENABLE_PUSH_CREATE_USER = true;
+        DEFAULT_PUSH_CREATE_PRIVATE = false;
       };
       session = {
         COOKIE_SECURE = true;
