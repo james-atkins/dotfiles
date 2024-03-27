@@ -24,6 +24,7 @@
       };
       security = {
         REVERSE_PROXY_AUTHENTICATION_EMAIL = "Tailscale-User";
+        REVERSE_PROXY_AUTHENTICATION_FULL_NAME = "Tailscale-Name";
       };
     };
   };
