@@ -12,6 +12,7 @@
       };
       server = {
         DOMAIN = "git.jamesatkins.io";
+        ROOT_URL = "https://git.jamesatkins.io/";
       };
       service = {
         DISABLE_REGISTRATION = true;
