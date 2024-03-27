@@ -10,6 +10,9 @@
       repository = {
         ENABLE_PUSH_CREATE_USER = true;
       };
+      session = {
+        COOKIE_SECURE = true;
+      };
       server = {
         DOMAIN = "git.jamesatkins.io";
         ROOT_URL = "https://git.jamesatkins.io/";
